@@ -25,7 +25,14 @@ const getRelativeTime = (timestamp: number, limit = units.week, locale = "en-GB"
   }
 }
 
-const PublishDate = ({ createdAt, locale = "en-GB" }): JSX.Element => {
+const PublishDate = ({
+  createdAt,
+  locale = "en-GB",
+  dateStyles,
+  prepositionStyles,
+  relativePreposition = "posted",
+  absolutePreposition = "posted on",
+}): JSX.Element => {
   const timestamp = new Date(createdAt).getTime()
   const relativeDate = getRelativeTime(timestamp)
   const [dd, mmmm, yy] = new Date(timestamp)
@@ -37,17 +44,22 @@ const PublishDate = ({ createdAt, locale = "en-GB" }): JSX.Element => {
     .split(" ")
 
   return (
-    <div>
-      {relativeDate ? (
-        <div>{relativeDate}</div>
-      ) : (
-        <div>
-          {dd}
-          <sup>{indicator(+dd)}</sup>
-          {` ${mmmm} ${yy}`}
-        </div>
-      )}
-    </div>
+    <>
+      <span css={[prepositionStyles]}>
+        {relativeDate ? relativePreposition : absolutePreposition}{" "}
+      </span>
+      <span css={[dateStyles]}>
+        {relativeDate ? (
+          <>{relativeDate}</>
+        ) : (
+          <>
+            {dd}
+            <sup>{indicator(+dd)}</sup>
+            {` ${mmmm} ${yy}`}
+          </>
+        )}
+      </span>
+    </>
   )
 }
 

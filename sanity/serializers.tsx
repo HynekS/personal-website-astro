@@ -3,11 +3,13 @@ import BlockContent from "@sanity/block-content-to-react"
 import Popup from "reactjs-popup"
 import "reactjs-popup/dist/index.css"
 import tw, { css } from "twin.macro"
+import Link from "next/link"
 
 import { urlFor } from "@/sanity/index"
 import HighlightedCode from "@/components/HighlightedCode"
 import LazyImage from "@/components/LazyImage"
 import { Tweet } from "@/components/react-static-tweets/src/index"
+import { XIcon, ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/outline"
 
 const serializers = {
   types: {
@@ -124,7 +126,7 @@ const serializers = {
                   tw="invisible group-hover:visible absolute top[0.5rem] right[0.5rem] text-3xl h-8 w-8 bg-primary rounded-full flex items-center justify-center shadow-md"
                   onClick={close}
                 >
-                  ×
+                  <XIcon tw="w-4 h-4" />
                 </button>
                 <button
                   onMouseEnter={() => {
@@ -134,7 +136,7 @@ const serializers = {
                     setCurrentIndex(rotateIndexIfOutOfLimits(currentIndex - 1))
                   }}
                 >
-                  Prev
+                  <ChevronLeftIcon tw="w-4 h-4" />
                 </button>
                 <img
                   src={urlFor(images[currentIndex % images.length].asset)
@@ -151,7 +153,7 @@ const serializers = {
                     setCurrentIndex(rotateIndexIfOutOfLimits(currentIndex - 1))
                   }}
                 >
-                  Next
+                  <ChevronRightIcon tw="w-4 h-4" />
                 </button>
                 {images[currentIndex % images.length].caption && (
                   <figcaption>{images[currentIndex % images.length].caption}</figcaption>
@@ -177,6 +179,11 @@ const serializers = {
     sup: ({ children }): JSX.Element => <sup>{children}</sup>,
     sub: ({ children }): JSX.Element => <sub>{children}</sub>,
     cite: ({ children }): JSX.Element => <cite>{children}</cite>,
+    internalLink: ({ children, mark }): JSX.Element => (
+      <Link href={`/post/${mark?.slug?.current ?? ""}`}>
+        <a>{children}</a>
+      </Link>
+    ),
   },
 }
 

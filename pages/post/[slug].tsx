@@ -4,6 +4,8 @@ import BlockContent from "@sanity/block-content-to-react"
 import readingTime from "reading-time"
 import { GetStaticProps, GetStaticPaths } from "next"
 import Head from "next/head"
+import Link from "next/link"
+import tw from "twin.macro"
 
 import { fetchTweetAst } from "static-tweets"
 import "react-static-tweets/styles.css"
@@ -79,23 +81,26 @@ const Post = ({ post }: { post: PostProps }): JSX.Element => {
               alt={mainImage.alt || ""}
             />
           )}
-          {_createdAt && <PublishDate createdAt={_createdAt} />}
-          <span>By {name}</span>
-          <span>{timeToRead}</span>
+          <PublishDate
+            createdAt={_createdAt}
+            dateStyles={tw`text-base font-medium`}
+            prepositionStyles={tw`text-sm`}
+          />{" "}
+          <span tw="text-sm">by </span>
+          <span tw="text-base font-medium">{name}</span>
+          <span tw="text-sm">{" ≈ "}</span>
+          <span tw="text-base font-medium">{timeToRead}</span>
           {categories && (
-            <div>
-              Posted in:
-              <ul tw="flex flex-wrap mt-0!">
-                {categories.map(category => (
-                  <li
-                    tw="bg-secondary rounded mr-2 py-1! px-2! before:hidden! text-base!"
-                    key={category._id}
-                  >
-                    {category.title}
-                  </li>
-                ))}
-              </ul>
-            </div>
+            <ul tw="flex flex-wrap mt-0!">
+              {categories.map(category => (
+                <li
+                  tw="bg-secondary rounded mr-2 py-1! px-2! before:hidden! text-base!"
+                  key={category._id}
+                >
+                  {category.title}
+                </li>
+              ))}
+            </ul>
           )}
           <BlockContent
             blocks={body}
@@ -104,6 +109,7 @@ const Post = ({ post }: { post: PostProps }): JSX.Element => {
             {...client.config()}
           />
         </article>
+        <Link href="/">← All blog posts</Link>
       </main>
     </Container>
   )
@@ -126,6 +132,12 @@ const query = groq`*[_type == "post" && slug.current == $slug][0]{
   },
 	body[]{
     ...,
+    markDefs[]{
+      ...,
+      _type == "internalLink" => {
+        "slug": @.reference->slug
+      },
+    },
     _type == "figure" => {
        "lqip": @.asset->metadata.lqip,
        "aspectRatio": @.asset->metadata.dimensions.aspectRatio, 

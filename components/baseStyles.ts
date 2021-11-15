@@ -9,7 +9,7 @@ const baseStyles = css`
     --text-primary: #475569;
     --text-secondary: #1e293b;
     --color-primary: #e11d48; /* red */
-    --color-links: #008297;
+    --color-links: #01778b;
   }
 
   .dark {

@@ -16,7 +16,6 @@ type Posts = Array<
 >
 
 const Index = ({ posts = [] }: { posts: Posts }): JSX.Element => {
-
   return (
     <Container>
       <div tw="max-w-prose mx-auto h-full">
@@ -69,7 +68,7 @@ export const getStaticProps: GetStaticProps = async () => {
   return {
     props: {
       posts: await getClient().fetch(groq`
-    *[_type == "post"]{
+    *[_type == "post"] | order(_createdAt desc) {
       ...,
       categories[]->{
         _id,
