@@ -13,9 +13,9 @@ const baseStyles = css`
   }
 
   .dark {
-    --bg-primary: #1a2633;
+    --bg-primary: #1c232e /*#1a2633*/;
     --bg-secondary: ${colors.coolGray["900"]};
-    --text-primary: #9facbd;
+    --text-primary: #d4cece;
     --text-secondary: #e9e1e1;
     --color-primary: #e4d1bb; /* gold: */
     --color-links: #7ecbd7;
@@ -43,8 +43,9 @@ const baseStyles = css`
 
   html {
     height: 100%;
+    width: 100vw;
     scroll-behavior: smooth;
-    overflow-y: overlay;
+    /*overflow-y: overlay;*/
     -ms-overflow-style: -ms-autohiding-scrollbar;
   }
 
@@ -57,13 +58,30 @@ const baseStyles = css`
   body {
     ${tw`h-full transition-all duration-200 bg-primary text-primary font-base`}
   }
+  /*
+  body.light {
+    background: radial-gradient(
+      circle,
+      rgba(255, 255, 255, 1) 0%,
+      rgba(255, 255, 255, 1) 60%,
+      rgb(224 251 257) 110%
+    );
+  }
+  */
+  body.dark {
+    background: radial-gradient(
+      circle,
+      rgba(28, 35, 46, 1) 0%,
+      rgba(28, 35, 46, 1) 30%,
+      rgba(17, 24, 35, 1) 110%
+    );
+  }
 
   #__next {
     height: 100%;
     min-height: 100%;
-    display: grid;
-    grid-template-rows: auto 1fr auto;
-    grid-auto-columns: 100%;
+    scroll-behavior: smooth;
+    overflow-x: hidden;
   }
 
   h1,
@@ -75,7 +93,6 @@ const baseStyles = css`
     ${tw`font-display`}
   }
 
-  ,
   [id] {
     scroll-margin-top: 2ex;
   }

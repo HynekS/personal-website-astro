@@ -1,5 +1,7 @@
 import RecursiveList from "./RecursiveList"
-import { buildTree, checkIfNestingIsValid, prepareHeadings } from "./utils"
+import { checkIfNestingIsValid, createTableOfContents } from "./utils"
+import type { Node } from "./utils"
 
 export default RecursiveList
-export { buildTree, checkIfNestingIsValid, prepareHeadings }
+export { checkIfNestingIsValid, createTableOfContents }
+export type { Node }

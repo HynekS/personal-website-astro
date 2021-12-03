@@ -1,9 +1,15 @@
 import type { AppProps } from "next/app"
 import { Global } from "@emotion/react"
 import { GlobalStyles } from "twin.macro"
+import { MDXProvider } from "@mdx-js/react"
 
+import Lightbox from "@/components/Lightbox"
 import { ThemeProvider } from "../components/Theme"
 import baseStyles from "./../components/baseStyles"
+
+const components = {
+  Lightbox,
+}
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -11,7 +17,9 @@ function MyApp({ Component, pageProps }: AppProps) {
       <ThemeProvider>
         <GlobalStyles />
         <Global styles={baseStyles} />
-        <Component {...pageProps} />
+        <MDXProvider components={components}>
+          <Component {...pageProps} />
+        </MDXProvider>
       </ThemeProvider>
     </>
   )

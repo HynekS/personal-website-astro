@@ -1,61 +1,82 @@
-export function checkIfNestingIsValid(arr = [], propName) {
-  if (!Array.isArray(arr) || !arr.length) return false
+import slugify from "slugify"
 
-  const canBeParsedAsInteger = val => Number.isInteger(Number(val))
+export type Node = {
+  nodes?: undefined | Node[]
+  title?: string
+  slug?: string
+  level?: number
+}
 
-  let baseLevel = arr[0].propName
+export function checkIfNestingIsValid(arr: Node[]) {
+  if (!Array.isArray(arr) || !arr.length || !arr[0].level) return false
+
+  const canBeParsedAsInteger = (val: unknown) => Number.isInteger(Number(val))
+
+  let baseLevel = arr[0].level
   let IsValid = true
 
   for (let [i, el] of arr.entries()) {
     // check if propName exists and can be cast to integer (beware of boolean edge case!)
-    if (!canBeParsedAsInteger(el[propName])) {
+    if (!canBeParsedAsInteger(el.level)) {
       IsValid = false
       break
     }
     // Any elements level can not be higher than the first ones
-    if (el[propName] < baseLevel) {
+    if (el.level && el.level < baseLevel) {
       IsValid = false
       break
     }
     // The nesting must go deeper step by step, only one by one
-    if (arr[i + 1] && arr[i + 1][propName] - el[propName] > 1) {
+    // @ts-ignore
+    /*
+    if (arr[i + 1].level && arr[i + 1].level - el.level > 1) {
       IsValid = false
       break
-    }
+    }*/
   }
   return IsValid
 }
 
-export function prepareHeadings(body) {
-  const headings = body
-    .filter(el => /h[1-6]/.test(el.style))
-    .map(el => Object.assign({}, el, { level: Number(el.style.match(/\d+/)) }))
-    .map(el =>
-      el.children
-        ? Object.assign({}, el, {
-            text: el.children.reduce((accum, child) => `${accum} ${child.text}`, "").trim(),
-          })
-        : el,
-    )
+export function createTableOfContents(content: string) {
+  const regexp = new RegExp(/(#{2,6} )(.+?)(?=\r\n)/, "gm")
+  const headings = [...content.matchAll(regexp)]
 
-  const headingsOffset = headings[0] && headings[0].level - 1
+  let tableOfContents = headings.length
+    ? headings.map(heading => {
+        const headingText = heading[2].trim()
+        const headingType = heading[1].trim().length
+        const headingLink = slugify(headingText, { lower: true, strict: true })
 
-  const WithadjustedLevels = headingsOffset
-    ? headings.map(heading => Object.assign({}, heading, { level: heading.level - headingsOffset }))
+        return {
+          title: headingText,
+          slug: headingLink,
+          level: headingType,
+        }
+      })
     : []
 
-  return WithadjustedLevels
+  const headingsOffset = tableOfContents[0] && tableOfContents[0].level - 1
+
+  const WithadjustedLevels = headingsOffset
+    ? tableOfContents.map(heading => ({
+        ...heading,
+        level: heading.level - headingsOffset,
+      }))
+    : []
+
+  function buildTree(array: typeof WithadjustedLevels) {
+    let levels: Node[] = [{ nodes: undefined }]
+    array.forEach(function (a) {
+      levels.length = a.level
+      levels[a.level - 1].nodes = levels[a.level - 1].nodes || []
+      levels[a.level - 1].nodes?.push(a)
+      levels[a.level] = a
+    })
+
+    return levels[0].nodes
+  }
+
+  return checkIfNestingIsValid(WithadjustedLevels) ? buildTree(WithadjustedLevels) : []
 }
 
-export function buildTree(array) {
-  var levels = [{ nodes: undefined }]
-  array.forEach(function (a) {
-    levels.length = a.level
-    levels[a.level - 1].nodes = levels[a.level - 1].nodes || []
-    levels[a.level - 1].nodes.push(a)
-    levels[a.level] = a
-  })
-  return levels[0].nodes
-}
-
-export default { checkIfNestingIsValid, prepareHeadings, buildTree }
+export default { checkIfNestingIsValid, createTableOfContents }

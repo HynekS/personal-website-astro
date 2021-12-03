@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace"
 import { useState, useEffect, useRef } from "react"
 import tw from "twin.macro"

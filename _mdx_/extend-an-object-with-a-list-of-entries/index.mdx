@@ -1,0 +1,108 @@
+---
+title: Extend an object with a list of entries
+slug: extend-an-object-with-a-list-of-entries
+author: Hynek Svacha
+type: blog post
+dateCreated: Tue Dec 07 2021 12:32
+dateLastModified:
+featuredImage:
+categories:
+  - javascript
+keywords:
+  - JavaScript
+  - Object.fromEntries
+description: How to easily extend a JavaScript object with an array of entries using the 'Object.fromEntries' method
+---
+
+# Extend an object with a list of entries
+
+While coding, I repeatedly encountered a need to extend an object with a list of some entries (key-value pairs).
+
+Let's say we have an object mapping Markdown (or MDX) HTML elements to our custom components:
+
+```jsx
+const components = {
+  a: props => <CustomLink {...props} />,
+  img: props => <Image {...props} />,
+  pre: props => {
+    const codeBlockProps = preToCodeBlock(props)
+
+    if (codeBlockProps) {
+      return <Code {...codeBlockProps} />
+    } else {
+      return <pre {...props} />
+    }
+  },
+}
+```
+
+What if we want to add every heading tag (to return custom heading component)? There are six of them (`h1` to `h6`). We _could_, by all means, just add every heading tag manually:
+
+```jsx
+const components = {
+  h1: props => <CustomHeading {...props} />,
+  h2: props => <CustomHeading {...props} />,
+  h3: props => <CustomHeading {...props} />,
+  h4: props => <CustomHeading {...props} />,
+  h5: props => <CustomHeading {...props} />,
+  h6: props => <CustomHeading {...props} />,
+  a: props => <CustomLink {...props} />,
+  img: props => <Image {...props} />,
+  pre: props => {
+    const codeBlockProps = preToCodeBlock(props)
+
+    if (codeBlockProps) {
+      return <Code {...codeBlockProps} />
+    } else {
+      return <pre {...props} />
+    }
+  },
+}
+```
+
+I don't want to evangelize DRY principle here – I think it can be perfectly fine to repeat ourself sometimes (see [Sandi's](https://sandimetz.com/blog/2016/1/20/the-wrong-abstraction) or [Dan's](https://overreacted.io/goodbye-clean-code/) or [Kent's](https://kentcdodds.com/blog/aha-programming) articles).
+
+But let's say we want to save ourself from the hassle of editing six different lines in our code in the case we want to update the heading component.
+
+We can create take an array of all the heading tags `map` over them like that:
+
+```jsx
+// Let's assume we want to add an id to every heading tag to allow anchoring:
+
+import slugify from "slugify"
+
+const headings = ["h1", "h2", "h3", "h4", "h5", "h6"].map(headingTag => [
+  headingTag,
+  ({ children }) => {
+    const idText = slugify(children)
+    const CustomHeading = headingTag
+
+    return <CustomHeading id={idText}>{children}</CustomHeading>
+  },
+])
+```
+
+Then, the simplest option is to use `Object.fromEntries()` method to add the `headings` into our `components` object.
+
+[`Object.fromEntries`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/fromEntries), a feature introduced by the 10th edition of ECMAScript in 2019, transforms an iterable into an object. It can be considered as an inverse method to older `Object.entries`, which does the opposite (object into iterable).
+
+```jsx
+const components = {
+  ...Object.fromEntries(headings),
+  a: props => <CustomLink {...props} />,
+  img: props => <Image {...props} />,
+  pre: props => {
+    const codeBlockProps = preToCodeBlock(props)
+
+    if (codeBlockProps) {
+      return <Code {...codeBlockProps} />
+    } else {
+      return <pre {...props} />
+    }
+  },
+}
+```
+
+Now, the `component` object looks a little tidier.
+
+👍 Enjoy!

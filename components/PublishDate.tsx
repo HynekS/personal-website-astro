@@ -1,4 +1,7 @@
 import indicator from "ordinal/indicator"
+import { TwStyle } from "twin.macro"
+
+type Unit = keyof typeof units
 
 const units = {
   year: 24 * 60 * 60 * 1000 * 365,
@@ -10,19 +13,33 @@ const units = {
   second: 1000,
 }
 
-const getRelativeTime = (timestamp: number, limit = units.week, locale = "en-GB"): string => {
+const getRelativeTime = (
+  timestamp: number,
+  limit = units.week,
+  locale = "en-GB",
+): string | null => {
   const rtf: Intl.RelativeTimeFormat = new Intl.RelativeTimeFormat(locale, {
     numeric: "auto",
   })
 
   const elapsed = timestamp - new Date().getTime()
 
-  if (Math.abs(elapsed) > limit) return ""
+  if (Math.abs(elapsed) > limit) return null
 
-  for (let u in units) {
-    if (Math.abs(elapsed) > units[u] || u == "second")
-      return rtf.format(Math.round(elapsed / units[u]), u as Intl.RelativeTimeFormatUnit)
+  for (let u of Object.keys(units)) {
+    if (Math.abs(elapsed) > units[u as Unit] || u == "second")
+      return rtf.format(Math.round(elapsed / units[u as Unit]), u as Unit)
   }
+  return null
+}
+
+type PublishDateProps = {
+  createdAt: Date
+  locale?: string
+  dateStyles?: TwStyle | string
+  prepositionStyles?: TwStyle | string
+  relativePreposition?: string
+  absolutePreposition?: string
 }
 
 const PublishDate = ({
@@ -32,7 +49,7 @@ const PublishDate = ({
   prepositionStyles,
   relativePreposition = "posted",
   absolutePreposition = "posted on",
-}): JSX.Element => {
+}: PublishDateProps): JSX.Element => {
   const timestamp = new Date(createdAt).getTime()
   const relativeDate = getRelativeTime(timestamp)
   const [dd, mmmm, yy] = new Date(timestamp)
@@ -43,21 +60,22 @@ const PublishDate = ({
     })
     .split(" ")
 
-  return (
+  return relativeDate ? (
     <>
-      <span css={[prepositionStyles]}>
-        {relativeDate ? relativePreposition : absolutePreposition}{" "}
-      </span>
+      <span css={[prepositionStyles]}>{relativePreposition} </span>
       <span css={[dateStyles]}>
-        {relativeDate ? (
-          <>{relativeDate}</>
-        ) : (
-          <>
-            {dd}
-            <sup>{indicator(+dd)}</sup>
-            {` ${mmmm} ${yy}`}
-          </>
-        )}
+        <>{relativeDate}</>
+      </span>
+    </>
+  ) : (
+    <>
+      <span css={[prepositionStyles]}>{absolutePreposition} </span>
+      <span css={[dateStyles]}>
+        <>
+          {dd}
+          <sup>{indicator(+dd)}</sup>
+          {` ${mmmm} ${yy}`}
+        </>
       </span>
     </>
   )

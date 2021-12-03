@@ -1,0 +1,175 @@
+---
+title: Pretty PowerShell with Windows Terminal, posh-git and oh-my-posh
+slug: pretty-powershell-with-windows-terminal-posh-git-and-oh-my-posh
+author: Hynek Svacha
+type: blog post
+dateCreated: Mar 27, 2021, 09:16 PM
+dateLastModified:
+featuredImage: assets/windows-terminal-main-image.jpg
+categories:
+  - terminals
+keywords:
+  - PowerShell
+  - Windows Terminal
+description: How to make PowerShell fully git-integrated and pretty with Windows Terminal, posh-git and oh-my-posh
+gallery: 
+  - src: assets/windows-powershell-pretty-git-prompt-01.png
+  - src: assets/windows-powershell-pretty-git-prompt-02.png
+  - src: assets/windows-powershell-pretty-git-prompt-03.png
+  - src: assets/windows-powershell-pretty-git-prompt-04.png
+  - src: assets/windows-powershell-pretty-git-prompt-05.png
+  - src: assets/windows-powershell-pretty-git-prompt-06.png
+  
+---
+
+import Lightbox from "@/components/Lightbox"
+
+# Pretty PowerShell with Windows Terminal, posh-git and oh-my-posh
+
+As a long-term Windows user, I always felt a twinge of envy for the Mac users whenever I seen their joyful, colorful terminals. In comparison, the Windows command line prompt looked like their broke, hopeless relative. The PowerShell, blue as a screen of death, was't much better (in the terms of look, not the features – these were pretty cool).
+
+Well, the time has changed! For me, the first breeze of fresh air was the [Cmder](https://cmder.net/) prompt, which I was happily using for a while and can definitely recommend. But I was greedy and I wanted more. And I've got it – with the customized new Windows Terminal.
+If you see the images and want to make your command line look like that, follow along.
+
+<Lightbox images={gallery} slug={slug}/>
+
+## Get the terminal
+
+You can easily get it from the [Microsoft Store](https://aka.ms/terminal). If that seems way too easy to be interesting, there are [multiple other install options](https://github.com/microsoft/terminal#via-github) listed on the terminals [github repo](https://github.com/microsoft/terminal).
+
+If you've installed the terminal, let consider that as our starting point (well, at least it's not blue!):
+
+![Screenshot of the appearance of PowerShell on a newly installed Windows Terminal.](assets/Image-00-default-look.png)
+
+## Install posh-git and oh-my-posh
+
+I suppose there is a high probability you've already installed Git. If you're unsure, open a terminal window and run:
+
+```PowerShell
+git --version
+```
+
+If you already have Git, you'll see its version. Otherwise, you'll get an error which means you'll have to download and install [Git for Windows first](https://git-scm.com/download/win) first.
+
+We'll be installing two packages. One, [Oh my posh](https://github.com/JanDeDobbeleer/oh-my-posh), for a colorful and customizable prompt. The second, [posh-git](http://dahlbyk.github.io/posh-git/), for Git integration.
+
+```PowerShell
+Install-Module posh-git -Scope CurrentUser
+Install-Module oh-my-posh -Scope CurrentUser -AllowPrerelease
+```
+
+You may need to install NuGet first, but the PowerShell is smart enough to offer you a NuGet install if it couldn't find it. You'll also probably get a few warning about untrusted repositories, because both `posh-git` and `oh-my-posh` are not Microsoft official packages. I suppose we can trust them, so feel free to assure PowerShell that we really want to install both of them (see image below).
+
+![Screenshot of a confirmation dialog while installing posh-git and oh-my-posh.](assets/Image-07-nu-get-confirmation.png)
+
+After the install has finished, we need to edit the PowerShells profile. The easiest way how to create or update settings is to open the PowerShell and run `notepad $PROFILE`.
+
+A notepad window should emerge (probably an empty one). Add these three lines:
+
+```
+Import-Module posh-git
+Import-Module oh-my-posh
+Set-PoshPrompt -Theme paradox
+```
+
+Save the file and reload your terminal. Since PowerShell is still kind of suspicious about these newly installed packages, you'll probably get an error regarding the security policies (as shown in the image below).
+
+![Screenshot of possible Execution policy error while trying to use installed packages.](assets/Image-08-security-error.png)
+
+If that is the case, you can lift the user privileges by running:
+
+```PowerShell
+Set-ExecutionPolicy -Scope CurrentUser Remotesigned
+```
+
+After a reload (it is sufficient to open a new tab), you should be able to see a nice new colorful prompt.
+
+**"But I see some weird ugly rectangles instead of the Git symbols!"**
+
+No worries. That would mean we have to install a [powerline font](https://github.com/powerline/fonts). There are lots of them; I personally like [DejaVu Sans Mono for Powerline](https://github.com/powerline/fonts/tree/master/DejaVuSansMono), so I would recommend to download and install it.
+
+After another reload, everything should be neat and clean.
+
+### Possible gotchas
+
+If you are using PowerShell Core, the new, open-sourced version of PowerShell, you may need to install [PSReadLine](https://docs.microsoft.com/en-us/powershell/module/psreadline/?view=powershell-7.1) module:
+
+```PowerShell
+Install-Module -Name PSReadLine -Scope CurrentUser -Force -SkipPublisherCheck
+```
+
+In the past, I've encountered an error where PowerShell wasn't able to load the installed packages. The hot fix I've found on Stack Exchange was to set the full paths to modules, e. g.:
+
+```
+Import-Module "$HOME\Documents\WindowsPowerShell\Modules\posh-git\<VERSION NUMBER>\posh-git.psm1"
+Import-Module "$HOME\Documents\WindowsPowerShell\Modules\oh-my-posh\<VERSION NUMBER>\oh-my-posh.psm1"
+
+Set-PoshPrompt -Theme Paradox
+```
+
+## Customize
+
+For the full customization, there is a JSON file you can edit, similar to VSCode settings. You can open it by clicking the down arrow on the top bar, which will open the menu. In the lower part, there should be a "Settings" choice with a sprocket-wheel icon.
+
+You can tweak the settings whatever you like. I just list mine for the reference:
+
+```json
+"profiles": [
+    {
+      "guid": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
+      "name": "Windows PowerShell ⚡",
+      "commandline": "powershell.exe -nologo",
+      "hidden": false,
+      "fontFace": "DejaVu Sans Mono for Powerline",
+      "fontSize": 10,
+      "colorScheme": "Night Owl",
+      "background": "#111",
+      "backgroundImage": "<SET YOURSELF OR SEE BELOW>",
+      "backgroundImageOpacity": 0.2,
+      "backgroundImageStretchMode": "uniformToFill",
+      "padding": "28, 20",
+      "startingDirectory": null
+    },
+]
+```
+
+I myself use Sarah Drasners "Night Owl" color theme. You can copy it from this [github repo](https://github.com/edurojasr/Windows-Terminal-Theme-Night-Owl). As far as I can remember I've changed the blue color a little to improve the contrast, so this is my custom version:
+
+```JSON
+  "schemes": [
+    {
+      "name": "Night Owl",
+      "background": "#011627",
+      "black": "#011627",
+      "blue": "#567ac7",
+      "brightBlack": "#969696",
+      "brightBlue": "#82AAFF",
+      "brightCyan": "#7FDBCA",
+      "brightGreen": "#22DA6E",
+      "brightPurple": "#C792EA",
+      "brightRed": "#EF5350",
+      "brightWhite": "#FFFFFF",
+      "brightYellow": "#FFEB95",
+      "cyan": "#21C7A8",
+      "foreground": "#D6DEEB",
+      "green": "#22DA6E",
+      "purple": "#C792EA",
+      "red": "#EF5350",
+      "white": "#FFFFFF",
+      "yellow": "#ADDB67"
+    }
+  ],
+```
+
+For the background image, I searched through the [DeviantArt](https://deviantart.com) until I found what I like. In the screenshots, I use [Dark Mount by Noxypia](https://www.deviantart.com/noxypia/art/Dark-Mount-305013507) as a background image, but with a very low opacity, as I find anything more discernible quite distracting.
+
+I also tweaked the default prompt a little. I don't want to see the full path, just the username and current working directory. So in the `<USER>/Documents/oh-my-posh/<VERSION>/themes` folder, I opened the `Paradox.psm1` file (as it is my theme) and changed the `$path` variable like that:
+
+```PowerShell
+# original:
+# $path = Get-FullPath -dir $pwd
+# changed to:
+$path = (Split-Path -leaf -path (Get-Location))
+```
+
+👍 Enjoy!

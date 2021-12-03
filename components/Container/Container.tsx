@@ -1,15 +1,16 @@
-import Header from "../Header"
+import Header from "@/components/Header"
+import Footer from "@/components/Footer"
 
-const Container = props => {
-  const { children } = props
+type ContainerProps = {
+  children?: React.ReactNode
+}
 
+const Container = ({ children }: ContainerProps) => {
   return (
     <>
       <Header />
-      <div>{children}</div>
-      <div tw="flex justify-center">
-        <footer tw="max-w-prose p-4">© 2019–{new Date().getFullYear()} Hynek Svacha</footer>
-      </div>
+      <div tw="flex">{children}</div>
+      <Footer />
     </>
   )
 }

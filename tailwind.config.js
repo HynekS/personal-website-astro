@@ -33,7 +33,27 @@ module.exports = {
             "h2, h3, h4, h5, h6": {
               marginBottom: "0.25em",
             },
-            "a[href]": {
+            "h2 a[href], h3 a[href], h4 a[href], h5 a[href], h6 a[href], .dark h2 a[href], h3 a[href], h4 a[href], h5 a[href], h6 a[href]":
+              {
+                backgroundColor: "transparent",
+                textDecoration: "none",
+                padding: "inherit",
+                color: "unset",
+                fontWeight: "unset",
+                position: "relative",
+                "&:hover": {
+                  "&::before": {
+                    content: '"#"',
+                    position: "absolute",
+                    left: "-0.7em",
+                    fontSize: "0.9em",
+                    fontWeight: 400,
+                    lineHeight: 1.55,
+                    opacity: 0.36,
+                  },
+                },
+              },
+            a: {
               color: "var(--color-links)",
               backgroundColor: "#e7f6f7",
               padding: "0.1em 0.2em",
@@ -53,7 +73,7 @@ module.exports = {
               content: '""',
               display: "none",
             },
-            "h1 ~ div p:first-of-type": {
+            "h1 ~ p:first-of-type": {
               fontSize: "calc(22/18 * 1em)",
               lineHeight: "calc(32/22)",
             },
@@ -79,7 +99,7 @@ module.exports = {
             "h1, h2, h3, h4, h5, h6": {
               color: "var(--text-secondary)",
             },
-            "a[href]": {
+            a: {
               color: "var(--color-links)",
               backgroundColor: "transparent",
             },

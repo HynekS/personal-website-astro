@@ -1,19 +1,9 @@
 import { forwardRef } from "react"
 import tw, { css } from "twin.macro"
-/*
-{tree &&
-  tree.map(branch => {
-    const { _key, text, nodes } = branch || {}
-    return <RecursiveList key={_key} id={_key} name={text} items={nodes} />
-  })}
-*/
-type Branch = Array<{
-  _key: string
-  text: string
-  nodes: Array<Branch>
-}>
 
-const RecursiveList = forwardRef<HTMLElement, { tree: Branch }>(
+import type { Node } from "./index"
+
+const RecursiveList = forwardRef<HTMLElement, { tree: Node[] }>(
   ({ tree }, ref): JSX.Element => (
     <nav
       ref={ref}
@@ -33,25 +23,25 @@ const RecursiveList = forwardRef<HTMLElement, { tree: Branch }>(
     >
       {tree
         ? tree.map(branch => {
-            const { _key, text, nodes } = branch || {}
-            return <ListLevel key={_key} id={_key} name={text} nodes={nodes} />
+            const { slug, title, nodes } = branch || {}
+            return <Branch key={slug} slug={slug} title={title} nodes={nodes} />
           })
         : null}
     </nav>
   ),
 )
 
-const ListLevel = ({ name, nodes, id }): JSX.Element => {
+const Branch = ({ title, nodes, slug }: Node): JSX.Element => {
   const hasChildren = nodes && nodes.length
 
   return (
     <ul>
       <li>
-        <a href={`#${id}`}>{name}</a>
+        <a href={`#${slug}`}>{title}</a>
         {hasChildren &&
           nodes.map(branch => {
-            const { _key, text, nodes } = branch || {}
-            return <ListLevel key={_key} id={_key} name={text} nodes={nodes}></ListLevel>
+            const { slug, title, nodes } = branch || {}
+            return <Branch key={slug} slug={slug} title={title} nodes={nodes} />
           })}
       </li>
     </ul>

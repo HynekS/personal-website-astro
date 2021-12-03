@@ -1,0 +1,138 @@
+---
+title: Clean up your conditionals with array methods
+slug: clean-up-conditionals-using-array-methods
+author: Hynek Svacha
+type: blog post
+dateCreated: Dec 14, 2021 22:31
+dateLastModified:
+featuredImage:
+categories:
+  - javascript
+keywords:
+  - javascript
+  - conditionals
+  - array method
+  - predicate
+description: Javascript array methods can be very helpful in cleaning up conditional statements. They can be also abstracted in specialized 'predicate' functions.
+---
+
+# Clean up your conditionals with array methods
+
+I think we've all been there at some moment of our coding paths. We have a simple `if` statement with a condition – all nice and tidy. But it soon turned out that there's another condition that needs to be checked. We have _two_ conditions now.
+
+Easy peasy, just use `&&` or `||` operators, depending on a situation. The `if` statement will be something like `if(condition1 && condition2)`. Nothing wrong here (actually, to my surprise, I wasn't able to find a single [eslint rule](https://eslint.org/docs/rules/) disallowing that).
+
+But a few moments later, we find out that we don't need just two, but _three_ conditionals, and our code starts to look quite untidy, e. g.:
+
+```js
+let ham = 10
+let pineapple = 20
+let tomatoSauce = 12
+
+if (ham > 0 && pineapple > 0 && tomatoSauce > 0) {
+  console.log("Hooray! Can make pineapple pizza")
+}
+```
+
+💡 **There are quite elegant solutions to this.**
+
+As in the example above, the conditions are often fairly related. Even though it _may_ seem they are not, putting them together into one statement inevitably creates a relation. Thus, it shouldn't matter to move things further and create a dedicated _list_, or an `array`, of the conditions, e. g.:
+
+```js
+let assets = [ham, pineapple, tomatoSauce]
+```
+
+Now, we'll be able take advantage of the native `array` methods to help us check the multiple conditions.
+
+## Array.every()
+
+The first method, which might not get the appreciation it deserves, is `array.every()`. It iterates over the `array` list and invokes a callback function over each element, just like most of other ES5 array methods.
+
+The callback's return value is coerced to `boolean` (just like anything put into `if` statement – see the pattern?).
+
+Unlike most ES5 array methods (`map`, `filter`, `reduce` etc.), it _short circuits_ and returns `false` when any of the the callbacks returns a **falsy** value, which is a bonus point regarding performance.
+
+We can utilize `array.every()` like that:
+
+```js
+let ham = 10
+let pineapple = 20
+let tomatoSauce = 12
+
+let assets = [ham, pineapple, tomatoSauce]
+
+if (assets.every(asset => asset > 0)) {
+  console.log("Hooray! Can make pineapple pizza")
+}
+```
+
+See? Way cleaner than the version with multiple `&&`'s.
+
+## Array.some()
+
+`Array.some()` can be seen as the inverted version of `array.every()`. It also iterates over an `array`, but short circuits and returns `true` if any of the callbacks returns a **truthy** value.
+
+The conditional check utilizing `array.some()` evaluates to `true` if any of the assets is lesser than 1:
+
+```js
+if (assets.some(asset => asset < 1)) {
+  console.log("So sad, can't make the best pizza")
+}
+```
+
+## Array.includes()
+
+`Array.includes()` is another useful array method. It is a more recent one, being added by ES7. It checks if the array _includes_ something – in other words, if there's a _certain element present_.
+
+It behaves very similar to older `array.indexOf()`, but unlike it, it simply returns `true` or `false`, depending on the element being found or not (`array.indexOf()` would return the elements index or `-1` if not found, which can be a little confusing).
+
+We can use `array.includes()` like that:
+
+```js
+if (assets.includes('pineapple')) {
+  // not a fan of pineapple pizza
+	console.log("Yuck! I won't eat that!")
+}
+```
+
+## Using `Set` instead of `Array`
+
+Regarding the `array.includes()` method, there _can_ be a slight drawback: the algorithmic complexity (the '_big O_' notation).
+
+Worst-case scenario, the complexity of `array.includes()` can be _O(n)_: element is not found and our program is iterating over the whole array. It would be better if the element _is_ found, because it [short circuits](https://tc39.es/ecma262/multipage/indexed-collections.html#sec-array.prototype.includes). 
+
+It probably wont't be something we need to worry about much, but if we really need to be performant, the solution is quite simple. We can convert our `array` into a `Set` data structure.
+
+The `set` is a javascript implementation of a hashmap (or [hash table](https://www.youtube.com/watch?v=MfhjkfocRR0)) and like it, it can be as performant as _O(1)_. The equivalent of `array.includes()` method is `set.has()`:
+
+```js
+// O(1)
+
+const setOfAssets = new Set(assets)
+
+if (setOfAssets.has('pineapple')) {
+  //...
+}
+```
+
+**Tip**: check another javascript hashmap implementation, the `Map` data structure.
+
+## Extract the logic into a predicate function
+
+It can be a good practice to extract (_abstract_) the logic of the examples above into a specialized function. There is an important reason to that: it forces us to think about what we are actually checking in order to _name_ the function (and as a bonus, it can make the code even more tidy).
+
+Because the conditions check function most likely returns a `boolean`, it is a good practice to give it a name that starts with **is** or **has**. There is actually a name for a function like that – a [Predicate](https://stackoverflow.com/questions/3230944/what-does-predicate-mean-in-the-context-of-computer-science?noredirect=1&lq=1).
+
+So applied to the above examples, the resulting code can look like that:
+
+```js
+const hasAssetsForPineapplePizza = assets => assets.every(asset => asset > 0)
+
+if (hasAssetsForPineapplePizza(assets)) {
+  console.log("Hooray! Can make pineapple pizza")
+}
+```
+
+Which is quite clean and easy to reason about.
+
+👍 Enjoy!

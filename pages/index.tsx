@@ -1,81 +1,92 @@
 import Link from "next/link"
-import groq from "groq"
+import path from "path"
+import fs from "fs"
+import matter from "gray-matter"
+import tw from "twin.macro"
 
-import { getClient } from "../sanity"
-import { GetStaticProps } from "next"
+import { InferGetStaticPropsType } from "next"
 
-import { urlFor } from "@/sanity/index"
-import Container from "../components/Container"
+import type { Meta } from "../pages/blog/[slug]"
 
-import * as Schema from "../../studio/schema"
+import Container from "@/components/Container"
+import PublishDate from "@/components/PublishDate"
 
-type Posts = Array<
-  Omit<Schema.Post, "categories"> & {
-    categories: Array<Pick<Schema.Category, "_id" | "title">>
-  }
->
+const Index = ({ links = [] }: InferGetStaticPropsType<typeof getStaticProps>): JSX.Element => {
+  let sortedLinks = links
+    .slice()
+    .sort((a, b) => (new Date(String(a.dateCreated)) < new Date(String(b.dateCreated)) ? 1 : -1))
 
-const Index = ({ posts = [] }: { posts: Posts }): JSX.Element => {
   return (
     <Container>
-      <div tw="max-w-prose mx-auto h-full">
-        <h1 tw="text-4xl">Welcome to a blog!</h1>
-        {posts.length ? (
-          <ul tw="list-none">
-            {posts.map(
-              ({
-                _id,
-                title = "",
-                slug = { current: "" },
-                _createdAt = "",
-                _updatedAt = "",
-                mainImage,
-                categories = [],
-              }) =>
-                slug && (
-                  <li tw="flex pb-8" key={_id}>
-                    {mainImage && (
-                      <Link href={`/post/${slug.current}`}>
-                        <img tw="rounded px-4" src={urlFor(mainImage).width(100).url()} />
-                      </Link>
-                    )}
-                    <Link href={`/post/${slug.current}`}>
-                      <a>
-                        <h2 tw="text-lg px-4">{title}</h2>
-                      </a>
+      <div tw="h-full px-4 mx-auto max-w-prose">
+        <h1 tw="text-4xl font-bold">Blog</h1>
+        {sortedLinks.length ? (
+          <ul tw="mt-4 list-none">
+            {sortedLinks.map(link => (
+              <li
+                tw="flex flex-col md:(flex-row) mt-8 p-4 pb-6 shadow-sm rounded-md dark:(background-color[#2a3340] border border-transparent) light:(border border-b-gray-400)"
+                key={link.title}
+              >
+                {link.featuredImage ? (
+                  <div tw="md:(max-width[6em] mr-6)">
+                    <Link href={"/blog/" + link.slug}>
+                      <img
+                        tw="mb-3 mr-4 rounded-md dark:(filter[brightness(0.75) contrast(1.1)] border-4 border-color[#656a72]) light:(opacity-90 border-4 border-gray-200) md:(mt-3)"
+                        src={require(`_mdx_/${link.slug}/${link.featuredImage}`)}
+                      />
                     </Link>
-                    {categories.length ? (
-                      <ul tw="flex list-none text-xs">
-                        {categories.map(category => (
-                          <li key={category._id}>{category.title}</li>
-                        ))}
-                      </ul>
-                    ) : null}
-                  </li>
-                ),
-            )}
+                  </div>
+                ) : (
+                  <></>
+                )}
+                <div>
+                  <h2 tw="text-3xl font-semibold">
+                    <Link href={"/blog/" + link.slug}>{link.title}</Link>
+                  </h2>
+                  {link.categories ? (
+                    <ul tw="flex gap-1.5 mt-1">
+                      {link.categories.map(category => (
+                        <li
+                          tw="text-xs rounded-md py-0.5 px-1.5 dark:(bg-gray-800) light:(bg-gray-100)"
+                          key={category}
+                        >
+                          {category}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <></>
+                  )}
+                  <PublishDate
+                    createdAt={new Date(link.dateCreated)}
+                    dateStyles={tw`text-sm dark:(text-gray-400)`}
+                    prepositionStyles={tw`text-sm dark:(text-gray-400)`}
+                  />
+                </div>
+              </li>
+            ))}
           </ul>
         ) : null}
-        <Link href="/about" as={`/about`}>
-          <a>About Me</a>
-        </Link>
       </div>
     </Container>
   )
 }
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getStaticProps = async () => {
+  const postsDirectory = path.join(process.cwd(), "_mdx_")
+  const filenames = fs.readdirSync(postsDirectory)
+
+  const links = filenames
+    .filter(path => fs.existsSync(`${process.cwd()}/_mdx_/${path}/index.mdx`))
+    .map(path => {
+      const rawContents = fs.readFileSync(`${process.cwd()}/_mdx_/${path}/index.mdx`, "utf8")
+      const { data: meta }: { data: Meta } = matter(rawContents)
+      return { ...meta, slug: path }
+    })
+
   return {
     props: {
-      posts: await getClient().fetch(groq`
-    *[_type == "post"] | order(_createdAt desc) {
-      ...,
-      categories[]->{
-        _id,
-        title,
-      },
-    }
-  `),
+      links,
     },
   }
 }

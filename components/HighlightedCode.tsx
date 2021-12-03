@@ -1,5 +1,6 @@
-import Highlight, { defaultProps } from "prism-react-renderer"
+import Highlight, { defaultProps, Language } from "prism-react-renderer"
 import nightOwl from "prism-react-renderer/themes/nightOwl"
+import rangeParser from "parse-numeric-range"
 
 // To pass Lighthouse accessibility check
 const nightOwlWithEnhancedCommentsContrast = {
@@ -17,12 +18,19 @@ const nightOwlWithEnhancedCommentsContrast = {
   ),
 }
 
-const HighlightedCode = ({ code, language, highlightedLines }) => {
+type HighlightProps = {
+  language: Language
+  codeString: string
+  lines: string
+}
+
+const HighlightedCode = ({ codeString = "", language, lines = "" }: HighlightProps) => {
+  const highlightedLines = rangeParser(lines)
   const linesToHighlight = new Set(highlightedLines)
   return (
     <Highlight
       {...defaultProps}
-      code={code}
+      code={codeString}
       language={language}
       theme={nightOwlWithEnhancedCommentsContrast}
     >
