@@ -191,6 +191,7 @@ export default function Post({
               <img src={require(`_mdx_/${slug}/${meta.featuredImage}`)} />
             ) : null}
             <MDXRemote {...source} components={components(slug, meta)} scope={meta} />
+            <span>last modified: {meta.dateLastModified}</span>
           </article>
         </main>
       </Container>
