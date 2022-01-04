@@ -9,7 +9,8 @@
     "start": "next start",
     "export": "next build && next export",
     "static": "next build && next export && cd out && start http://localhost:5000 && serve",
-    "lint": "eslint ./ --ext js,jsx,ts,tsx"
+    "lint": "eslint ./ --ext js,jsx,ts,tsx",
+    "netlify": "netlify"
   },
   "private": true,
   "workspaces": [
@@ -64,13 +65,13 @@
     "rehype-autolink-headings": "^6.1.0",
     "rehype-slug": "^5.0.0",
     "rehype-toc": "^3.0.2",
-    "responsive-loader": "^2.3.0",
     "slugify": "^1.6.3",
     "static-tweets": "^0.2.7",
     "tailwindcss": "^2.2.19",
     "twin.macro": "^2.8.1"
   },
   "devDependencies": {
+    "@netlify/plugin-nextjs": "^4.1.1",
     "@tailwindcss/typography": "^0.4.0",
     "@types/node": "^14.14.16",
     "@types/react": "^17.0.0",
@@ -81,6 +82,7 @@
     "eslint-plugin-jsx-a11y": "^6.4.1",
     "eslint-plugin-react": "^7.22.0",
     "eslint-plugin-react-hooks": "^4.2.0",
+    "netlify-cli": "^8.6.2",
     "postcss": "^8.2.8",
     "sanity-codegen": "^0.9.1",
     "typescript": "^4.1.3"
