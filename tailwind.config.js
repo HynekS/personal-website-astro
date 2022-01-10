@@ -13,8 +13,8 @@ module.exports = {
         accent: "var(--color-primary)",
       },
       fontFamily: {
-        base: `system-ui, -apple-system, 'Segoe UI', 'Open Sans', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji'`,
-        display: `Jost, system-ui, -apple-system, 'Segoe UI', 'Open Sans', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji'`,
+        base: `Nunito, system-ui, -apple-system, 'Segoe UI', 'Open Sans', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji'`,
+        display: `Nunito, Jost, system-ui, -apple-system, 'Segoe UI', 'Open Sans', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji'`,
         // I like much better Consolas then Menlo, so I am swapping them:
         mono: `ui-monospace, SFMono-Regular, Consolas, Menlo, Monaco, "Liberation Mono", "Courier New", monospace`,
       },
@@ -32,6 +32,9 @@ module.exports = {
             },
             "h2, h3, h4, h5, h6": {
               marginBottom: "0.25em",
+            },
+            "h2 + pre, h3 + pre, h4 + pre, h5 + pre, h6 + pre": {
+              marginTop: "1.3333333em",
             },
             "h2 a[href], h3 a[href], h4 a[href], h5 a[href], h6 a[href], .dark h2 a[href], h3 a[href], h4 a[href], h5 a[href], h6 a[href]":
               {

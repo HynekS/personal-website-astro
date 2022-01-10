@@ -18,7 +18,7 @@ const Index = ({ links = [] }: InferGetStaticPropsType<typeof getStaticProps>): 
 
   return (
     <Container>
-      <div tw="h-full px-4 mx-auto max-w-prose">
+      <div tw="h-full px-4 mx-auto max-w-prose light:(text-secondary)">
         <h1 tw="text-4xl font-bold">Blog</h1>
         {sortedLinks.length ? (
           <ul tw="mt-4 list-none">
@@ -47,7 +47,7 @@ const Index = ({ links = [] }: InferGetStaticPropsType<typeof getStaticProps>): 
                     <ul tw="flex gap-1.5 mt-1">
                       {link.categories.map(category => (
                         <li
-                          tw="text-xs rounded-md py-0.5 px-1.5 dark:(bg-gray-800) light:(bg-gray-100)"
+                          tw="font-mono text-xs rounded-md py-0.5 px-1.5 dark:(bg-gray-800) light:(bg-gray-100)"
                           key={category}
                         >
                           {category}
@@ -57,11 +57,13 @@ const Index = ({ links = [] }: InferGetStaticPropsType<typeof getStaticProps>): 
                   ) : (
                     <></>
                   )}
-                  <PublishDate
-                    createdAt={new Date(link.dateCreated)}
-                    dateStyles={tw`text-sm dark:(text-gray-400)`}
-                    prepositionStyles={tw`text-sm dark:(text-gray-400)`}
-                  />
+                  <span tw="font-mono">
+                    <PublishDate
+                      createdAt={new Date(link.dateCreated)}
+                      dateStyles={tw`text-sm dark:(text-gray-400)`}
+                      prepositionStyles={tw`text-sm dark:(text-gray-400)`}
+                    />
+                  </span>
                 </div>
               </li>
             ))}

@@ -1,4 +1,4 @@
-import React, { useRef } from "react"
+import React, { useRef, useState } from "react"
 import Link from "next/link"
 import { NextSeo } from "next-seo"
 import { serialize } from "next-mdx-remote/serialize"
@@ -6,16 +6,19 @@ import { MDXRemote } from "next-mdx-remote"
 import matter from "gray-matter"
 import slugify from "slugify"
 import readingTime, { ReadTimeResults } from "reading-time"
-// @ts-ignore
 import { preToCodeBlock } from "mdx-utils"
 import { onlyText } from "react-children-utilities"
 import path from "path"
 import fs from "fs"
+import { execSync } from "child_process"
+import tw from "twin.macro"
 
 import HighlightedCode from "@/components/HighlightedCode"
 import Container from "@/components/Container"
 import RecursiveList, { createTableOfContents } from "@/components/RecursiveList"
 import Lightbox from "@/components/Lightbox"
+import ScrollToTop from "@/components/ScrollToTop"
+import PublishDate from "@/components/PublishDate"
 import useObserveActiveSection from "@/hooks/useObserveActiveSection"
 
 import type { ReactNode } from "react"
@@ -55,7 +58,7 @@ type HeadingTag = "h2" | "h3" | "h4" | "h5" | "h6"
 const headings = ["h2", "h3", "h4", "h5", "h6"].map(headingTag => [
   headingTag,
   ({ children }: { children: ReactNode }) => {
-    const idText = slugify(onlyText(children), { lower: true, strict: true })
+    const idText = slugify(onlyText(children), { lower: true })
     const Tag = headingTag as HeadingTag
 
     return (
@@ -85,8 +88,9 @@ const components = (slug: string, meta: Meta): Components => ({
     return (
       <>
         <h1>{children}</h1>
-        <div>
-          {meta.dateCreated} • by {meta.author} • {meta?.timeToRead?.text}
+        <div tw="font-mono text-sm dark:(text-gray-400)">
+          <PublishDate createdAt={new Date(meta.dateCreated)} /> • by {meta.author} •{" "}
+          {meta?.timeToRead?.text}
         </div>
       </>
     )
@@ -149,6 +153,9 @@ export default function Post({
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const articleRef = useRef<HTMLDivElement>(null!)
   const navRef = useRef<HTMLDivElement>(null!)
+  const [scrollContainer, _] = useState<HTMLElement | null>(() => {
+    return process.browser ? document.querySelector("#__next") : null
+  })
 
   useObserveActiveSection(navRef, articleRef)
   let toc = createTableOfContents(content)
@@ -167,7 +174,7 @@ export default function Post({
           type: "article",
           article: {
             publishedTime: meta.dateCreated,
-            modifiedTime: meta.dateLastModified,
+            ...(meta.dateLastModified && { modifiedTime: meta.dateLastModified }),
             authors: [meta.author],
             tags: meta.keywords,
           },
@@ -191,10 +198,11 @@ export default function Post({
               <img src={require(`_mdx_/${slug}/${meta.featuredImage}`)} />
             ) : null}
             <MDXRemote {...source} components={components(slug, meta)} scope={meta} />
-            <span>last modified: {meta.dateLastModified}</span>
+            <p>last modified git: {new Date(meta.dateLastModified).toDateString()}</p>
           </article>
         </main>
       </Container>
+      <ScrollToTop treshold={640} scrollContainer={scrollContainer} />
     </>
   )
 }
@@ -203,10 +211,15 @@ export const getStaticProps = async (context: GetStaticPropsContext<{ slug: stri
   const slug = String(context.params?.slug)
   const filePath = path.join(process.cwd(), `_mdx_/${slug}/index.mdx`)
   const rawContents = fs.readFileSync(filePath, "utf8")
-  const { mtime } = fs.statSync(filePath)
+
+  const allAuthorDates = execSync(
+    `git log --follow --name-status --pretty=format:%aI -- ${filePath}`,
+  ).toString()
+
+  const [lastEditExceptPathChangeDate] = allAuthorDates.match(/20[\d-T:.Z+]+$(?!\r?\nR)/m) || []
 
   const { content, data: meta }: { content: string; data: Meta } = matter(rawContents)
-  const timeToRead = readingTime(content, { wordsPerMinute: 150 })
+  const timeToRead = readingTime(content)
   const mdxSource = await serialize(content, {
     scope: meta,
   })
@@ -216,7 +229,13 @@ export const getStaticProps = async (context: GetStaticPropsContext<{ slug: stri
       source: mdxSource,
       slug,
       content,
-      meta: { ...meta, timeToRead, dateLastModified: JSON.stringify(mtime.toString()) },
+      meta: {
+        ...meta,
+        timeToRead,
+        dateLastModified: lastEditExceptPathChangeDate
+          ? JSON.stringify(lastEditExceptPathChangeDate)
+          : null,
+      },
     },
   }
 }

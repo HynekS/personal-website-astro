@@ -27,12 +27,10 @@ export function checkIfNestingIsValid(arr: Node[]) {
       break
     }
     // The nesting must go deeper step by step, only one by one
-    // @ts-ignore
-    /*
-    if (arr[i + 1].level && arr[i + 1].level - el.level > 1) {
+    if (arr[i + 1]?.level && Number(arr[i + 1]?.level) - Number(el?.level) > 1) {
       IsValid = false
       break
-    }*/
+    }
   }
   return IsValid
 }
@@ -45,7 +43,7 @@ export function createTableOfContents(content: string) {
     ? headings.map(heading => {
         const headingText = heading[2].trim()
         const headingType = heading[1].trim().length
-        const headingLink = slugify(headingText, { lower: true, strict: true })
+        const headingLink = slugify(headingText, { lower: true })
 
         return {
           title: headingText,

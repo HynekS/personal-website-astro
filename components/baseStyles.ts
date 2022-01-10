@@ -117,7 +117,8 @@ const baseStyles = css`
   .prism-code::-webkit-scrollbar-thumb {
     border-radius: 0.5rem;
     border: 5px solid rgba(1, 22, 39, 40);
-    background-color: rgb(139, 146, 151);
+    /* background-color: rgb(139, 146, 151); */
+    background-color: rgb(50, 62, 80);
   }
 `
 
