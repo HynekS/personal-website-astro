@@ -17,33 +17,33 @@ description:
 
 # Tracking last modified date in markdown
 
-I have migrated my blog completely to Markdown (MDX) after I realized that it's probably the best match my workflow. I am quite happy with the decision. However, I was missing a few features that typically come out of the box when using a conventional CMS – like tracking the date and time of the last edit.
+I have migrated my blog completely to Markdown (MDX) after I realized that it's probably the best match my workflow. I am quite happy with the decision. However, I was missing a few features that typically come out of the box when using a conventional CMS – like tracking the date of the last edit.
 
 I will go through a couple of possible solutions to this problem.
 
 ## Use a Markdown CMS
 
-If you are using VSCode, there is a [vscode-front-matter](https://github.com/estruyf/vscode-front-matter) plugin that claims to "give you the power and control of a full-blown CMS running straight in the editor".
+If you are using VSCode, there is the [vscode-front-matter](https://github.com/estruyf/vscode-front-matter) plugin that claims to "give you the power and control of a full-blown CMS running straight in the editor".
 
 I tested it briefly, and it looks cool. It has some issues, e. g. it doesn't seem to fully support MDX at the time (although this is probably [being fixed recently](https://github.com/estruyf/vscode-front-matter/issues/218)).
 
 While I would probably recommend this plugin to a friend if being asked, it was not the solution I choose. Why?
 
-Firstly, I like the pristine experience of creating posts solely by editing text files (just like the elders around the campfire remembers creating web pages using only HTML and CSS).
+Firstly, I like the pristine experience of creating posts solely by editing text files (just like the elders around the campfires remember creating web pages using nothing but HTML and CSS).
 
-Secondly, I didn't want to become dependent on another tool (however cool it was).
+Secondly, I didn't want to become dependent on another tool (however cool it could be).
 
 ## Use filesystem metadata
 
-My first – rather naïve – attempt was to use meta information accessible from a filesystem.
+My first – rather naïve – attempt was to use metadata that are accessible from the filesystem.
 
-But there is an issue: while _some_ metadata do live in the file itself (like image EXIF data), the basic info (including the last edit) lives in the filesystem itself. That's why the info is available even when the file is completely empty (its length is exactly `0` bytes).
+But there is an issue: while _some_ metadata do live in the file itself (like image EXIF data), the main info (including the last edit) is stored in the filesystem itself. That's why it is available even when the file is completely empty (its length is exactly `0` bytes).
 
 (I don't want to dive too deep into details, because I am nowhere near an expert on this topic.)
 
 The `fs` built-in library of Node.js has multiple methods to access file metadata. For simplicity sake, I will only refer to a synchronous api method, [`fs.statSync`](https://nodejs.org/api/fs.html#fsstatsyncpath-options).
 
-This method takes a path and returns a `fs.Stats` instance. So, to get the last edit date you can do something like that:
+This method takes a path and returns a `fs.Stats` instance. So, to get the last edit date, you can do something like that:
 
 ```js
 import * as fs from "fs"
@@ -62,7 +62,7 @@ It _won't_ work if you are deploying using continuous integration – like when 
 
 Why? Because the files are created from scratch on every build. So, while it hopefully won't break anything, the last modify date on _all_ your files will match the date of the last build, which is probably not what you want.
 
-### Next.js `getStaticProps` example
+### Next.js `getStaticProps` example (filesystem)
 
 ```ts
 export const getStaticProps = async context => {
@@ -72,7 +72,7 @@ export const getStaticProps = async context => {
 
   const { mtime } = fs.statSync(filePath)
 
-  const { content, data: meta }: { content: string; data: Meta } = matter(rawContents)
+  const { content, data: meta } = matter(rawContents)
 
   const mdxSource = await serialize(content, {
     scope: meta,
@@ -113,7 +113,9 @@ const lastAuthorDate = execSync(
 
 There are just a few minor ones I know of. We need to keep in mind that Git doesn't track the moment when edits are saved, but the moment when they are committed. Which is not necessarily bad, just different from the filesystem way to track updates.
 
-The second difference I can think of is in the way Git tracks _file path change_. When renaming or moving file, you'll have to make a commit and the commit date will appear as the last modification date, which is not optimal (the present-day filesystems, AFAIK, would ignore such a name and/or path change). I am currently investigating on how to find a way out of this. I'll be giving updates.
+The second difference I can think of is in the way Git tracks _file path change_. When renaming or moving file, you'll have to make a commit and the commit date will appear as the last modification date, which is not optimal (the present-day filesystems, AFAIK, would ignore such a name and/or path change).
+
+We can avoid this, but it'll take some effort. Git is, among other stuff, saving the brief commit status of a file (A for added, M for modified, R for renamed/moved – see the [full docs](https://git-scm.com/docs/git-status#_short_format)). Therefore, if we log the status among the other stats, we can easily filter out those starting with `R`:
 
 ```js
 import { execSync } from "child_process"
@@ -122,11 +124,28 @@ const allAuthorDates = execSync(
   `git log --follow --name-status --pretty=format:%aI -- <PATH>/<TO>/<FILE>.mdx`,
 ).toString()
 
-// Match the first date that is NOT followed by a line starting with R (for rename/move)
-const [lastEditExceptPathChangeDate] = allAuthorDates.match(/20[\d-T:.Z+]+$(?!\r?\nR)/m) || []
+/*
+ *  This command will give us something like the following commit list:
+ *  (commits with R100 status are merely renames/moves – no content updates)
+ *
+ *  2021-12-07T16:18:59+01:00
+ *  R100    old.test.md  test.md
+ *
+ *  2021-12-07T15:37:15+01:00
+ *  M       old.test.md
+ *
+ *  2021-10-07T10:30:11+01:00
+ *  A       old.test.md
+ */
+
+/*
+ *  Match the first date that is NOT followed by a line starting with R (for rename/move).
+ *  The last commit from example above will be ignored.
+ */
+const [lastEditExceptPathChangeDate] = allAuthorDates.match(/20[\d-T:.Z+]+$(?!\r?\nR)/m) || [] // 2021-12-07T15:37:15+01:00
 ```
 
-### Next.js `getStaticProps` example
+### Next.js `getStaticProps` example (Git)
 
 ```ts
 export const getStaticProps = async context => {
@@ -141,7 +160,7 @@ export const getStaticProps = async context => {
   // Match the first date that is NOT followed by a line starting with R (for rename/move)
   const [lastEditExceptPathChangeDate] = allAuthorDates.match(/20[\d-T:.Z+]+$(?!\r?\nR)/m) || []
 
-  const { content, data: meta }: { content: string; data: Meta } = matter(rawContents)
+  const { content, data: meta } = matter(rawContents)
 
   const mdxSource = await serialize(content, {
     scope: meta,
