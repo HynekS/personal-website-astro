@@ -230,7 +230,7 @@ export const getStaticProps = async (context: GetStaticPropsContext<{ slug: stri
   const remoteBranch = execSync(`git rev-parse --abbrev-ref HEAD`).toString().replace(/\n$/, "")
 
   //const gihubFileLink = `${githubRemote}/edit/${remoteBranch}/_mdx_/${slug}/index.mdx`
-  const gihubFileLink = `https://github.com/HynekS/personal-website/edit/${remoteBranch}/_mdx_/${slug}/index.mdx`
+  const gihubFileLink = `https://github.com/HynekS/personal-website/edit/main/_mdx_/${slug}/index.mdx`
 
   const allAuthorDates = execSync(
     `git log --follow --name-status --pretty=format:%aI -- ${filePath}`,
