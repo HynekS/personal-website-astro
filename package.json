@@ -42,7 +42,7 @@
     "img-optimize-loader": "^1.0.7",
     "mdx-prism": "^0.3.4",
     "mdx-utils": "^0.2.0",
-    "next": "^10.0.0",
+    "next": "10",
     "next-compose-plugins": "^2.2.1",
     "next-mdx-remote": "^3.0.8",
     "next-optimized-images": "^2.6.2",
@@ -82,7 +82,6 @@
     "eslint-plugin-jsx-a11y": "^6.4.1",
     "eslint-plugin-react": "^7.22.0",
     "eslint-plugin-react-hooks": "^4.2.0",
-    "netlify-cli": "^8.6.2",
     "postcss": "^8.2.8",
     "sanity-codegen": "^0.9.1",
     "typescript": "^4.1.3"
