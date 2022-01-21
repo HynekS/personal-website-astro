@@ -111,7 +111,7 @@ const lastAuthorDate = execSync(
 
 ### Caveats(?)
 
-There are just a few minor ones I know of. We need to keep in mind that Git doesn't track the moment when edits are saved, but the moment when they are committed. Which is not necessarily bad, just different from the filesystem way to track updates.
+There are just a few minor ones I know of. We need to keep in mind that Git doesn't track the moment edits are saved, but the one they are committed. Which is not necessarily bad, just different from the filesystem way to track updates. (Once I was baffled by funny dates of my posts edits; then I realized that I just _kinda forget about_ the need to commit them.) 
 
 The second difference I can think of is in the way Git tracks _file path change_. When renaming or moving file, you'll have to make a commit and the commit date will appear as the last modification date, which is not optimal (the present-day filesystems, AFAIK, would ignore such a name and/or path change).
 
@@ -173,9 +173,7 @@ export const getStaticProps = async context => {
       content,
       meta: {
         ...meta,
-        // Next.js is throwing error unless I serialize the date to JSON
-        // Also, `undefined` can't be serialized, so we need to use `null` if date is missing (no commits yet)
-        dateLastModified: JSON.stringify(lastEditExceptPathChangeDate || null),
+        dateLastModified: lastEditExceptPathChangeDate.toString(),
       },
     },
   }
@@ -186,13 +184,13 @@ export const getStaticProps = async context => {
 
 Honestly: I am tracking it manually (when I'm done writing, I'd update the frontmatter). One of the reasons is that I've migrated my older blogposts to MDX, thus niether the file creation dates nor the commit dates do match the genuine birth dates.
 
-But _can_ it be done programmaticaly?
+But _can_ it be done programmatically?
 
 If you are deploying the already built static site, you can use the filesystem meta: you get it as a `ctime` using Node.js. But beware: the date when the file was created can vastly differ from the actual date of publishing (e. g. a long post that takes two weeks to finish).
 
 So how about Git? Well, it _can_ be done, but it is not safe. As far as I investigated, there is no reliable way you can get the date of the first file commit once you rename/move the original file. See [answers in this SO thread](https://stackoverflow.com/questions/2314652/is-it-possible-to-move-rename-files-in-git-and-maintain-their-history).
 
-I made some tests and I once lost a file history when I renamed a text file _and_ add a question mark to its "Hello World!" contents in one commit. On the other hand, my blogposts Git history _sustained_ its path updates.
+I made some tests. Once, I've lost a file history as soon as I renamed a text file _and_ added a question mark to its "Hello World!" content in single commit. On the other hand, my blog posts history _sustained_ its path updates. Generally, if the content is big enough (how exactly?), Git should be able to track the file path updates, but it's not guaranteed.
 
 If you are willing to take the risk, you can get the first commit date like that:
 
