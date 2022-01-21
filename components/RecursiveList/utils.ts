@@ -36,7 +36,8 @@ export function checkIfNestingIsValid(arr: Node[]) {
 }
 
 export function createTableOfContents(content: string) {
-  const regexp = new RegExp(/(#{2,6} )(.+?)(?=\r\n)/, "gm")
+  // TODO make the carriage return optional!
+  const regexp = new RegExp(/(#{2,6} )(.+?)(?=\r?\n)/, "gm")
   const headings = [...content.matchAll(regexp)]
 
   const tableOfContents = headings.length
