@@ -158,7 +158,8 @@ export default function Post({
   })
 
   useObserveActiveSection(navRef, articleRef)
-  let toc = createTableOfContents(content)
+
+  //let toc = createTableOfContents(content)
 
   return (
     <>
@@ -187,7 +188,9 @@ export default function Post({
       />
       <Container>
         <aside tw="hidden md:(block w-1/5 pt-6)">
-          {toc ? <RecursiveList tree={toc} ref={navRef}></RecursiveList> : null}
+          {createTableOfContents(content) ? (
+            <RecursiveList tree={createTableOfContents(content)} ref={navRef} />
+          ) : null}
         </aside>
         <main tw="flex-auto max-w-full margin-right[calc((50% - 30ch)/2)]">
           <article
@@ -214,7 +217,6 @@ export default function Post({
             </p>
           </article>
         </main>
-        <div id="fix-layout-jump" />
       </Container>
       <ScrollToTop treshold={640} scrollContainer={scrollContainer} />
     </>
