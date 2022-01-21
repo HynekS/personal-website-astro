@@ -3,7 +3,7 @@ import tw from "twin.macro"
 
 interface ScrollToTopProps {
   treshold: number
-  scrollContainer: HTMLElement | null
+  scrollContainer: HTMLElement | Window | null
 }
 
 const ScrollToTop = ({ treshold, scrollContainer }: ScrollToTopProps) => {
@@ -32,8 +32,8 @@ const ScrollToTop = ({ treshold, scrollContainer }: ScrollToTopProps) => {
   }
 
   const toggleVisible = () => {
-    const scrolled = scrollContainer?.scrollTop
-    console.log({ scrolled })
+    const scrolled =
+      scrollContainer instanceof Window ? scrollContainer?.scrollY : scrollContainer.scrollTop
 
     if (scrolled > treshold) {
       setVisible(true)
@@ -52,10 +52,11 @@ const ScrollToTop = ({ treshold, scrollContainer }: ScrollToTopProps) => {
   return (
     <button
       css={[
-        tw`fixed bottom-6 right-10 bg-primary origin-center transition-transform shadow-xl rounded-full text-primary flex items-center justify-center border-2 p-1 focus:(outline-none ring-0) dark:(border-gray-500)`,
+        tw`fixed bottom-6 right-10 bg-primary origin-center transition-transform shadow-xl rounded-full text-primary flex items-center justify-center border-2 p-3 focus:(outline-none ring-0) dark:(border-gray-500)`,
         visible ? tw`scale-100` : tw`scale-0`,
       ]}
       onClick={scrollToTop}
+      aria-label="Scroll to top"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

@@ -2,7 +2,7 @@ const SunIcon = () => (
   <svg
     tw="w-6 h-6"
     fill="none"
-    stroke="currentColor"
+    stroke="#e4d1bb"
     viewBox="0 0 24 24"
     xmlns="http://www.w3.org/2000/svg"
   >

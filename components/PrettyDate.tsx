@@ -33,8 +33,8 @@ const getRelativeTime = (
   return null
 }
 
-type PublishDateProps = {
-  createdAt: Date
+type PrettyDateProps = {
+  date: Date
   locale?: string
   dateStyles?: TwStyle | string
   prepositionStyles?: TwStyle | string
@@ -42,15 +42,15 @@ type PublishDateProps = {
   absolutePreposition?: string
 }
 
-const PublishDate = ({
-  createdAt,
+const PrettyDate = ({
+  date,
   locale = "en-GB",
   dateStyles,
   prepositionStyles,
-  relativePreposition = "posted",
-  absolutePreposition = "posted on",
-}: PublishDateProps): JSX.Element => {
-  const timestamp = new Date(createdAt).getTime()
+  relativePreposition = "",
+  absolutePreposition = "on",
+}: PrettyDateProps): JSX.Element => {
+  const timestamp = new Date(date).getTime()
   const relativeDate = getRelativeTime(timestamp)
   const [dd, mmmm, yy] = new Date(timestamp)
     .toLocaleDateString(locale, {
@@ -81,4 +81,4 @@ const PublishDate = ({
   )
 }
 
-export default PublishDate
+export default PrettyDate

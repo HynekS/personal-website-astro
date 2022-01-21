@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
 import Popup from "reactjs-popup"
 import { XIcon, ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/outline"
 import tw, { css } from "twin.macro"
@@ -8,31 +8,37 @@ type LightboxProps = {
   slug: string
 }
 
+const getScrollbarWidth = () => window.innerWidth - document.documentElement.clientWidth
+
 const Lightbox = (props: LightboxProps): JSX.Element | null => {
   const { images = [], slug } = props
 
   const [isPopupOpen, setIsPopupOpen] = useState(false)
   const [currentIndex, setCurrentIndex] = useState(0)
 
+  const previousButtonRef = useRef(null)
+  const nextButtonRef = useRef(null)
+
   // https://stackoverflow.com/questions/4467539/javascript-modulo-gives-a-negative-result-for-negative-numbers
   const rotateIndexIfOutOfLimits = (i: number, len: number = images.length) =>
     ((i % len) + len) % len
 
-  const handleKeyUp = (e: KeyboardEvent, idx: number) => {
-    console.log(e.key, idx)
-
-    const nextKeys = ["ArrowRight", "ArrowDown", "PageDown", "D", "X"]
-    const previousKeys = ["ArrowLeft", "ArrowUp", "PageUp", "A", "W"]
-    if (nextKeys.includes(e.key)) {
-      console.log("next", idx)
-
-      setCurrentIndex(rotateIndexIfOutOfLimits(idx + 1))
-      console.log(idx)
+  // This hacky way is used because on opening popup, the state is stale and can't be properly updated
+  const handleKeyUp = (e: KeyboardEvent) => {
+    const mouseClick = () =>
+      new MouseEvent("click", {
+        view: window,
+        bubbles: true,
+        cancelable: true,
+        buttons: 1,
+      })
+    const nextKeys = ["ArrowRight", "ArrowDown", "PageDown", "D", "X", "6", "2"]
+    const previousKeys = ["ArrowLeft", "ArrowUp", "PageUp", "A", "W", "4", "8"]
+    if (nextKeys.includes(e.key) && previousButtonRef.current) {
+      previousButtonRef.current.dispatchEvent(mouseClick())
     }
-    if (previousKeys.includes(e.key)) {
-      console.log("prev", idx)
-      setCurrentIndex(rotateIndexIfOutOfLimits(idx - 1))
-      console.log(idx)
+    if (previousKeys.includes(e.key) && nextButtonRef.current) {
+      nextButtonRef.current.dispatchEvent(mouseClick())
     }
   }
 
@@ -62,11 +68,18 @@ const Lightbox = (props: LightboxProps): JSX.Element | null => {
         open={isPopupOpen}
         modal
         nested
-        lockScroll
         onOpen={() => {
-          window?.addEventListener("keyup", e => handleKeyUp(e, currentIndex))
+          document.getElementById("__next").style.width =
+            String(document.getElementById("__next").clientWidth) + "px"
+          document.body.style.overflowY = "hidden"
+
+          window.addEventListener("keyup", handleKeyUp)
         }}
         onClose={() => {
+          document.getElementById("__next").style.removeProperty("width")
+          document.body.style.removeProperty("overflow-y")
+
+          window.removeEventListener("keyup", handleKeyUp)
           return setIsPopupOpen(false)
         }}
         css={css`
@@ -102,6 +115,7 @@ const Lightbox = (props: LightboxProps): JSX.Element | null => {
             </button>
             {images.length > 1 ? (
               <button
+                ref={previousButtonRef}
                 onClick={() => {
                   setCurrentIndex(rotateIndexIfOutOfLimits(currentIndex - 1))
                 }}
@@ -117,6 +131,7 @@ const Lightbox = (props: LightboxProps): JSX.Element | null => {
 
             {images.length > 1 ? (
               <button
+                ref={nextButtonRef}
                 onClick={() => {
                   setCurrentIndex(rotateIndexIfOutOfLimits(currentIndex - 1))
                 }}

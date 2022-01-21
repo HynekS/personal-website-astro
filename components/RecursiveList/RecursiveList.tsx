@@ -24,20 +24,25 @@ const RecursiveList = forwardRef<HTMLElement, { tree: Node[] }>(
   ({ tree }, ref): JSX.Element => (
     <nav
       ref={ref}
-      tw="p-4 lg:(sticky left-0 top-0)"
       css={css`
-        ${tw`transition-all duration-75 text-primary`}
+        ${tw`transition-all duration-75 text-primary p-4 lg:(sticky left-0 top-0)`}
+        a {
+          ${tw`block ml-2`}
+        }
+        li {
+          ${tw`relative`}
+        }
         li svg {
-          ${tw`opacity-0`}
+          ${tw`opacity-0 absolute top-0 left-0 w-[1rem] h-[calc(1em * 1.5)]`}
         }
         li li svg {
-          ${tw`mr-6 ml--3`}
+          ${tw`ml--3`}
         }
         li.active > svg {
           ${tw`opacity-100`}
         }
-        .active /*> a:first-of-type*/ {
-          ${tw`text-accent`}
+        .active {
+          ${tw`dark:(color[var(--color-links)]) light:(color[var(--color-primary)])`}
         }
         ul li {
           ${tw`pl-3`}
@@ -64,7 +69,15 @@ const Branch = ({ title, nodes, slug }: Node): JSX.Element => {
     <ul>
       <li>
         <ArrowRight />
-        <a href={`#${slug}`}>{title}</a>
+        <a
+          href={`#${slug}`}
+          onClick={e => {
+            e.preventDefault()
+            document.getElementById(slug)?.scrollIntoView({ behavior: "smooth" })
+          }}
+        >
+          {title}
+        </a>
         {hasChildren &&
           nodes.map(branch => {
             const { slug, title, nodes } = branch || {}

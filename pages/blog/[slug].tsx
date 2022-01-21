@@ -11,14 +11,13 @@ import { onlyText } from "react-children-utilities"
 import path from "path"
 import fs from "fs"
 import { execSync } from "child_process"
-import tw from "twin.macro"
 
 import HighlightedCode from "@/components/HighlightedCode"
 import Container from "@/components/Container"
 import RecursiveList, { createTableOfContents } from "@/components/RecursiveList"
 import Lightbox from "@/components/Lightbox"
 import ScrollToTop from "@/components/ScrollToTop"
-import PublishDate from "@/components/PublishDate"
+import PrettyDate from "@/components/PrettyDate"
 import useObserveActiveSection from "@/hooks/useObserveActiveSection"
 
 import type { ReactNode } from "react"
@@ -89,7 +88,7 @@ const components = (slug: string, meta: Meta): Components => ({
       <>
         <h1>{children}</h1>
         <div tw="font-mono text-sm dark:(text-gray-400)">
-          <PublishDate createdAt={new Date(meta.dateCreated)} /> • by {meta.author} •{" "}
+          posted <PrettyDate date={new Date(meta.dateCreated)} /> ∙ by {meta.author} ∙{" "}
           {meta?.timeToRead?.text}
         </div>
       </>
@@ -124,6 +123,7 @@ export type Meta = {
   keywords?: string[]
   description?: string
   timeToRead?: ReadTimeResults
+  gihubFileLink?: string
 }
 
 const getFeaturedImage = (slug: string, meta: Meta) => {
@@ -153,8 +153,8 @@ export default function Post({
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const articleRef = useRef<HTMLDivElement>(null!)
   const navRef = useRef<HTMLDivElement>(null!)
-  const [scrollContainer, _] = useState<HTMLElement | null>(() => {
-    return process.browser ? document.querySelector("#__next") : null
+  const [scrollContainer, _] = useState<HTMLElement | Window | null>(() => {
+    return process.browser ? window : null
   })
 
   useObserveActiveSection(navRef, articleRef)
@@ -186,21 +186,35 @@ export default function Post({
         }}
       />
       <Container>
-        <aside tw="hidden md:(block w-1/5)">
+        <aside tw="hidden md:(block w-1/5 pt-6)">
           {toc ? <RecursiveList tree={toc} ref={navRef}></RecursiveList> : null}
         </aside>
         <main tw="flex-auto max-w-full margin-right[calc((50% - 30ch)/2)]">
           <article
             ref={articleRef}
-            tw="prose prose-sm mx-auto pt-8 px-4 md:(prose) lg:(prose-lg px-0) dark:(prose-dark)"
+            tw="prose prose-sm mx-auto pt-8 px-4 md:(prose) lg:(prose-lg px-0) dark:(prose-dark) pb-16"
           >
             {meta.featuredImage ? (
               <img src={require(`_mdx_/${slug}/${meta.featuredImage}`)} />
             ) : null}
             <MDXRemote {...source} components={components(slug, meta)} scope={meta} />
-            <p>last modified git: {new Date(meta.dateLastModified).toDateString()}</p>
+            {meta.dateLastModified ? (
+              <p>
+                last modified <PrettyDate date={new Date(meta.dateLastModified)} />
+              </p>
+            ) : null}
+            <hr />
+            <p tw="text-base">
+              If you find anything in this post that should be improved (either factually or
+              linguistically), feel free to{" "}
+              <a href={meta.gihubFileLink} rel="noopener noreferer" target="_blank">
+                edit it on Github
+              </a>
+              .
+            </p>
           </article>
         </main>
+        <div id="fix-layout-jump" />
       </Container>
       <ScrollToTop treshold={640} scrollContainer={scrollContainer} />
     </>
@@ -211,6 +225,11 @@ export const getStaticProps = async (context: GetStaticPropsContext<{ slug: stri
   const slug = String(context.params?.slug)
   const filePath = path.join(process.cwd(), `_mdx_/${slug}/index.mdx`)
   const rawContents = fs.readFileSync(filePath, "utf8")
+
+  const githubRemote = execSync(`git remote get-url origin`).toString().replace(/\n$/, "")
+  const remoteBranch = execSync(`git rev-parse --abbrev-ref HEAD`).toString().replace(/\n$/, "")
+
+  const gihubFileLink = `${githubRemote}/edit/${remoteBranch}/_mdx_/${slug}/index.mdx`
 
   const allAuthorDates = execSync(
     `git log --follow --name-status --pretty=format:%aI -- ${filePath}`,
@@ -232,9 +251,8 @@ export const getStaticProps = async (context: GetStaticPropsContext<{ slug: stri
       meta: {
         ...meta,
         timeToRead,
-        dateLastModified: lastEditExceptPathChangeDate
-          ? JSON.stringify(lastEditExceptPathChangeDate)
-          : null,
+        dateLastModified: lastEditExceptPathChangeDate.toString(),
+        gihubFileLink,
       },
     },
   }

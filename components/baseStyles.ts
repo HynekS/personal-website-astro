@@ -13,11 +13,11 @@ const baseStyles = css`
   }
 
   .dark {
-    --bg-primary: #1c232e /*#1a2633*/;
+    --bg-primary: #1c232e;
     --bg-secondary: ${colors.coolGray["900"]};
     --text-primary: #d4cece;
     --text-secondary: #e9e1e1;
-    --color-primary: #e4d1bb; /* gold: */
+    --color-primary: ${colors.cyan["300"]}; /* #e4d1bb gold: */
     --color-links: #7ecbd7;
   }
 
@@ -31,42 +31,24 @@ const baseStyles = css`
   }
 
   @font-face {
-    font-family: "Jost";
-    src: local("Jost"),
-      url("/assets/fonts/Jost-Italic-VariableFont_wght.ttf") format("truetype-variations");
+    font-family: "Nunito";
+    src: local("Nunito"), url("/assets/fonts/Nunito-Italic[wght].ttf") format("truetype-variations");
     font-weight: 125 950;
     font-stretch: 75% 125%;
     font-style: italic;
     font-display: swap;
   }
 
-  html {
-    height: 100%;
-    width: 100vw;
-    scroll-behavior: smooth;
-    /*overflow-y: overlay;*/
-    -ms-overflow-style: -ms-autohiding-scrollbar;
-  }
-
   @media (prefers-reduced-motion) {
     html {
-      scroll-behavior: auto;
+      scroll-behavior: auto !important;
     }
   }
 
   body {
     ${tw`h-full transition-all duration-200 bg-primary text-primary font-base`}
   }
-  /*
-  body.light {
-    background: radial-gradient(
-      circle,
-      rgba(255, 255, 255, 1) 0%,
-      rgba(255, 255, 255, 1) 60%,
-      rgb(224 251 257) 110%
-    );
-  }
-  */
+
   body.dark {
     background: radial-gradient(
       circle,
@@ -74,13 +56,17 @@ const baseStyles = css`
       rgba(28, 35, 46, 1) 30%,
       rgba(17, 24, 35, 1) 110%
     );
+    background-attachment: fixed;
+  }
+
+  @-moz-document url-prefix() {
+    body.dark {
+      background: var(--bg-primary);
+    }
   }
 
   #__next {
     height: 100%;
-    min-height: 100%;
-    scroll-behavior: smooth;
-    overflow-x: hidden;
   }
 
   h1,
@@ -116,7 +102,6 @@ const baseStyles = css`
   .prism-code::-webkit-scrollbar-thumb {
     border-radius: 0.5rem;
     border: 5px solid rgba(1, 22, 39, 40);
-    /* background-color: rgb(139, 146, 151); */
     background-color: rgb(50, 62, 80);
   }
 `
