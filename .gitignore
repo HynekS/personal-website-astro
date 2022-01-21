@@ -3,5 +3,9 @@ node_modules
 out
 .env
 *.log
+
 # Local Netlify folder
 .netlify
+
+# Misc
+get-github-link.sh
