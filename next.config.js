@@ -66,13 +66,6 @@ module.exports = withPlugins(
         })
       }
 
-      if (!options.isServer) {
-        // Fixes npm packages that depend on `fs` module
-        //config.node = { fs: "empty" }
-        //config.resolve.fallback.fs = false;
-        //config.resolve.fallback.fs = false
-        webpack5: false
-      }
       return config
     },
   },

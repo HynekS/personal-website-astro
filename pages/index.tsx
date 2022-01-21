@@ -15,7 +15,7 @@ import PrettyDate from "@/components/PrettyDate"
 const DESCRIPTION = "A blog featurnig posts about React, Next.js, front-end development & more."
 
 const Index = ({ links = [] }: InferGetStaticPropsType<typeof getStaticProps>): JSX.Element => {
-  let sortedLinks = links
+  const sortedLinks = links
     .slice()
     .sort((a, b) => (new Date(String(a.dateCreated)) < new Date(String(b.dateCreated)) ? 1 : -1))
 

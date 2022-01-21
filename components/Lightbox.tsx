@@ -56,7 +56,7 @@ const Lightbox = (props: LightboxProps): JSX.Element | null => {
               src={require(`_mdx_/${slug}/${image.src}`)}
               alt={alt}
               onClick={() => {
-                let i = images.findIndex(image => image.src === src)
+                const i = images.findIndex(image => image.src === src)
                 setCurrentIndex(i)
                 setIsPopupOpen(true)
               }}

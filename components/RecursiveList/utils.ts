@@ -12,10 +12,10 @@ export function checkIfNestingIsValid(arr: Node[]) {
 
   const canBeParsedAsInteger = (val: unknown) => Number.isInteger(Number(val))
 
-  let baseLevel = arr[0].level
+  const baseLevel = arr[0].level
   let IsValid = true
 
-  for (let [i, el] of arr.entries()) {
+  for (const [i, el] of arr.entries()) {
     // check if propName exists and can be cast to integer (beware of boolean edge case!)
     if (!canBeParsedAsInteger(el.level)) {
       IsValid = false
@@ -39,7 +39,7 @@ export function createTableOfContents(content: string) {
   const regexp = new RegExp(/(#{2,6} )(.+?)(?=\r\n)/, "gm")
   const headings = [...content.matchAll(regexp)]
 
-  let tableOfContents = headings.length
+  const tableOfContents = headings.length
     ? headings.map(heading => {
         const headingText = heading[2].trim()
         const headingType = heading[1].trim().length
@@ -63,7 +63,7 @@ export function createTableOfContents(content: string) {
     : []
 
   function buildTree(array: typeof WithadjustedLevels) {
-    let levels: Node[] = [{ nodes: undefined }]
+    const levels: Node[] = [{ nodes: undefined }]
     array.forEach(function (a) {
       levels.length = a.level
       levels[a.level - 1].nodes = levels[a.level - 1].nodes || []

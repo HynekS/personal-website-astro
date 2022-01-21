@@ -26,7 +26,7 @@ const getRelativeTime = (
 
   if (Math.abs(elapsed) > limit) return null
 
-  for (let u of Object.keys(units)) {
+  for (const u of Object.keys(units)) {
     if (Math.abs(elapsed) > units[u as Unit] || u == "second")
       return rtf.format(Math.round(elapsed / units[u as Unit]), u as Unit)
   }
