@@ -13,13 +13,13 @@ class MyDocument extends Document {
           <meta httpEquiv="Content-type" content="text/html; charset=utf-8" />
           <link
             rel="preload"
-            href="/assets/fonts/Jost-VariableFont_wght.ttf"
+            href="/assets/fonts/Nunito[wght].ttf"
             as="font"
             crossOrigin="anonymous"
           />
           <link
             rel="preload"
-            href="/assets/fonts/Jost-Italic-VariableFont_wght.ttf"
+            href="/assets/fonts/Nunito-Italic[wght].ttf"
             as="font"
             crossOrigin="anonymous"
           />

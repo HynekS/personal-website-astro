@@ -22,9 +22,8 @@ const baseStyles = css`
   }
 
   @font-face {
-    font-family: "Jost";
-    src: local("Jost"),
-      url("/assets/fonts/Jost-VariableFont_wght.ttf") format("truetype-variations");
+    font-family: "Nunito";
+    src: local("Nunito"), url("/assets/fonts/Nunito[wght].ttf") format("truetype-variations");
     font-weight: 125 950;
     font-stretch: 75% 125%;
     font-style: normal;
