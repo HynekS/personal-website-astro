@@ -95,7 +95,9 @@ const components = (slug: string, meta: Meta): Components => ({
     )
   },
   a: ({ href, children, ...props }: LinkProps) => (
-    <InternalExternalLink href={href} children={children} {...props} />
+    <InternalExternalLink href={href} {...props}>
+      {children}
+    </InternalExternalLink>
   ),
   pre: (preProps: PreProps) => {
     const props = preToCodeBlock(preProps)
@@ -159,10 +161,14 @@ export default function Post({
 
   useObserveActiveSection(navRef, articleRef)
 
-  //let toc = createTableOfContents(content)
+  const toc = createTableOfContents(content)
 
   return (
     <>
+      content:
+      <pre> {JSON.stringify(content, null, 2)}</pre>
+      toc:
+      <pre> {JSON.stringify(toc, null, 2)}</pre>
       <NextSeo
         title={meta.title + " | HynekS"}
         description={meta.description ?? ""}
@@ -188,9 +194,7 @@ export default function Post({
       />
       <Container>
         <aside tw="hidden md:(block w-1/5 pt-6)">
-          {createTableOfContents(content) ? (
-            <RecursiveList tree={createTableOfContents(content)} ref={navRef} />
-          ) : null}
+          {toc ? <RecursiveList tree={toc} ref={navRef} /> : null}
         </aside>
         <main tw="flex-auto max-w-full margin-right[calc((50% - 30ch)/2)]">
           <article
@@ -210,7 +214,7 @@ export default function Post({
             <p tw="text-base">
               If you find anything in this post that should be improved (either factually or
               linguistically), feel free to{" "}
-              <a href={meta.gihubFileLink} rel="noopener noreferer" target="_blank">
+              <a href={meta.gihubFileLink} rel="noopener noreferrer" target="_blank">
                 edit it on Github
               </a>
               .
@@ -229,7 +233,7 @@ export const getStaticProps = async (context: GetStaticPropsContext<{ slug: stri
   const rawContents = fs.readFileSync(filePath, "utf8")
 
   // const githubRemote = execSync(`git remote get-url origin`).toString().replace(/\n$/, "")
-  const remoteBranch = execSync(`git rev-parse --abbrev-ref HEAD`).toString().replace(/\n$/, "")
+  // const remoteBranch = execSync(`git rev-parse --abbrev-ref HEAD`).toString().replace(/\n$/, "")
 
   //const gihubFileLink = `${githubRemote}/edit/${remoteBranch}/_mdx_/${slug}/index.mdx`
   const gihubFileLink = `https://github.com/HynekS/personal-website/edit/main/_mdx_/${slug}/index.mdx`
