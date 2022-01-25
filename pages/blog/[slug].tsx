@@ -165,10 +165,6 @@ export default function Post({
 
   return (
     <>
-      content:
-      <pre> {JSON.stringify(content, null, 2)}</pre>
-      toc:
-      <pre> {JSON.stringify(toc, null, 2)}</pre>
       <NextSeo
         title={meta.title + " | HynekS"}
         description={meta.description ?? ""}

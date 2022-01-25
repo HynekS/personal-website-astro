@@ -22,8 +22,18 @@ const baseStyles = css`
   }
 
   @font-face {
+    font-family: "Nunito-fallback";
+    ascent-override: 110%;
+    descent-override: 20%;
+    line-gap-override: normal;
+    advance-override: 10;
+    src: local(Arial);
+  }
+
+  @font-face {
     font-family: "Nunito";
-    src: local("Nunito"), url("/assets/fonts/Nunito[wght].ttf") format("truetype-variations");
+    /*src: local("Nunito"), url("/assets/fonts/Nunito[wght].ttf") format("truetype-variations");*/
+    src: /*local("Nunito"),*/ url("/assets/fonts/Nunito[wght]-subset.woff2") format("woff2");
     font-weight: 125 950;
     font-stretch: 75% 125%;
     font-style: normal;
@@ -32,7 +42,8 @@ const baseStyles = css`
 
   @font-face {
     font-family: "Nunito";
-    src: local("Nunito"), url("/assets/fonts/Nunito-Italic[wght].ttf") format("truetype-variations");
+    /*src: local("Nunito"), url("/assets/fonts/Nunito-Italic[wght].ttf") format("truetype-variations");*/
+    src: /*local("Nunito"),*/ url("/assets/fonts/Nunito-Italic[wght]-subset.woff2") format("woff2");
     font-weight: 125 950;
     font-stretch: 75% 125%;
     font-style: italic;

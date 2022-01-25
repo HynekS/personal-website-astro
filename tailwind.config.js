@@ -13,8 +13,8 @@ module.exports = {
         accent: "var(--color-primary)",
       },
       fontFamily: {
-        base: `Nunito, system-ui, -apple-system, 'Segoe UI', 'Open Sans', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji'`,
-        display: `Nunito, system-ui, -apple-system, 'Segoe UI', 'Open Sans', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji'`,
+        base: `Nunito, Nunito-fallback, system-ui, -apple-system, 'Segoe UI', 'Open Sans', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji'`,
+        display: `Nunito, Nunito-fallback, system-ui, -apple-system, 'Segoe UI', 'Open Sans', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji'`,
         mono: `Consolas, ui-monospace, SFMono-Regular, Menlo, Monaco, "Liberation Mono", "Courier New", monospace`,
       },
       /* Temporary extension to get all the tailwind v3 colors in twin.macro. Should be removed when macro is updated */

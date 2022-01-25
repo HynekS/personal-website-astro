@@ -1,5 +1,4 @@
 import Document, { Html, Head, Main, NextScript } from "next/document"
-
 class MyDocument extends Document {
   static async getInitialProps(ctx) {
     const initialProps = await Document.getInitialProps(ctx)
@@ -13,13 +12,13 @@ class MyDocument extends Document {
           <meta httpEquiv="Content-type" content="text/html; charset=utf-8" />
           <link
             rel="preload"
-            href="/assets/fonts/Nunito[wght].ttf"
+            href="/assets/fonts/Nunito[wght]-subset.woff2"
             as="font"
             crossOrigin="anonymous"
           />
           <link
             rel="preload"
-            href="/assets/fonts/Nunito-Italic[wght].ttf"
+            href="/assets/fonts/Nunito-Italic[wght]-subset.woff2"
             as="font"
             crossOrigin="anonymous"
           />
