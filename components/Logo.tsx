@@ -1,59 +1,20 @@
-// @ts-nocheck
-// TS is complaining abou incopatible 'font', 'glyph' and 'FontFace' properties
-// https://stackoverflow.com/questions/70782154/svg-with-embedded-font-as-a-react-component-property-font-fontface-gly
-import React from "react"
+import * as React from "react"
+import { SVGProps } from "react"
 
-const SvgComponent = props => (
-  <svg
-    fill="currentColor"
-    viewBox="0 0 34 12"
-    xmlns="http://www.w3.org/2000/svg"
-    tw="w-20"
-    xmlSpace="preserve"
-    {...props}
-  >
-    <font horizAdvX={1000}>
-      <fontFace fontFamily="VT323" underlinePosition={-124} underlineThickness={50} />
-      <glyph
-        unicode="H"
-        horizAdvX={400}
-        d="M364 440c0-15-1-29-4-40 3-11 4-24 4-40 0-15-1-29-4-40 3-11 4-24 4-40 0-15-1-29-4-40 3-11 4-24 4-40 0-15-1-29-4-40 3-11 4-24 4-40 0-15-1-29-4-40 3-11 4-24 4-40 0-15-1-29-4-40h-80c-3 11-4 25-4 40 0 16 1 29 4 40-3 11-4 25-4 40 0 16 1 29 4 40-3 11-4 25-4 40 0 16 1 29 4 40H120c3-11 4-24 4-40 0-15-1-29-4-40 3-11 4-24 4-40 0-15-1-29-4-40 3-11 4-24 4-40 0-15-1-29-4-40H40c-3 11-4 25-4 40 0 16 1 29 4 40-3 11-4 25-4 40 0 16 1 29 4 40-3 11-4 25-4 40 0 16 1 29 4 40-3 11-4 25-4 40 0 16 1 29 4 40-3 11-4 25-4 40 0 16 1 29 4 40-3 11-4 25-4 40 0 16 1 29 4 40-3 11-4 25-4 40 0 16 1 29 4 40h80c3-11 4-24 4-40 0-15-1-29-4-40 3-11 4-24 4-40 0-15-1-29-4-40 3-11 4-24 4-40 0-15-1-29-4-40h160c-3 11-4 25-4 40 0 16 1 29 4 40-3 11-4 25-4 40 0 16 1 29 4 40-3 11-4 25-4 40 0 16 1 29 4 40h80c3-11 4-24 4-40 0-15-1-29-4-40 3-11 4-24 4-40z"
-      />
-      <glyph
-        unicode="S"
-        horizAdvX={400}
-        d="M364 200c0-15-1-29-4-40 3-11 4-24 4-40 0-15-1-29-4-40h-40c3-11 4-24 4-40 0-15-1-29-4-40H80c-3 11-4 25-4 40 0 16 1 29 4 40H40c-3 11-4 25-4 40 0 16 1 29 4 40h80c3-11 4-24 4-40 0-15-1-29-4-40h160c-3 11-4 25-4 40 0 16 1 29 4 40-3 11-4 25-4 40 0 16 1 29 4 40H80c-3 11-4 25-4 40 0 16 1 29 4 40H40c-3 11-4 25-4 40 0 16 1 29 4 40-3 11-4 25-4 40 0 16 1 29 4 40h40c-3 11-4 25-4 40 0 16 1 29 4 40h240c3-11 4-24 4-40 0-15-1-29-4-40h40c3-11 4-24 4-40 0-15-1-29-4-40h-80c-3 11-4 25-4 40 0 16 1 29 4 40H120c3-11 4-24 4-40 0-15-1-29-4-40 3-11 4-24 4-40 0-15-1-29-4-40h200c3-11 4-24 4-40 0-15-1-29-4-40h40c3-11 4-24 4-40z"
-      />
-      <glyph
-        unicode="e"
-        horizAdvX={400}
-        d="M360 240c3-11 4-24 4-40 0-15-1-29-4-40H150c3-11 4-24 4-40 0-15-1-29-4-40h170c3-11 4-24 4-40 0-15-1-29-4-40H120c-3 11-4 25-4 40 0 16 1 29 4 40H70c-3 11-4 25-4 40 0 16 1 29 4 40H40c-3 11-4 25-4 40 0 16 1 29 4 40h30c-3 11-4 25-4 40 0 16 1 29 4 40h50c-3 11-4 25-4 40 0 16 1 29 4 40h200c3-11 4-24 4-40 0-15-1-29-4-40h40c3-11 4-24 4-40 0-15-1-29-4-40m-84 40c0 16 1 29 4 40H150c3-11 4-24 4-40 0-15-1-29-4-40h130c-3 11-4 25-4 40z"
-      />
-      <glyph
-        unicode="k"
-        horizAdvX={400}
-        d="M364 40c0-15-1-29-4-40H220c-3 11-4 25-4 40 0 16 1 29 4 40h-40c-3 11-4 25-4 40 0 16 1 29 4 40h-60c3-11 4-24 4-40 0-15-1-29-4-40 3-11 4-24 4-40 0-15-1-29-4-40H40c-3 11-4 25-4 40 0 16 1 29 4 40-3 11-4 25-4 40 0 16 1 29 4 40-3 11-4 25-4 40 0 16 1 29 4 40-3 11-4 25-4 40 0 16 1 29 4 40-3 11-4 25-4 40 0 16 1 29 4 40-3 11-4 25-4 40 0 16 1 29 4 40-3 11-4 25-4 40 0 16 1 29 4 40h80c3-11 4-24 4-40 0-15-1-29-4-40 3-11 4-24 4-40 0-15-1-29-4-40 3-11 4-24 4-40 0-15-1-29-4-40 3-11 4-24 4-40 0-15-1-29-4-40h60c-3 11-4 25-4 40 0 16 1 29 4 40h40c-3 11-4 25-4 40 0 16 1 29 4 40h120c3-11 4-24 4-40 0-15-1-29-4-40h-80c3-11 4-24 4-40 0-15-1-29-4-40h-40c3-11 4-24 4-40 0-15-1-29-4-40h40c3-11 4-24 4-40 0-15-1-29-4-40h100c3-11 4-24 4-40z"
-      />
-      <glyph
-        unicode="n"
-        horizAdvX={400}
-        d="M110 320h40c3-11 4-24 4-40 0-15-1-29-4-40h-30c3-11 4-24 4-40 0-15-1-29-4-40 3-11 4-24 4-40 0-15-1-29-4-40 3-11 4-24 4-40 0-15-1-29-4-40H40c-3 11-4 25-4 40 0 16 1 29 4 40-3 11-4 25-4 40 0 16 1 29 4 40-3 11-4 25-4 40 0 16 1 29 4 40-3 11-4 25-4 40 0 16 1 29 4 40-3 11-4 25-4 40 0 16 1 29 4 40h70c3-11 4-24 4-40 0-15-1-29-4-40m254-120c0-15-1-29-4-40 3-11 4-24 4-40 0-15-1-29-4-40 3-11 4-24 4-40 0-15-1-29-4-40h-80c-3 11-4 25-4 40 0 16 1 29 4 40-3 11-4 25-4 40 0 16 1 29 4 40-3 11-4 25-4 40 0 16 1 29 4 40-3 11-4 25-4 40 0 16 1 29 4 40H150c-3 11-4 25-4 40 0 16 1 29 4 40h160c3-11 4-24 4-40 0-15-1-29-4-40h50c3-11 4-24 4-40 0-15-1-29-4-40 3-11 4-24 4-40z"
-      />
-      <glyph
-        unicode="y"
-        horizAdvX={400}
-        d="M360 320h-30c3-11 4-24 4-40 0-15-1-29-4-40h-30c3-11 4-24 4-40 0-15-1-29-4-40h-20c3-11 4-24 4-40 0-15-1-29-4-40h-30c3-11 4-24 4-40 0-15-1-29-4-40h-20c3-11 4-24 4-40 0-15-1-29-4-40h-40c3-11 4-24 4-40 0-15-1-29-4-40H70c-3 11-4 25-4 40 0 16 1 29 4 40h80c-3 11-4 25-4 40 0 16 1 29 4 40-3 11-4 25-4 40 0 16 1 29 4 40h-40c-3 11-4 25-4 40 0 16 1 29 4 40H90c-3 11-4 25-4 40 0 16 1 29 4 40H60c-3 11-4 25-4 40 0 16 1 29 4 40H30c-3 11-4 25-4 40 0 16 1 29 4 40h80c3-11 4-24 4-40 0-15-1-29-4-40h30c3-11 4-24 4-40 0-15-1-29-4-40h30c3-11 4-24 4-40 0-15-1-29-4-40 3-11 4-24 4-40 0-15-1-29-4-40h30c-3 11-4 25-4 40 0 16 1 29 4 40h20c-3 11-4 25-4 40 0 16 1 29 4 40h30c-3 11-4 25-4 40 0 16 1 29 4 40h30c-3 11-4 25-4 40 0 16 1 29 4 40h80c3-11 4-24 4-40 0-15-1-29-4-40z"
-      />
-      <glyph
-        unicode="_"
-        horizAdvX={400}
-        d="M364 40c0-15-1-29-4-40H40c-3 11-4 25-4 40 0 16 1 29 4 40h320c3-11 4-24 4-40z"
-      />
-    </font>
-    <g fontFamily="'VT323'" fontSize={12}>
-      <text transform="translate(0 9.36)">{"HynekS_"}</text>{" "}
-    </g>
+const Logo = (props: SVGProps<SVGSVGElement>) => (
+  <svg viewBox="0 0 50 1" xmlns="http://www.w3.org/2000/svg" tw="w-20 h-8 fill-current" {...props}>
+    <style>
+      {`@font-face { 
+          font-family: "VT323";
+          font-weight: 400;
+          font-style: normal;
+          src: url(data:application/octet-stream;base64,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);
+        }`}
+    </style>
+    <text x={0} y={5} style={{ fontFamily: "VT323" }}>
+      {"HynekS_"}
+    </text>
   </svg>
 )
 
-export default SvgComponent
+export default Logo

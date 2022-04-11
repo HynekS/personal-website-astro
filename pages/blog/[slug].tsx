@@ -254,7 +254,9 @@ export const getStaticProps = async (context: GetStaticPropsContext<{ slug: stri
       meta: {
         ...meta,
         timeToRead,
-        dateLastModified: lastEditExceptPathChangeDate.toString(),
+        dateLastModified: lastEditExceptPathChangeDate
+          ? lastEditExceptPathChangeDate?.toString()
+          : null,
         gihubFileLink,
       },
     },
