@@ -1,0 +1,249 @@
+---
+title: Convert a number to an unique ID
+slug: is-it-used-or-not
+author: Hynek Svacha
+type: blog post
+dateCreated: Mar 29, 2022 12:31
+dateLastModified:
+featuredImage:
+categories:
+  - javascript
+keywords:
+  - javascript
+description:
+---
+
+# Convert a number to an unique ID
+
+## The problem
+
+This post is inspired with one of the [Exercism](https://exercism.org/) exercise, in which I was given a task to create a random IDs in a `ABC123` (three letters, then three digits) format.
+
+Every ID should be unique and they must not be sequential. Not a big deal, I thought carelessly, and I wrote a simple algorithm which produced a random three-letters-three-digits ID. Then I checked the random result against a cache and if the ID wasn't used before, I returned it. If it _was used_, I created another one and tried again. In essence, it was something like that:
+
+```javascript
+// What Could Possibly Go Wrong?
+let cache = new Set()
+
+const getRandomName = () => {
+  let randomName = generateRandomName()
+  while (cache.has(randomName)) {
+    randomName = generateRandomName()
+  }
+  cache.add(randomName)
+  return randomName
+}
+```
+
+## The failure
+
+Self confident, I've ran the tests, and failed miserably 😢. Actually, I do exaggerate a little here – most of them have turned <span style={{borderBottom:"3px solid lightgreen"}}>green</span>, but a few <span style={{borderBottom:"3px solid red"}}>kept on failing</span>. A timeout error was thrown; the tests were taking too much time to finish. Soon I realized why. In the terms of performance, I've created a variation of the dreaded [Bogosort](https://en.wikipedia.org/wiki/Bogosort).
+
+The test was strictly checking if I can create _every possible combination_ of three letters and three digits (there were 26 \* 26 \* 10 \* 10 \* 10 of them – 676,000 altogether). And while my naive solution might have "worked just fine" for a limited amount of ID's, when the amount got larger, it was doomed to randomly guessing over and over until it find one that was not already in use – hence the timeout error.
+
+## Try another way
+
+Let's try another way. What if we:
+
+- create an array of consecutive integers which length will be equal to the number of all possible combinations (`[0, 1, 2, ..max - 1]`),
+- get a random integer `n` (in range of the array's current length),
+- map `array[n]` to the actual ID and return it,
+- remove `array[n]` from the array, so there won't be any duplicity.
+
+Maybe we could map the array elements to the IDs instantly, but let's rather keep it numeric, because it could be huge and numbers should cost us less memory than strings (theoretically; it depends on the language, engine etc.)
+
+So we have a large array of numbers. Now, we'll need a mapping function: `n -> unique ID`
+
+```
+// pseudo code
+
+if (n = 0) { id = "AAA000" }
+if (n = (676,000 - 1)) { id = "ZZZ999" }
+
+// but what about that?
+if (n = random(0, 676,000 - 1)) { id = ? }
+```
+
+## Simple example: two six-sided dice
+
+For a start, let's simplify the problem. Let's say we have a set of two six-sided dice 🎲🎲. If we'd throw them, we'll get one of the 36 unique results (6 \* 6 = 36).
+
+So, how could we determine what throw result we get with e. g. n = 25?
+
+```
+// pseudo code
+
+// this are our basic presumptions
+if (n = 0) { result = [1, 1] }
+if (n = (36 - 1)) { result = [6, 6] }
+
+// but what about that?
+if (n = random(0, 36 - 1)) { result = ? }
+```
+
+We'll use a little bit of simple math. Because the total count of possible results is the effect of multiplying by 6, we'll start by dividing the value by 6. This will give us two values: the quotient and the remainder.
+
+The lowest possible throw result is represented by **0**.
+
+**0 / 6 = 0, the remainder is 0.**
+
+The highest possible throw result is represented by 36 - 1 = **35**.
+
+**35 / 6 = 5, the remainder is 5.**
+
+So we got `[0, 0]` and `[5, 5]`. _But what do these numbers represent?_
+
+Well, if we represent the sides of a dice as an _array of numbers_, these are the _indices_:
+
+```js
+const diceResults = [1, 2, 3, 4, 5, 6]
+
+console.log(diceResults[0]) // 1
+console.log(diceResults[1]) // 6
+```
+
+So what about our **25**? Well, **25 / 6 = 4, the remainder is 1.** So the result is `[4, 1]`, which means the actual throw results are **5 ⚄** and **2 ⚁**.
+
+But why don't we just add 1 and yield the same result in a much simpler way (`[0, 0]` -> `[1, 1]`, `[5, 5]` -> `[6, 6]`)?
+
+We can definitely do that, as long as the result is numeric. But if it's rather a symbol, like a character or a color, we'd probably need to store it in some list-like data structure anyway.
+
+Putting it all together:
+
+```js
+const allPossibleResults = Array.from(
+  {
+    length: 36,
+  },
+  (_, i) => i,
+)
+
+const get2D6Values = n => {
+  const quotient = Math.floor(n / 6)
+  const remainder = n % 6
+
+  return [quotient, remainder]
+}
+
+const d6values = [1, 2, 3, 4, 5, 6]
+
+// Let's forget the randomness for now and just map the values
+const actualResults = allPossibleResults.map(value => get2D6Values(value))
+// [[1, 1], [1, 2], [1, 3], ..[6, 6]]
+```
+
+## The actual alphanumeric pattern
+
+All right, now for the actual alphanumeric pattern. I dont't want to fully spoil the actual above mentioned exercise, so I'll modify it slightly. So our ID will compose of **three** capital letters, followed by **two** digits: `AAA00..ZZZ99`
+
+The letters will be the basic ASCII charset:
+
+```js
+const CHARSET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+```
+
+This charset has 26 characters. Hence the number of possible combinations is 26 \* 26 \* 26 \* 10 \* 10 = 1,757,600. That's quite a lot!
+
+We can again represent all combination as a list. `0` represents `AAA00` and `(1,757,600 - 1)` represents `ZZZ99`.
+
+Let's pick a random number in the range and do the math.
+
+First, we separate the numeric part from the letters. The numeric part will be preserved (just stringified and possibly left-padded).
+
+We'll do it by dividing the number by 100. The remainder will be the numeric part; the quotient the letters:
+
+---
+
+**1,757,599 / 100 = 17575, the remainder is 99** (**99** is our _numeric part_)
+
+**17,575 / (26 \* 26) = 25, the remainder is 675** (**25** is our _first letter index_)
+
+**675 / 26 = 25, the remainder is 25** (**25** is our _second letter index_)
+
+**25 / 26 = 0, the remainder is 25** (**25** is our _third letter index_)
+
+---
+
+Let's try some random number (devtools console gave me **744,202**)
+
+---
+
+**744202 / 100 = 7442, the remainder is 2**
+
+**7442 / (26 \* 26) = 11, the remainder is 6**
+
+**6 / 26 = 0, the remainder is 6**
+
+**0 / 26 = 0, the remainder is 0**
+
+---
+
+So we have **2** (or **02** if padded) as a _numeric part_ and **6**, **6** and **0** as _letter indices_. How to order those indices (ot the charset itself) is your choice, it really doesn't matter as long as you keep the consistency.
+
+```js
+const CHARSET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+const mapNumberToID = n => {
+  const numeric = n % 100
+  const numericAsPaddedString = String(numeric).padStart(2, 0)
+
+  const charRoot = Math.floor(n / 100)
+  const charI1 = Math.floor(charRoot / (26 * 26))
+  const charI2 = (charRoot % (26 * 26)) % 26
+  const charI3 = charI2 % 26
+
+  return `${CHARSET[charI1]}${CHARSET[charI2]}${CHARSET[charI3]}${numericAsPaddedString}`
+}
+```
+
+So we have our mapping function. But how we get all the combinations in random order? We can try something like that:
+
+```js
+const CHARSET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+const mapNumberToID = n => {
+  const numeric = n % 100
+  const numericAsPaddedString = String(numeric).padStart(2, 0)
+
+  const charRoot = Math.floor(n / 100)
+  const charI1 = Math.floor(charRoot / (26 * 26))
+  const charI2 = (charRoot % (26 * 26)) % 26
+  const charI3 = charI2 % 26
+
+  return `${CHARSET[charI1]}${CHARSET[charI2]}${CHARSET[charI3]}${numericAsPaddedString}`
+}
+
+const arrayOfAllPossibleCombinations = Array.from(
+  {
+    length: 26 * 26 * 26 * 10 * 10,
+  },
+  (_, i) => i,
+)
+
+const getRandomInRange = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
+
+const logAllIDsInRandomOrder = list => {
+  let i = 0
+  while (list.length > 0) {
+    i++
+    let random = getRandomInRange(0, list.length - 1)
+
+    let id = mapNumberToID(list[random])
+    console.log(id)
+
+    if (list.length > 0) {
+      list[random] = list[list.length - 1]
+      list.pop()
+    }
+  }
+  console.log(`Job finished. Unique IDs expected: ${26 * 26 * 26 * 10 * 10}, Unique IDs generated: ${i}`)
+}
+
+logAllIDsInRandomOrder(arrayOfAllPossibleCombinations)
+```
+
+Fair warning: running this snippet may take some time, even a few minutes (after all, we are logging more than a million and a half unique IDs).
+
+So, that was our naive hashing function, and a way to generate a random sequence of unique tokens. Hope you've learned something new today. 
+
+👍 Enjoy!
