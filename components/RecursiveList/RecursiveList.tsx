@@ -25,7 +25,7 @@ const RecursiveList = forwardRef<HTMLElement, { tree: Node[] }>(
     <nav
       ref={ref}
       css={css`
-        ${tw`transition-all duration-75 text-primary p-4 lg:(sticky left-0 top-0)`}
+        ${tw`transition-all duration-75 text-primary p-4 md:(sticky left-0 top-16)`}
         a {
           ${tw`block ml-2`}
         }
