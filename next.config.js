@@ -58,6 +58,34 @@ module.exports = withPlugins(
         ],
       })
 
+      // https://github.com/cyrilwanner/next-optimized-images/issues/177
+      // https://github.com/cyrilwanner/next-optimized-images/pull/247
+      if (!options.isServer) {
+        config.module.rules.forEach(rule => {
+          if (rule.oneOf) {
+            rule.oneOf.forEach(subRule => {
+              if (
+                subRule.issuer &&
+                !subRule.test &&
+                !subRule.include &&
+                subRule.exclude &&
+                subRule.use &&
+                subRule.use.options &&
+                subRule.use.options.name
+              ) {
+                if (
+                  String(subRule.issuer) ===
+                    "/\\.(css|scss|sass)(\\.webpack\\[javascript\\/auto\\])?$/" &&
+                  subRule.use.options.name.startsWith("static/media/")
+                ) {
+                  subRule.exclude.push(/\.(jpg|jpeg|png|svg|webp|gif|ico)$/)
+                }
+              }
+            })
+          }
+        })
+      }
+
       if (!options.dev && !options.isServer) {
         Object.assign(config.resolve.alias, {
           react: "preact/compat",
