@@ -49,10 +49,10 @@ const Index = ({ links = [] }: InferGetStaticPropsType<typeof getStaticProps>): 
                   key={link.title}
                 >
                   {link.featuredImage ? (
-                    <div tw="md:(max-width[6em] mr-6)">
+                    <div tw="md:(max-width[6em] mr-6) flex[1 0 4em]">
                       <Link href={"/blog/" + link.slug}>
                         <img
-                          tw="mb-3 mr-4 rounded-md dark:(filter[brightness(0.75) contrast(1.1)] border-4 border-color[#656a72]) light:(opacity-90 border-4 border-gray-200) md:(mt-3)"
+                          tw="object-cover rounded-full width[4em] height[4em] mb-3 mr-4 dark:(filter[brightness(0.75) contrast(1.1)] border-4 border-color[#656a72]) light:(opacity-90 border-4 border-gray-200) md:(mt-3)"
                           src={require(`_mdx_/${link.slug}/${link.featuredImage}`)}
                           alt="thumbnail"
                         />
