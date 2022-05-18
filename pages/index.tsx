@@ -45,7 +45,7 @@ const Index = ({ links = [] }: InferGetStaticPropsType<typeof getStaticProps>): 
             <ul tw="mt-4 list-none">
               {sortedLinks.map(link => (
                 <li
-                  tw="flex flex-col md:(flex-row) mt-8 p-4 pb-6 shadow-sm rounded-md dark:(background-color[#2a3340] border border-transparent) light:(border border-b-gray-400)"
+                  tw="relative flex flex-col md:(flex-row) mt-8 p-4 pb-6 rounded-md dark:(background-color[#2a3340] shadow-sm) light:after:(w-full left-0 height[1px] absolute bottom[-1.25rem] background[linear-gradient(90deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.4) 33%, rgba(166,166,166,0.3) 100%)])"
                   key={link.title}
                 >
                   {link.featuredImage ? (
