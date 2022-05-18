@@ -76,6 +76,14 @@ type PreProps = {
   children?: ReactNode
 }
 
+/*
+ *  NOTE: including the list inside Typography element forces me to do some nasty !importants.
+ *  This is very unpleasant. It seems like a better way would be to remove this from Typography all together.
+ * The new Typography version (5.2) has a new 'not-prose' class, unfortunatelly I got this issue:
+ * https://github.com/tailwindlabs/tailwindcss/issues/6398
+ * I will try to find versions of twin.macro and Typography that would work together.
+ * There is probably something wrong with the config file.
+ */
 const components = (slug: string, meta: Meta): Components => ({
   ...Object.fromEntries(headings),
   h1: ({ children }: { children: ReactNode }) => {
@@ -83,6 +91,18 @@ const components = (slug: string, meta: Meta): Components => ({
       <>
         <h1>{children}</h1>
         <div tw="font-mono text-sm dark:(text-gray-400)">
+          {!!meta.categories.length && (
+            <ul tw="flex gap-1.5 mt-0! mb-1! ml--1!">
+              {meta.categories.map(category => (
+                <li
+                  tw="font-mono text-xs rounded-md py-1 px-2! dark:(background-color[#2a3340]) light:(bg-gray-100) before:(hidden)"
+                  key={category}
+                >
+                  {category}
+                </li>
+              ))}
+            </ul>
+          )}
           posted <PrettyDate date={new Date(meta.dateCreated)} /> ∙ by {meta.author} ∙{" "}
           {meta?.timeToRead?.text}
         </div>
