@@ -46,12 +46,6 @@ const InternalExternalLink = ({ href, children, ...props }: LinkProps) => {
   )
 }
 
-export type ImageProps = {
-  fileName: string
-  alt: string
-  slug: string
-}
-
 type HeadingTag = "h2" | "h3" | "h4" | "h5" | "h6"
 
 const headings = ["h2", "h3", "h4", "h5", "h6"].map(headingTag => [
@@ -75,6 +69,7 @@ type Components = Record<HTMLElement["nodeName"], () => JSX.Element>
 type ImgProps = {
   src: string
   alt: string
+  className: string
 }
 
 type PreProps = {
@@ -109,8 +104,12 @@ const components = (slug: string, meta: Meta): Components => ({
     }
   },
 
-  img: ({ src, alt = "", ...props }: ImgProps) => {
-    return <Lightbox images={[{ src, alt }]} slug={slug} {...props} />
+  img: ({ src, alt = "", className, ...props }: ImgProps) => {
+    return className?.includes("noTransform") ? (
+      <img src={require(`_mdx_/${slug}/${src}`)} alt={alt} className={className} {...props} />
+    ) : (
+      <Lightbox images={[{ src, alt }]} slug={slug} {...props} />
+    )
   },
 })
 
