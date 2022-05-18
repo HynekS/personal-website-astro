@@ -58,9 +58,7 @@ const Index = ({ links = [] }: InferGetStaticPropsType<typeof getStaticProps>): 
                         />
                       </Link>
                     </div>
-                  ) : (
-                    <></>
-                  )}
+                  ) : null}
                   <div>
                     <h2 tw="text-3xl font-semibold">
                       <Link href={"/blog/" + link.slug}>{link.title}</Link>
@@ -76,9 +74,7 @@ const Index = ({ links = [] }: InferGetStaticPropsType<typeof getStaticProps>): 
                           </li>
                         ))}
                       </ul>
-                    ) : (
-                      <></>
-                    )}
+                    ) : null}
                     <span tw="font-mono text-sm pl-1 dark:(text-gray-400)">
                       posted{" "}
                       <PrettyDate
