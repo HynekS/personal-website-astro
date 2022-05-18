@@ -389,6 +389,9 @@ module.exports = {
             code: {
               color: "#D1D5DB",
             },
+            hr: {
+              opacity: 0.3,
+            },
           },
         },
         lg: {
