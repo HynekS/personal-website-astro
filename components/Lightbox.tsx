@@ -8,8 +8,6 @@ type LightboxProps = {
   slug: string
 }
 
-const getScrollbarWidth = () => window.innerWidth - document.documentElement.clientWidth
-
 const Lightbox = (props: LightboxProps): JSX.Element | null => {
   const { images = [], slug } = props
 
