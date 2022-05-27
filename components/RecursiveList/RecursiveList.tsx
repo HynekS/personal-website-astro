@@ -52,12 +52,14 @@ const RecursiveList = forwardRef<HTMLElement, { tree: Node[] }>(
         }
       `}
     >
-      {tree
-        ? tree.map(branch => {
+      {tree ? (
+        <ul>
+          {tree.map(branch => {
             const { slug, title, nodes } = branch || {}
             return <Branch key={slug} slug={slug} title={title} nodes={nodes} />
-          })
-        : null}
+          })}
+        </ul>
+      ) : null}
     </nav>
   ),
 )
@@ -66,25 +68,26 @@ const Branch = ({ title, nodes, slug }: Node): JSX.Element => {
   const hasChildren = nodes && nodes.length
 
   return (
-    <ul>
-      <li>
-        <ArrowRight />
-        <a
-          href={`#${slug}`}
-          onClick={e => {
-            e.preventDefault()
-            document.getElementById(slug)?.scrollIntoView({ behavior: "smooth" })
-          }}
-        >
-          {title}
-        </a>
-        {hasChildren &&
-          nodes.map(branch => {
+    <li>
+      <ArrowRight />
+      <a
+        href={`#${slug}`}
+        onClick={e => {
+          e.preventDefault()
+          document.getElementById(slug)?.scrollIntoView({ behavior: "smooth" })
+        }}
+      >
+        {title}
+      </a>
+      {hasChildren && (
+        <ul>
+          {nodes.map(branch => {
             const { slug, title, nodes } = branch || {}
             return <Branch key={slug} slug={slug} title={title} nodes={nodes} />
           })}
-      </li>
-    </ul>
+        </ul>
+      )}
+    </li>
   )
 }
 
