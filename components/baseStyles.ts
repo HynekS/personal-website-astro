@@ -36,7 +36,7 @@ const baseStyles = css`
     font-weight: 125 950;
     font-stretch: 75% 125%;
     font-style: normal;
-    font-display: swap;
+    font-display: optional;
   }
 
   @font-face {
@@ -45,7 +45,7 @@ const baseStyles = css`
     font-weight: 125 950;
     font-stretch: 75% 125%;
     font-style: italic;
-    font-display: swap;
+    font-display: optional;
   }
 
   @media (prefers-reduced-motion) {
@@ -55,7 +55,7 @@ const baseStyles = css`
   }
 
   body {
-    ${tw`h-full transition-all duration-200 bg-primary text-primary font-base`}
+    ${tw`h-full transition-colors duration-200 bg-primary text-primary font-base`}
     /* Do not render pseudobold font */
     font-synthesis: none;
   }
