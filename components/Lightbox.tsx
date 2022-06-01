@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef } from "react"
 import Popup from "reactjs-popup"
 import { XIcon, ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/outline"
 import tw, { css } from "twin.macro"
@@ -51,7 +51,12 @@ const Lightbox = (props: LightboxProps): JSX.Element | null => {
             key={src + index}
           >
             <img
-              src={require(`_mdx_/${slug}/${image.src}`)}
+              src={require(`_mdx_/${slug}/${image.src}?resize&sizes[]=320&sizes[]=640&sizes[]=800`)}
+              srcSet={
+                require(`_mdx_/${slug}/${image.src}?resize&sizes[]=320&sizes[]=640&sizes[]=800`)
+                  .srcSet
+              }
+              //sizes="(min-width: 960px) 640px, 100vw"
               alt={alt}
               onClick={() => {
                 const i = images.findIndex(image => image.src === src)
@@ -121,10 +126,17 @@ const Lightbox = (props: LightboxProps): JSX.Element | null => {
                 <ChevronLeftIcon tw="w-4 h-4" />
               </button>
             ) : null}
-
             <img
-              src={require(`_mdx_/${slug}/${images[currentIndex % images.length].src}`)}
+              src={require(`_mdx_/${slug}/${
+                images[currentIndex % images.length].src
+              }?resize&sizes[]=640&sizes[]=800&sizes[]=1200`)}
+              srcSet={
+                require(`_mdx_/${slug}/${
+                  images[currentIndex % images.length].src
+                }?resize&sizes[]=640&sizes[]=800&sizes[]=1200`).srcSet
+              }
               tw="max-w-full max-h-screen"
+              sizes="(min-width: 800px) 800px, (min-width: 1200px) 1200px, 100vw"
             />
 
             {images.length > 1 ? (
