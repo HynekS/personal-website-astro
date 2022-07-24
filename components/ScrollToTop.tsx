@@ -52,7 +52,7 @@ const ScrollToTop = ({ treshold, scrollContainer }: ScrollToTopProps) => {
   return (
     <button
       css={[
-        tw`fixed bottom-6 right-10 bg-primary origin-center transition-transform shadow-xl rounded-full text-primary flex items-center justify-center border-2 p-3 focus:(outline-none ring-0) dark:(border-gray-500)`,
+        tw`fixed bottom-6 right-10 bg-primary origin-center transition-transform shadow-xl rounded-full text-primary flex items-center justify-center border-2 p-3 focus:(outline-none ring-0) dark:(border-coolGray-600)`,
         visible ? tw`scale-100` : tw`scale-0`,
       ]}
       onClick={scrollToTop}

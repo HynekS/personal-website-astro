@@ -18,7 +18,7 @@ const ThemeToggle = () => {
     <button
       aria-label="Toggle Dark Mode"
       type="button"
-      tw="rounded-full flex items-center justify-center border-2 p-1 focus:(outline-none ring-0) dark:(border-gray-500)"
+      tw="rounded-full flex items-center justify-center border-2 p-1 focus:(outline-none ring-0) dark:(border-coolGray-600)"
       onClick={toggleTheme}
     >
       {isDark(theme) ? <SunIcon /> : <MoonIcon />}
