@@ -14,7 +14,7 @@
   },
   "private": true,
   "workspaces": [
-    "_mdx_"
+    "__content__"
   ],
   "keywords": [],
   "author": "",

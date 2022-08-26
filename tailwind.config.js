@@ -27,6 +27,7 @@ module.exports = {
         DEFAULT: {
           css: {
             color: "var(--text-primary)",
+            fontFamily: "var(--font-base)",
             pre: {
               marginLeft: "-1rem",
               marginRight: "-1rem",
@@ -48,6 +49,7 @@ module.exports = {
                 padding: "inherit",
                 color: "unset",
                 fontWeight: "unset",
+
                 position: "relative",
                 "&:hover": {
                   "&::before": {
@@ -130,6 +132,13 @@ module.exports = {
             },
             "ul>li::before": {
               top: 0,
+            },
+          },
+        },
+        thin: {
+          css: {
+            "h1, h2, h3, h4, h5, h6": {
+              fontWeight: 300,
             },
           },
         },

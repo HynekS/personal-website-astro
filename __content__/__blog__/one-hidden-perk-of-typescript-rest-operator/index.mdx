@@ -1,0 +1,30 @@
+---
+title: Get type of the first and the last tuple element in TypeScript
+author: Hynek Svacha
+type: blog post
+dateCreated: July 27, 2022 17:45
+dateLastModified:
+featuredImage:
+categories:
+  - typescript
+keywords:
+	- typescript
+description:
+---
+
+# Get type of the first and the last tuple element in TypeScript 
+
+
+```ts
+type First<T extends readonly any[]> = T extends readonly [infer R, ...any[]] ? R : never
+```
+
+```ts
+type First<T extends readonly any[]> = T extends readonly [infer R, ...any] ? R : never
+type Last<T extends readonly any[]> = T extends readonly [...any, infer R] ? R : never
+
+const test = [1, 2, 3, 4, 5] as const
+
+type TestFirst = First<typeof test> // 1
+type TestLast = Last<typeof test> // 5
+```

@@ -4,7 +4,7 @@
   "frontMatter.content.publicFolder": "public",
   "frontMatter.content.pageFolders": [
     {
-      "path": "g:/~dev/sanity-nextjs/web-mdx/_mdx_"
+      "path": "g:/~dev/sanity-nextjs/web-mdx/__content__"
     }
   ]
 }

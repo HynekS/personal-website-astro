@@ -1,0 +1,100 @@
+---
+title: Get exact string length in TypeScript
+author: Hynek Svacha
+type: blog post
+dateCreated: Aug 26, 2022 09:44 
+dateLastModified:
+featuredImage:
+categories:
+  - typescript
+keywords:
+  - TypeScript
+description: To get the exact length of a string in TypeScript, use a recursive type to convert it to an array of character. While TypeScript can not get the exact length of a string, it can get exact length of an array.
+---
+
+# Get exact string length in TypeScript
+
+How can we get a length of a string using TypeScript? Well, every string has a `length` property, hasn't it? And we can access it in TypeScript using the bracket notation. Let's try!
+
+```ts
+const myString = "marshmallow"
+
+type Strlen<S extends string> = S["length"];
+
+type MyStrlen = Strlen<myString> // "number" 🤔
+```
+
+Sadly it doesn't work the way we wanted. We got `number` type. Technically, there's nothing wrong with that – the type of string length *is* a `number`. But what about the *exact* one?
+
+Hmmm…
+
+What about arrays? Can TypeScript get exact length of an array?
+
+```ts
+const myArray = ["chocolate", "liquorice", "marshmallow"]
+
+type Arrlen<A extends unknown[]> = A["length"]
+
+type MyArrlen<typeof myArray> // "number" 🤔
+```
+
+Still no success? Well, TypeScript actually can't get the exact length of an array. The only data structure it *can* get length of is a **tuple**, a list-like data structure with a fixed length. Ironically, JavaScript currently doesn't have a tuple data structure, but TypeScript kind of does.
+
+```ts
+const myTuple = ["chocolate", "liquorice", "marshmallow"] as const
+/*
+or myTuple: readonly string[] = ["chocolate", "liquorice", "marshmallow"]
+or myTuple = ReadonlyArray<string> = ["chocolate", "liquorice", "marshmallow"]
+*/
+
+type Arrlen<A extends readonly unknown[]> = A["length"]
+
+type MyArrlen<typeof myArray> // 3 🎉
+```
+
+Using type assertion (`as const`, `readonly`) would be common in practice, but there is an even simpler way to do this – and it is important to show, because otherwise you might be confused why the final code actually doesn't use type assertion:
+
+```ts
+type Arrlen<A extends unknown[]> = A["length"] // no readonly!
+
+type MyArrlen<["chocolate", "liquorice", "marshmallow"]> // 3 🎉
+```
+
+As we can see, if we use a type literal, TypeScript regards it as a tuple by default.
+
+So we can get a length of a string, if we convert it somehow to a tuple of the same length. Is this possible? Good news – it is!
+
+This might get a little scary for someone, but there is nothing too arcane, just a simple tail-call recursion, which is a substitute for a loop {TypeScript does't have loops).
+
+First, let's create equivalent JavaScript function:
+
+```js
+function strlen(str, cache = []) {
+  const first = str.slice(0, 1);
+  const rest = str.slice(1);
+  // the TS version is closer to `let [first, ...rest] = str`,
+  // but it breaks in JS once `...rest` gets `undefined` (which is not iterable)
+  
+  return first.length 
+    ? strlen(rest, [...cache, first]) 
+    : cache.length;
+}
+
+console.log(strlen("marshmallow")) // 11 🎉
+```
+This is of course kind of ridiculous, because we can do simply `"marshmallow".length` in JavaScript. But as has been said before, it doesn't work the same way in TypeScript.
+
+This is the TypeScript version of the strlen: 
+
+```ts
+type Strlen<
+  Str extends string,
+  Cache extends string[] = []
+> = Str extends `${infer First}${infer Rest}`
+  ? Strlen<Rest, [...Cache, First]>
+  : Cache["length"]
+
+type MyStrlen = Strlen<"marshmallow"> // 11 🎉
+```
+
+Heureka, we have our exact length!
