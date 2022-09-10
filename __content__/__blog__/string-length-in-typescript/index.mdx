@@ -98,3 +98,7 @@ type MyStrlen = Strlen<"marshmallow"> // 11 🎉
 ```
 
 Heureka, we have our exact length!
+
+Confused about what's going on here? We're recursively iterating over a string. At each iteration, we pull out the first character (using `infer`) and add it to a `Cache` tuple. Once we are done iterating, we return the length of the `Cache` tuple.
+
+👍 Enjoy!

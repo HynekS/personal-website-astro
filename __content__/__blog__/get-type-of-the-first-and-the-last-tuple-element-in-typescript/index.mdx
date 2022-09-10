@@ -1,0 +1,77 @@
+---
+title: Get type of the first and the last tuple element in TypeScript
+author: Hynek Svacha
+type: blog post
+dateCreated: July 27, 2022 17:45
+dateLastModified:
+featuredImage:
+categories:
+  - typescript
+keywords:
+	- typescript
+description:
+---
+
+# Get type of the first and the last tuple element in TypeScript 
+
+How can we get the exact type of the first and the last tuple element in TypeScript?
+
+// NOTE
+What is a tuple? Tuple is a list-like data structure with a fixed length. JavaScript doesn't have a native tuple type, but you can tell TypeScript that „this array will never change“ by using `as const` or `readonly` type assertions.
+
+## Get type of the first element
+
+Get the type of the first tuple element is actually very simple:
+
+```ts
+type First<T extends readonly unknown[]> = T[0]
+
+const myArray = [1, 2, 3]
+
+type FirstOfMyArray = First<typeof myArray> // 1 🎉
+```
+
+Note that if the array is empty, we'll get `undefined`. If we'd like to alter this behavior, we can use a ternary and return whatever type we want:
+
+```ts
+type First<T extends readonly any[]> = T[0] extends undefined ? never : T[0]
+```
+
+## Get type of the last element
+
+Getting the last element of a tuple is a little bit complex. We'll need to use a ternary with `extends` and `infer` combo:
+
+```ts
+type Last<T extends readonly any[]> = T extends readonly [...any, infer R] ? R : never
+
+const test = [1, 2, 3, 4, 5] as const
+
+type TestLast = Last<typeof test> // 5
+```
+
+Note that we can't do equivalent to `[...any, infer R]` in JavaScript: it would cause the syntax error: `Rest element must be last element`. In this case, TypeScript is more flexible then JavaScript.
+
+## What about arrays?
+
+Regarding arrays, TypeScript is much more limited in what it can actually infer. We can get the general type of an array using the same simple approach that we used on tuples:
+
+```ts
+type First<T extends any[]> = T[0]
+
+const myArray = [1, 2, 3]
+
+type FirstOfMyArray = First<typeof myArray> // number
+```
+
+If the array is of mixed type, TypeScript will only give us the union of all present types:
+
+```ts
+type First<T extends any[]> = T[0]
+
+const myArray = [1, "orange", 3]
+
+type FirstOfMyArray = First<typeof myArray> // string | number
+```
+
+As far as I know, it is not possible to get the type of the last element of an array.
+
