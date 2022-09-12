@@ -19,6 +19,26 @@ module.exports = {
         display: "var(--font-display)",
         mono: "var(--font-mono)",
       },
+      keyframes: {
+        swing: {
+          "0%": {
+            backgroundPosition: "100% center",
+            animationTimingFunction: "ease-in",
+          },
+          "22%": {
+            backgroundPosition: "-20.5% center",
+            animationTimingFunction: "ease-out",
+          },
+          "48%": {
+            backgroundPosition: "25% center",
+            animationTimingFunction: "ease-in",
+          },
+          "59%": {
+            backgroundPosition: "-29.5% center",
+            animationTimingFunction: "ease-out",
+          },
+        },
+      },
       /* Temporary extension to get all the tailwind v3 colors in twin.macro. Should be removed when macro is updated */
       colors: {
         ...Object.fromEntries(Object.entries(colors)),
@@ -68,6 +88,22 @@ module.exports = {
               backgroundColor: "#e7f6f7",
               padding: "0.1em 0.2em",
               borderRadius: "0.1em",
+
+              backgroundPosition: "100% center",
+              backgroundSize: "200% 100%",
+              animationDuration: "3.3s",
+              animationIterationCount: "infinite",
+              boxDecorationBreak: "clone",
+              display: "inline",
+              "&:hover": {
+                animationName: "swing",
+                animationTimingFunction: "ease-out",
+                background:
+                  "linear-gradient(45deg, rgba(231,246,247,1) 0%, rgba(233,250,251,1) 5%, rgba(197,241,244,1) 21%, rgba(202,241,247,1) 24%, rgba(197,241,244,1) 27%, rgba(231,246,247,1) 44%, rgba(231,246,247,1) 100%, rgba(233,250,251,1) 100%)",
+                backgroundPosition: "100% center",
+                backgroundSize: "200% 100%",
+                textDecorationColor: "rgb(31, 105, 231)",
+              },
             },
             code: {
               backgroundColor: "var(--bg-secondary)",
@@ -112,6 +148,25 @@ module.exports = {
             a: {
               color: "var(--color-links)",
               backgroundColor: "transparent",
+              backgroundPosition: "100% center",
+              backgroundSize: "200% 100%",
+              textDecorationLine: "underline",
+              textDecorationColor: "rgba(126, 203, 215, 1)",
+              animationDuration: "3.3s",
+              animationIterationCount: "infinite",
+              boxDecorationBreak: "clone",
+              display: "inline",
+              "&:hover": {
+                animationName: "swing",
+                animationTimingFunction: "ease-out",
+                background:
+                  "linear-gradient(45deg, rgb(69, 138, 255) 0%, rgba(104, 114, 251, 1) 5%, rgba(250, 44, 245, 1) 20%, rgb(226, 122, 224) 24%, rgba(250, 44, 245, 1) 27%, rgba(104, 114, 251, 1) 44%, rgb(69, 138, 255) 50%, rgb(69, 138, 255) 100%)",
+                "-webkit-background-clip": "text",
+                "-webkit-text-fill-color": "transparent",
+                backgroundPosition: "100% center",
+                backgroundSize: "200% 100%",
+                textDecorationColor: "rgb(31, 105, 231)",
+              },
             },
             code: {
               color: "#d1d5db",
