@@ -18,7 +18,9 @@ description: 'There is one simple dirty trick for Redux Devtools that can make l
 
 # One dirty redux devtools logging trick
 
-While redux is far from being the coolest kid in the playground at the moment (late 2020), I am still using it on some of my projects. There is still one feature, which most of its competitors (like recoil, zustand, jotai, react-query or SWR) lack so far: mature and feature rich devtools.
+While redux is far from being the coolest kid in the playground at the moment (late 2020), I am still using it on some of my projects. There is still one feature, which most of its competitors (like zustand, jotai, recoil, react-query or SWR) lack so far: mature and feature rich devtools.
+
+<Note>This article is not up-to-date. While the proposed trick is still valid, i can't se any reason to keep using vanilla Redux in 2022. 💡 I would suggest to check <a style={{ all: "unset", textDecoration: "underline", cursor: "pointer" }} href="https://redux-toolkit.js.org/">Redux Toolkit</a>, which yields a much better DX (unfortunately, you can't use the proposed trick here).</Note>
 
 But even on redux-devtools, there was something which makes me think meh… and that thing is logging constants. Even though I made my redux constants (thanks mostly ducks inspiration) much less GENERATED_CODE_LOOKALIKE and more human readable, I'd like to have a possibility to use parametrize them.
 
