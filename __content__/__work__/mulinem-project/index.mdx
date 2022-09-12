@@ -23,13 +23,16 @@ A demo of this project is available on [https://mulinem.net](https://mulinem.net
 
 ## Repo
 
+https://github.com/HynekS/mulinem-nextjs-sanity
+
 ## Tech stack
-Next.js 
-Sanity
+
+<DevstackItem item="nextjs" label="NextJS" />
+<DevstackItem item="sanity" label="Sanity" />
 
 ## Comment
 
-This was initially a simple WordPress site with a slightly modified default theme. During the "JAMstack rush" I migrated it to a static site with Gatsby on frontend and Netlify CMS on backend. The site was O.K., but the client was struggling a little with the CMS UI, thus I decided to migrate it to Sanity (which I have used in the past and is slightly more user friendly). Because Gatsby has silently passed away in the meantime, I decided to move to Next.js. I also ditched SSG in the favor of SSR.
+This was initially a simple WordPress site with a slightly modified default theme. During the "JAMstack rush" I migrated it to a static site with Gatsby on frontend and Netlify CMS on backend. The site was O.K., but the client was struggling a little with the CMS UI, thus I decided to migrate it to Sanity (which I have used in the past and is more user friendly). Because Gatsby has silently passed away in the meantime, I decided to move to Next.js. I also ditched SSG in the favor of SSR.
 
 One thing I wasn't happy about is the frontend to backend type safety. It is not officialy supported yet when for GROQ queries (it might work better with GraphQL). There are some promising open source projects working on solution (EXAMPLES), but they are still in development and I wasn't able to make them really work. In the end, I've just use the codegen (MORE) and wrote the types for API responses by hand, which is quite _meh_, but for a small project like this probably acceptable.
 

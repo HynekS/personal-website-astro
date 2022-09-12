@@ -72,7 +72,7 @@ After adding WP GraphQL plugin to a list of dependencies in `composer.json`, we 
 composer update
 ```
 
-Let's test if everything is working fine. Let's start our development environment. We need to point our server to a `web` subdirectory, which is a distinction from 'vanilla' release. The 'admin' urls are also slightly different – they are prefixed by `/wp/` segment, so `https://example.com/wp-login.php` is now `https://example.com/wp/wp-login.php`. This can cause some issues when importing an existing database, and the rewrite rules mismatch. When I encounter that issue, I was able to solve it by creating a `.htaccess` file with the [default rewrite rules](https://wordpress.org/support/article/htaccess/) and saving it to the `web` directory.
+Let's test if everything is working fine. Let's start our development environment. We need to point our server to a `web` subdirectory, which is a distinction from 'vanilla' release. The 'admin' urls are also slightly different – they are prefixed by `/wp/` segment, so `https://example.com/wp-login.php` is now `https://example.com/wp/wp-login.php`. This can cause some issues when importing an existing database and the rewrite rules mismatch. I  was able to solve that issues by creating a `.htaccess` file with the [default rewrite rules](https://wordpress.org/support/article/htaccess/) and saving it to the `web` directory.
 
 Hopefully, everything went well and we successfully installed a new WordPress instance. Let's log in our admin pages and activate the WP GraphQL plugin. A GraphQL link should appear at the sidebar, and a GraphiQL IDE link should appear on the upper bar:
 
