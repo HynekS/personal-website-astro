@@ -19,6 +19,7 @@
       "@/components/*": ["src/components/*"],
       "@/hooks/*": ["src/hooks/*"],
       "@/constants": ["src/constants"],
+      "@/types": ["src/types"],
       "@/data/*": ["__content__/*"]
     },
     "incremental": true
