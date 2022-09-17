@@ -24,11 +24,9 @@ type Strlen<S extends string> = S["length"];
 type MyStrlen = Strlen<myString> // "number" 🤔
 ```
 
-Sadly it doesn't work the way we wanted. We got `number` type. Technically, there's nothing wrong with that – the type of string length *is* a `number`. But what about the *exact* one?
+Sadly it doesn't work the way we wanted. We got `number` type. Technically, there's nothing wrong with that – the type of string length *is* indeed a  *number*. But what about the *exact* number – *11* in case of "marshmallow"?
 
-Hmmm…
-
-What about arrays? Can TypeScript get exact length of an array?
+Sidebar: what about arrays? Can TypeScript get exact length of an array? Let's try:
 
 ```ts
 const myArray = ["chocolate", "liquorice", "marshmallow"]
@@ -38,7 +36,7 @@ type Arrlen<A extends unknown[]> = A["length"]
 type MyArrlen<typeof myArray> // "number" 🤔
 ```
 
-Still no success? Well, TypeScript actually can't get the exact length of an array. The only data structure it *can* get length of is a **tuple**, a list-like data structure with a fixed length. Ironically, JavaScript currently doesn't have a tuple data structure, but TypeScript kind of does.
+Still no success. Well, TypeScript actually can't get the exact length of an array. The only data structure it *can* get length of is a **tuple**, a list-like data structure with a fixed length. JavaScript currently doesn't have a tuple data structure, but TypeScript kind of does – a readonly array.
 
 ```ts
 const myTuple = ["chocolate", "liquorice", "marshmallow"] as const
@@ -52,7 +50,7 @@ type Arrlen<A extends readonly unknown[]> = A["length"]
 type MyArrlen<typeof myArray> // 3 🎉
 ```
 
-Using type assertion (`as const`, `readonly`) would be common in practice, but there is an even simpler way to do this – and it is important to show, because otherwise you might be confused why the final code actually doesn't use type assertion:
+Using type assertion (`as const`, `readonly`) would be common in practice, but there is an even simpler way to do this (and it is important to show, because otherwise you might be confused why the final code actually doesn't use type assertion):
 
 ```ts
 type Arrlen<A extends unknown[]> = A["length"] // no readonly!
@@ -60,13 +58,13 @@ type Arrlen<A extends unknown[]> = A["length"] // no readonly!
 type MyArrlen<["chocolate", "liquorice", "marshmallow"]> // 3 🎉
 ```
 
-As we can see, if we use a type literal, TypeScript regards it as a tuple by default.
+As we can see, if we use a *type literal*, TypeScript regards it as a tuple by default.
 
-So we can get a length of a string, if we convert it somehow to a tuple of the same length. Is this possible? Good news – it is!
+To get to the point: we *can* get the exact length of a string, if we convert it somehow to a tuple of the same length. Is this possible? Good news – it is!
 
-This might get a little scary for someone, but there is nothing too arcane, just a simple tail-call recursion, which is a substitute for a loop {TypeScript does't have loops).
+This might get a little scary for someone, but there is nothing too arcane, just a simple tail-call recursion, which is a substitute for a loop (TypeScript is currently very limited regarding loops – only the `in` syntax can be probably considered a loop).
 
-First, let's create equivalent JavaScript function:
+First, let's create equivalent code in JavaScript:
 
 ```js
 function strlen(str, cache = []) {
@@ -91,7 +89,7 @@ type Strlen<
   Str extends string,
   Cache extends string[] = []
 > = Str extends `${infer First}${infer Rest}`
-  ? Strlen<Rest, [...Cache, First]>
+  ? Strlen<Rest, [...Cache, First]> // <-- The array is a type literal, no need for 'readonly' (see above)
   : Cache["length"]
 
 type MyStrlen = Strlen<"marshmallow"> // 11 🎉
@@ -99,6 +97,6 @@ type MyStrlen = Strlen<"marshmallow"> // 11 🎉
 
 Heureka, we have our exact length!
 
-Confused about what's going on here? We're recursively iterating over a string. At each iteration, we pull out the first character (using `infer`) and add it to a `Cache` tuple. Once we are done iterating, we return the length of the `Cache` tuple.
+Confused about what's going on here? We're recursively iterating over a string. At each iteration, we pull out the first character (using `infer`) and add it to a `Cache` tuple. Once we are done iterating (we are done when `Rest` can't be inferred, because there isn't any character left), we return the length of the `Cache` tuple.
 
 👍 Enjoy!
