@@ -62,28 +62,27 @@ module.exports = {
             "h2 + pre, h3 + pre, h4 + pre, h5 + pre, h6 + pre": {
               marginTop: "1.3333333em",
             },
-            "h2 a[href], h3 a[href], h4 a[href], h5 a[href], h6 a[href], .dark h2 a[href], h3 a[href], h4 a[href], h5 a[href], h6 a[href]":
-              {
-                backgroundColor: "transparent",
-                textDecoration: "none",
-                padding: "inherit",
-                color: "unset",
-                fontWeight: "unset",
+            "h2 a, h3 a, h4 a, h5 a, h6 a": {
+              backgroundColor: "transparent",
+              textDecoration: "none",
+              padding: "inherit",
+              color: "unset",
+              fontWeight: "unset",
 
-                position: "relative",
-                "&:hover": {
-                  "&::before": {
-                    content: '"#"',
-                    position: "absolute",
-                    left: "-0.7em",
-                    fontSize: "0.9em",
-                    fontWeight: 400,
-                    lineHeight: 1.55,
-                    opacity: 0.36,
-                  },
+              position: "relative",
+              "&:hover": {
+                "&::before": {
+                  content: '"#"',
+                  position: "absolute",
+                  left: "-0.7em",
+                  fontSize: "0.9em",
+                  fontWeight: 400,
+                  lineHeight: 1.55,
+                  opacity: 0.36,
                 },
               },
-            a: {
+            },
+            "p a, li a": {
               color: "var(--color-links)",
               backgroundColor: "#e7f6f7",
               padding: "0.1em 0.2em",
@@ -102,7 +101,6 @@ module.exports = {
                   "linear-gradient(45deg, rgba(231,246,247,1) 0%, rgba(233,250,251,1) 5%, rgba(197,241,244,1) 21%, rgba(202,241,247,1) 24%, rgba(197,241,244,1) 27%, rgba(231,246,247,1) 44%, rgba(231,246,247,1) 100%, rgba(233,250,251,1) 100%)",
                 backgroundPosition: "100% center",
                 backgroundSize: "200% 100%",
-                textDecorationColor: "rgb(31, 105, 231)",
               },
             },
             code: {
@@ -129,6 +127,7 @@ module.exports = {
             "blockquote p:last-of-type::after": {
               content: '""',
             },
+            /* Doesn't work – precedence issues */
             "ul>li::before": {
               content: '"✓"',
               backgroundColor: "transparent",
@@ -145,7 +144,7 @@ module.exports = {
             "h1, h2, h3, h4, h5, h6": {
               color: "var(--text-secondary)",
             },
-            a: {
+            "p a, li a": {
               color: "var(--color-links)",
               backgroundColor: "transparent",
               backgroundPosition: "100% center",
