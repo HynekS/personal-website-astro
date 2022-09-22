@@ -102,7 +102,12 @@ h6 {
   scroll-margin-top: 2ex;
 }
 
-.prism-code .line_highlight {
+pre.prism-code {
+  box-shadow: rgb(0 2 4 / 20%) 0px 5px 20px -10px;
+  filter: contrast(1.05);
+}
+
+.dark .prism-code .line_highlight {
   background-color: rgba(53, 59, 69, 0.6);
   display: block;
   margin-right: -1em;
@@ -120,6 +125,12 @@ h6 {
 }
 
 .prism-code::-webkit-scrollbar-thumb {
+  border-radius: 0.5rem;
+  border: 3px solid rgb(246, 248, 250);
+  background-color: #d4d4d7;
+}
+
+.dark .prism-code::-webkit-scrollbar-thumb {
   border-radius: 0.5rem;
   border: 5px solid rgba(1, 22, 39, 40);
   background-color: rgb(50, 62, 80);
