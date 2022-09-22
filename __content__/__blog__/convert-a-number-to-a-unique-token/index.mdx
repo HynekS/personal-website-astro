@@ -50,7 +50,7 @@ We can think of it as a simple, naive, reversible [hash function](https://en.m.w
 
 ## But why should I do that?
 
-This is inspired by an [Exercism](https://exercism.org/) exercise. I was given a task to generate a bunch of unique random letters/numbers combinations. However, one of the tests were very strict: it was one checking if I'd be able to create _all the possible_ unique combinations. So I've got to create a list of them and "crossing out" the ones already being used (my previous approach to just generate something random and check if it is unique scaled very poorly).
+This is inspired by an [Exercism](https://exercism.org/) exercise. I was given a task to generate a bunch of unique random letters/numbers combinations. However, one of the tests were very strict: it was one checking if I'd be able to create _all the possible_ unique combinations. So I've got to create a list of them and filter out the ones already being used (my previous approach to just generate something random and check if it is unique scaled very poorly).
 
 The number of combinations was in the order of hundred of thousands, so I was a little afraid about the performance. In most programming languages, numbers are less memory costly than strings are. So I decided to create a list of _numbers_ and map them to the derived strings just in time.
 
