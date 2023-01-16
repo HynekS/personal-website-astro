@@ -1,0 +1,38 @@
+#uncrop-transition-demo {
+      --dimensions: 240px;
+      --cropColor: var(--bg-primary);
+      --cropSize: calc(var(--dimensions) / 10);
+      }
+      .center {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .container {
+        position: relative;
+        height: var(--dimensions);
+        width: var(--dimensions);
+      }
+      .container::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        border-radius: 50%;
+        z-index: 1;
+        box-shadow: inset 0 0 0 var(--cropSize) var(--cropColor);
+        transition: box-shadow 0.3s ease;
+      }
+      .container:hover::after {
+        box-shadow: inset 0 0 0 0 var(--cropColor);
+      }
+      .image {
+        position: absolute;
+        inset: 1px;
+        max-width: calc(100% - 2px);
+        max-height: calc(100% - 2px);
+        z-index: -1;
+        border-radius: 50%;
+      }
