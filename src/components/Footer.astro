@@ -1,0 +1,29 @@
+---
+import GithubIcon from "./GithubIcon.astro";
+import LinkedinIcon from "./LinkedinIcon.astro";
+---
+<div class="flex justify-center py-8">
+    <footer class="max-w-prose">
+      <div class="flex gap-4 justify-center mb-4 text-gray-400">
+        <a
+          class="block"
+          href="https://github.com/HynekS"
+          rel="noopener noreferrer"
+          target="__blank"
+          aria-labelledby="Link to my Github profile"
+        >
+          <GithubIcon />
+        </a>
+        <a
+          class="block"
+          href="https://www.linkedin.com/in/hynek-%C5%A1v%C3%A1cha-829387103/"
+          rel="noopener noreferrer"
+          target="__blank"
+          aria-labelledby="Link to my LinkedIn profile"
+        >
+          <LinkedinIcon />
+        </a>
+      </div>
+      <span class="text-sm font-mono px-4">© 2019–{new Date().getFullYear()} Hynek Svacha</span>
+    </footer>
+  </div>

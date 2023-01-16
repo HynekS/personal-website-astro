@@ -1,0 +1,20 @@
+---
+import Logo from "./Logo.astro";
+import ThemeToggle from "./ThemeToggle"
+---
+<header
+  class="top-0 flex justify-between pr-6 pl-4 pt-6 pb-4 w-full mb-8 h-[4.5rem] /* added explicit height and width to fight the layout shift*/ lg:pl-[2.25rem] lg:sticky"
+>
+  <div class="flex items-center gap-4">
+    <a href="/" aria-label="Link to homepage">
+      <Logo />
+    </a>
+    <a href="/">blog</a>
+    <a href="/projects">projects</a>
+    <a href="/about">about</a>
+  </div>
+
+  <div>
+    <ThemeToggle client:load/>
+  </div>
+</header>

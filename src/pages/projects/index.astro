@@ -1,0 +1,39 @@
+---
+import Layout from "../../layouts/Layout.astro";
+
+const posts = await Astro.glob("./**/*.{md,mdx}");
+
+posts.sort(
+  (a, b) =>
+    Date.parse(b.frontmatter.dateCreated) -
+    Date.parse(a.frontmatter.dateCreated)
+);
+---
+
+<Layout title="My Projects">
+  <div class="h-full px-4 mx-auto max-w-prose text-secondary">
+  <h1 class="text-4xl font-bold">Projects</h1>
+  <ul class="mt-4 list-none">
+    {
+      posts.map((post) => {
+        return (
+          <li class="my-8">
+            <h2 class="text-3xl font-semibold">
+              <a href={post.url}>{post.frontmatter.title}</a>
+            </h2>
+            {post?.frontmatter?.categories ? (
+              <ul class="flex gap-1.5 mt-1">
+                {post.frontmatter.categories.map((category) => (
+                  <li class="font-mono text-xs rounded-md py-0.5 px-1.5 bg-gray-100 dark:bg-gray-800">
+                    {category}
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+          </li>
+        );
+      })
+    }
+  </ul>
+</div>
+</Layout>

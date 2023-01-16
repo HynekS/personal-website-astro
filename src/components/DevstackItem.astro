@@ -1,0 +1,15 @@
+---
+import Image from "@astrojs/image"
+
+const { item, label} = Astro.props
+---
+<div
+  class="not-prose border rounded-lg px-3 py-1.5 inline-flex mr-4 items-center dark:border-gray-600/50 dark:[background-color:#2a3340]"
+>
+  <img
+    class="h-6 w-6 m-0"
+    src={`/assets/devicons/${item}/plain/icon.svg`}
+    alt=""
+  />
+  <span class="font-medium ml-3 mr-2">{label}</span>
+</div>
