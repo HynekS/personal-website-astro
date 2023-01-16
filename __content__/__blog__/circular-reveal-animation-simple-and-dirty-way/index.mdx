@@ -11,19 +11,67 @@ keywords:
 description:
 ---
 
-import YouTube from "mdx-embed"
+import { Image, Picture } from "@astrojs/image/components";
+export const css = String.raw`
+  #uncrop-transition-demo {
+      --dimensions: 240px;
+      --cropColor: var(--bg-primary);
+      --cropSize: calc(var(--dimensions) / 10);
+      }
+      .center {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .container {
+        position: relative;
+        height: var(--dimensions);
+        width: var(--dimensions);
+      }
+      .container::after {
+        content: \"\";
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        border-radius: 50%;
+        z-index: 1;
+        box-shadow: inset 0 0 0 var(--cropSize) var(--cropColor);
+        transition: box-shadow 0.3s ease;
+        display: block !important; /* Tailwind typography hack */
+      }
+      .container:hover::after {
+        box-shadow: inset 0 0 0 0 var(--cropColor);
+      }
+      .image {
+        position: absolute;
+        inset: 1px;
+        max-width: calc(100% - 2px);
+        max-height: calc(100% - 2px);
+        z-index: -1;
+        border-radius: 50%;
+      };`
 
 # Circular reveal animation: simple & dirty way
 
 This post is inspired by a youtube video by [Paul Lewis](https://twitter.com/aerotwist), named [Creating a circular reveal animation with JavaScript and CSS!](https://www.youtube.com/watch?v=YdvQPkJd0gc). He is explaining how to make a cool image animation using CSS and Javascript.
 
-Paul's approach is quite sophisticated. He is putting the image into a circular container that is a little bit smaller than the image itself. When the animation is triggered, the container is *expanding*, while the contained image is *contracting* with the same speed. This is creating the 'reveal' effect. To make the easing of the two motions synced, Paul is using JavaScript and some clever maths. Just take a look:
+Paul's approach is quite sophisticated. He is putting the image into a circular container that is a little bit smaller than the image itself. When the animation is triggered, the container is _expanding_, while the contained image is _contracting_ with the same speed. This is creating the 'reveal' effect. To make the easing of the two motions synced, Paul is using JavaScript and some clever maths. Just take a look:
 
-<YouTube youTubeId="YdvQPkJd0gc" />
+<iframe
+  width="560"
+  height="315"
+  src="https://www.youtube.com/embed/YdvQPkJd0gc"
+  title="YouTube video player"
+  frameborder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowfullscreen
+></iframe>
 
 The video made me wonder why he is using such a complex approach. Most likely because Paul is a decent guy who play by the rules. And the basic rule of CSS animations is: You will animate only [transform or opacity](https://web.dev/animations-guide/) (if you are wondering why, [here is the detailed explanation](https://www.smashingmagazine.com/2016/12/gpu-animation-doing-it-right/)).
 
-But I am nowhere near as smart as Paul, hence I'd rather avoid such sophisticated stuff. So I decided to play dirty. Hold to your hats – here is a way how to replicate the reveal effect using *a box shadow animation*!
+But I am nowhere near as smart as Paul, hence I'd rather avoid such sophisticated stuff. So I decided to play dirty. Hold to your hats – here is a way how to replicate the reveal effect using _a box shadow animation_!
 
 First things first, the CSS:
 
@@ -74,27 +122,26 @@ And here is the markup:
 
 ```html
 <div class="container">
-  <img class="image" src="http://placekitten.com/300/300" alt="a furry qute kitt'n" />
+  <img
+    class="image"
+    src="http://placekitten.com/300/300"
+    alt="a furry qute kitt'n"
+  />
 </div>
 ```
 
 ## Demo
 
-  <div id="uncrop-transition-demo">
-    <style  dangerouslySetInnerHTML={{
-    __html:
-      '\n      #uncrop-transition-demo {\n        --dimensions: 240px;\n        --cropColor: var(--bg-primary);\n        --cropSize: calc(var(--dimensions) / 10);\n      }\n\n      .center {\n        display: flex;\n        align-items: center;\n        justify-content: center;\n        }\n\n      .container {\n        position: relative;\n        height: var(--dimensions);\n        width: var(--dimensions);\n      }\n\n      .container::after {\n        content: "";\n        position: absolute;\n        top: 0;\n        left: 0;\n        height: 100%;\n        width: 100%;\n        border-radius: 50%;\n        z-index: 1;\n        box-shadow: inset 0 0 0 var(--cropSize) var(--cropColor);\n        transition: box-shadow 0.3s ease;\n      }\n\n      .container:hover::after {\n        box-shadow: inset 0 0 0 0 var(--cropColor);\n      }\n\n      .image {\n        position: absolute;\n        inset: 1px;\n        max-width: calc(100% - 2px);\n        max-height: calc(100% - 2px);\n        z-index: -1;\n        border-radius: 50%;\n      }\n    '
-  }}
-/>
-    <div className="center">
-      <div className="container">
-        <img
-          className="noTransform image"
-          src="assets/pexels-lad-fury-2835623.jpg"
-          alt="a verry qiute kitton"
-          style={{ margin: 0 }}
-        />
-      </div>
+<div id="uncrop-transition-demo">
+  <style>{css}</style>
+  <div className="center">
+    <div className="container">
+      <Image
+        src={import(`./assets/pexels-lad-fury-2835623.jpg`)}
+        alt="a verry qiute kitton"
+        style={{ margin: 0, zIndex: 0 }}
+        className="noTransform image"
+      />
     </div>
-
   </div>
+</div>

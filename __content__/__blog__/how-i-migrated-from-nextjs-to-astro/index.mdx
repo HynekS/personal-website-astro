@@ -1,0 +1,50 @@
+---
+title: How I migrated my blog from Next.js to Astro
+author: Hynek Svacha
+type: blog post
+dateCreated: Nov 11, 2022 11:47
+dateLastModified:
+featuredImage:
+categories:
+  - Next.js
+  - Astro
+keywords:
+  - Next.js
+  - Astro
+description:
+---
+
+# {frontmatter.title}
+
+I've migrated my website from Next.js to Astro.
+
+What makes me decide to do so? There were multiple reasons, actually, but the bottom line was that the developer experience of my blog was quite bad. To be fair, I don't blame Next.js itself for that. I've most likely just picked a bunch of libraries (for some features that Next doesn't provide out of the box) which, as it turns out, don't get along well.
+
+What were the problems?
+
+One of the main causes was the usage of twin.macro library. This is actually a thing that makes me genuinely sad, because I appreciate that library a lot and I've used it in many projects. It is basically a css-in-js variant of Tailwind, and it was (and still, in a lot of cases, is – e. g. variants grouping) a lot more ergonomic than Tailwind itself.
+
+In this codebase, though, it turned out to have more drawbacks than advantages. One bad thing is that Twin overtook Tailwind itself applying some features, namely arbitrary rules, and chose a different syntax.
+ then As it is a css-in-js library, the compiled styles are shipped in a bunch of `<style />` components. Debugging those styles using devtools is… not an easy task. Also, there was some quirky behavior that was hard to track, the fonts were sometimes being set weirdly, etc.
+
+ [Grouping variants together](https://github.com/tailwindlabs/tailwindcss/discussions/8337)
+
+
+The most serious issue was the speed of the development server. To put it bluntly, it was just unbearable. Every simple change in a results in a delay that usually takes as much as 30 seconds. I honestly don't know what was causing that (probably a markdown compilation related issue), but it was just awful.
+
+What made it even worse was the Tailwind typography customizing. In the version of typography I was using (and I couldn't update, because the newer was incompatible with twin.macro), I have to put overrides in the `tailwind.config.js`, which means to use the JavaScript object form of the selectors and rules, which is kind of painful by itself. Some selectors were causing the build tool to silently fail, and just omit the selector AND rest of the rules. It was VERY painful to debug. The worst part is, I needed to wipe out the `.next` folder and recreate it every single time I wanted to see if the recreated stylesheets are correct (which takes a LOT of time…). Awful.
+
+Another pain point was image optimization. But Next.js has `<Image />` component, so why though?, you may ask. Well, in the time I was working on a my website, it doesn't work for SSG. With some hacks, it could be tweaked to *not break*, but it wasn't optimizing anything. Also, I don't like the possible vendor lock it might result in (I might be wrong about these assumptions, but this was my reasoning). I picked a next-optimize-images library for the job. The issue is that the library was already basically abandoned at this point (likely because of the official `<Image />` replacement) and wasn't fully compatible with the version of Next.js I've been using, which results in a lot of hacking around to make things work.
+
+and yeah, Next uses SWC now. The problem is, that unless there's an SWC plugin for every added library, Next.js falls back to Webpack.
+
+
+
+I am not sure what was the main cause of the terrible response times
+
+The markdown compiler. I have trouble 
+
+The Tailwind typography plugin.
+
+
+

@@ -1,5 +1,5 @@
 ---
-title: Get exact string length in TypeScript
+title: Get the exact string length in TypeScript
 author: Hynek Svacha
 type: blog post
 dateCreated: Aug 26, 2022 09:44 
@@ -12,9 +12,9 @@ keywords:
 description: To get the exact length of a string in TypeScript, use a recursive type to convert it to an array of character. While TypeScript can not get the exact length of a string, it can get exact length of an array.
 ---
 
-# Get exact string length in TypeScript
+# Get the exact string length in TypeScript
 
-How can we get a length of a string using TypeScript? Well, every string has a `length` property, hasn't it? And we can access it in TypeScript using the bracket notation. Let's try!
+How can we get the length of a string using TypeScript? Well, every string has a `length` property, doesn't it? And we can access it in TypeScript using the bracket notation. Let's try!
 
 ```ts
 const myString = "marshmallow"
@@ -24,9 +24,9 @@ type Strlen<S extends string> = S["length"];
 type MyStrlen = Strlen<myString> // "number" 🤔
 ```
 
-Sadly it doesn't work the way we wanted. We got `number` type. Technically, there's nothing wrong with that – the type of string length *is* indeed a  *number*. But what about the *exact* number – *11* in case of "marshmallow"?
+Sadly, it doesn't work the way we wanted. We got `number` type. Technically, there's nothing wrong with that – the type of string length *is* indeed a  *number*. But what about the *exact* number – *11* in case of "marshmallow"?
 
-Sidebar: what about arrays? Can TypeScript get exact length of an array? Let's try:
+Sidebar: What about arrays? Can TypeScript get the exact length of an array? Let's try:
 
 ```ts
 const myArray = ["chocolate", "liquorice", "marshmallow"]

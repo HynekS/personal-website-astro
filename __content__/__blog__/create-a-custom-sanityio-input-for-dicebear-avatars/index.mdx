@@ -16,6 +16,8 @@ keywords:
   - custom input
 description: "Sanity.io: how to build a custom input widget that will call the DiceBear avatar api to get an avatar image"
 ---
+import { Image } from "@astrojs/image/components";
+import Note from "@components/Note"
 
 # Create a custom Sanity.io input for DiceBear avatars
 
@@ -562,11 +564,7 @@ export default AvatarInput
 
 Now, it should be working fine, as shown in the animation beneath:
 
-<img
-  src="assets/avatar-input-animation.gif"
-  className="noTransform"
-  alt="Animated gif of finished avatar input"
-/>
+<Image src={import("./assets/avatar-input-animation.gif")} alt="Animated gif of finished avatar input"/>
 
 ## Conclusion
 

@@ -16,12 +16,13 @@ keywords:
   - jamstack
 description: How to create a JAMstack static site using headless WordPress, Next.js and GraphQL
 ---
+import { Image } from "@astrojs/image/components";
 
 # Create a Next.js static site with Wordpress and GraphQL (WP GraphQL + Next.js, part 1)
 
 In this tutorial, we will create a JAMstack app by connecting three quite different libraries. On the backend, there is the old champ WordPress, tuned up by [Roots](https://roots.io). On the frontend, there is the prodigy, [Next.js](https://nextjs.org). Between those two, there is a great invention from, erm… the minions? (*cough*): [GraphQL](https://graphql.org).
 
-As it turned out, these three, while being different ages and languages, went along really well! Let's try yourself!
+As it turned out, these three, while being different ages and languages, went along really well. Let's give it a try!
 
 ## Prerequisites
 
@@ -76,11 +77,11 @@ Let's test if everything is working fine. Let's start our development environmen
 
 Hopefully, everything went well and we successfully installed a new WordPress instance. Let's log in our admin pages and activate the WP GraphQL plugin. A GraphQL link should appear at the sidebar, and a GraphiQL IDE link should appear on the upper bar:
 
-![Image of the WordPress admin pages after activating WP GraphQL plugin](assets/wp-graphql-tutorial-pt1-admin-page-graphiql-edited.png)
+<Image  src={import("./assets/wp-graphql-tutorial-pt1-admin-page-graphiql-edited.png")} alt="Image of the WordPress admin pages after activating WP GraphQL plugin"/>
 
 Also, check the plugin settings (see image below). We didn't need to change any of the defaults. Just notice the 'GraphQL Endpoint' option, because we will need this later while querying the from our Next app.
 
-![Image of the default WP GraphQL plugin settings](assets/wp-graphql-tutorial-pt1-admin-page-settings-full-edited.png)
+<Image src={import("./assets/wp-graphql-tutorial-pt1-admin-page-settings-full-edited.png")} alt="Image of the default WP GraphQL plugin settings"/>
 
 One more thing: Right now, if we use a fresh new install with and empty database, there are barely any data to query (just the default 'Hello World' post), which is kind of dull. Let's create more posts! We'll use the 'Faker Press' plugin.
 
@@ -112,7 +113,7 @@ composer update
 
 When the plugin is installed and activated, the 'FakerPress' menu item appears on the side bar. Let's go to the 'posts' submenu and create some posts. I did create 12 posts from 'this month', but feel free to change that settings. I would just recommend to create _some_ posts.
 
-![Image of the Faker Press settings](assets/wp-graphql-tutorial-pt1-admin-page-fakerpress-posts.png)
+<Image src={import("./assets/wp-graphql-tutorial-pt1-admin-page-fakerpress-posts.png")} alt="Image of the Faker Press settings" />
 
 ## Install Next.js
 
@@ -205,7 +206,7 @@ const Home = () => {
 Beautiful, isn't it? Well, probably not. Let's add some styles to make it look acceptable, at least. There are some neat open source CSS libraries for the basic HTML elements styling that can achieve that very easily, for instance the [Basic.css](https://github.com/vladocar/Basic.css/blob/master/css/basic.css) or [spcss](https://github.com/susam/spcss/blob/master/sp.css). There is a `styles` folder in the root dir of our Next.js app, containing a `globals.css` file. Let's open it and replace all of its contents with one of the linked files from github. Last but not least, put a one remaining selector with a few rules taken from [58 bytes of css to look great nearly everywhere](https://jrl.ninja/etc/1/) article (NOTE: Unfortunately, the link seems to be currently broken):
 
 ```css
-/* ... Basic.css or spcss rules */
+/* ... Basic.css rules */
 
 #__next {
   max-width: 70ch;
@@ -276,7 +277,7 @@ yarn dev
 
 Hopefully, we can see our first query result:
 
-![Image of the homepage with our first queried data](assets/wp-graphql-tutorial-pt1-first-query-display.png)
+<Image src={import("./assets/wp-graphql-tutorial-pt1-first-query-display.png")} alt="Image of the homepage with our first queried data" />
 
 It doesn't look bad, but we want *actual links*, no just a JSON list of them. Let's import a `Link` component and create some… no surprise, links:
 

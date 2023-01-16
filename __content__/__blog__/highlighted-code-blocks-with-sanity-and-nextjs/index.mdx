@@ -13,14 +13,15 @@ keywords:
   - Next.js
   - Prism
   - highlight
-description: How to create syntax highlighted code blocks using Sanity.io as a CMS and Next.js as a front-end
+description: "How to create syntax highlighted code blocks using Sanity.io as a CMS and Next.js as a front-end"
 ---
+import Note from "@components/Note"
 
 # Highlighted code blocks with Sanity.io and Next.js
 
 In this tutorial, we will create an input for code blocks in **Sanity.io**. Subsequently, we will create a component for displaying our code blocks in a **Next.js** app.
 
-## Prerequisities
+## Prerequisites
 
 *   We already know how to install and use Sanity Studio (it is [pretty straightforward](https://www.sanity.io/docs/getting-started-with-sanity-cli)).
 *   We already know how to install Next.js and connect it to Sanity api. In the case of uncertainty, there is a [great tutorial on the company blog](https://www.sanity.io/blog/build-your-own-blog-with-sanity-and-next-js).
@@ -32,7 +33,6 @@ Sanity.io does not come with a dedicated input for code blocks out of the box, b
 ```sh
 sanity install @sanity/code-input
 ```
-
 Once the plugin is installed, we'll have to enable it in our portable text scheme. Let's open a file where our portable text scheme is defined and add a code block definition (as highlighted below):
 
 ```js
@@ -104,7 +104,7 @@ If everything went well, we could now be able to add a block of code in our rich
 
 ![Image of the Code Block option in Sanity block editor's collapsible menu](assets/code-block-in-sanity-studio-block-editor.png)
 
-**NOTE**: To highlight a line, simply click on it. Click again to unhighlight.
+<Note>To highlight a line, simply click on it. Click again to un-highlight.</Note>
 
 ## How to render our code blocks on the front end
 
@@ -147,7 +147,6 @@ First, we gonna need to install the PrismJS module:
 ```sh
 npm i prismjs
 ```
-
 Once the module is installed, we need to create a React component which will be responsible to rendering our code blocks.
 
 The component would look like the one below. Since we are rendering client-side, we need to initialize a ref on the wrapper element first. Then, in the `useEffect` hook, when the DOM is available, we invoke the `Prism.highlightAllUnder()` method on that ref – which should make our code highlighted.
@@ -184,7 +183,7 @@ export default CodeBlock
 
 ### Option #2: Prerender
 
-While server-side rendering or static generation is definitely possible using bare PrismJS, i've run into some issues with it. Therefore, I would recommend to install the library, which is using PrismJS under the hood, but is enhanced to use specificaly with React. That library is [prism-react-renderer](https://github.com/FormidableLabs/prism-react-renderer) from [Formidable labs](https://github.com/FormidableLabs).
+While server-side rendering or static generation is definitely possible using bare PrismJS, i've run into some issues with it. Therefore, I would recommend to install the library, which is using PrismJS under the hood, but is enhanced to use specifically with React. That library is [prism-react-renderer](https://github.com/FormidableLabs/prism-react-renderer) from [Formidable labs](https://github.com/FormidableLabs).
 
 So let's install it:
 
@@ -282,8 +281,9 @@ const CodeBlock = ({ code, language, highlightedLines }) => {
     </>
   )
 }
-```
+
 export default CodeBlock
+```
 
 #### prism-react-renderer
 

@@ -1,0 +1,231 @@
+---
+title: "Add 'copy to clipboard' button to code snippets in Astro"
+author: Hynek Svacha
+type: blog post
+dateCreated: Dec 19, 2022 13:19
+dateLastModified:
+featuredImage:
+categories:
+  - Astro
+  - Preact
+  - MDX
+keywords:
+description:
+---
+
+# {frontmatter.title}
+
+I am currently migrating my blog from Next.js to Astro. I also recently fell in love with Preact. I decided that in this new blog iteration, I will ditch React completely and I will recreate the small amount of interactive components using that great 3Kb library.
+
+Since Astro has the 'next-gen island architecture', it is actually easy to bring any library/framework for an island component – you can have a dropdown in React, dialog in Svelte and theme toggle button as a web component. I wouldn't do _that_, but it makes decision like the above mentioned easier to make.
+
+I write my blog posts in MDX, which is a superset of Markdown that allows (among other things) using interactive components. A code block with a button that would copy the contained snippet to a clipboard is a nice and simple example of this component.
+
+## Install Astro and create a MDX post
+
+If you don't have a previous experience with Astro, you can [follow this tutorial](https://docs.astro.build/en/tutorial/0-introduction/). Of course using Markdown and MDX in Astro can be a little different than in other frameworks – if you are not sure, [check the docs](https://docs.astro.build/en/guides/markdown-content/).
+
+
+So let's suppose that we have Astro installed and we have a simple simple MDX  blog post with a frontmatter and code block:
+
+````md
+---
+title: How to sum up two numbers in JavaScript
+category: JavaScript
+---
+# How to sum up two numbers in JavaScript
+
+Let's make a function:
+```js
+function sum(a, b) {
+  return a + b
+}
+```
+And this is how we do it!
+````
+
+This will serve as our starting point.
+
+## Create Preact integration
+
+To create Preact integration, you need to basically use just one simple command:
+
+```bash
+# Using NPM
+npx astro add preact
+# Using Yarn
+yarn astro add preact
+```
+
+However, I am using TypeScript and the default config is considering JSX as React. So I would also update the `tsconfig.json` file to prevent type errors:
+
+```js
+{
+  "extends": "astro/tsconfigs/strict",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact"
+  }
+}
+```
+
+As the docs suggests, you can also use pragma comment (which is handy if you are using different libraries in the same Astro project):
+
+```jsx
+/** @jsxImportSource preact */
+```
+
+## Create an enhanced `<pre>` component
+
+In most markdown compilers, the block between the triple backticks is being converted to a `<pre>` element. So we need to enhance it.
+
+First, let's make a file for our component in `components` folder, called `EnhancedPreElement.tsx`
+
+```jsx
+// EnhancedPreElement.tsx
+import { createRef, ComponentChildren } from "preact";
+
+const EnhancedPreElement = ({ children, ...props }: { children: ComponentChildren }) => {
+  const snippetRef = createRef<HTMLPreElement>();
+
+  const copyToClipboard = () => {
+    /* This is kinda messy, but I am afraid there is currently not 
+    *  a better way than creating a <textarea> element, putting the <pre>
+    *  element's `innerText` in it, select it and copy it to clipboard :/
+    */
+    let snippet = snippetRef.current;
+    let area = document.createElement("textarea");
+    area.value = snippet ? snippet.innerText : "";
+    area.select();
+    area.setSelectionRange(0, 99999);
+    navigator.clipboard.writeText(area.value);
+  };
+
+  return (
+    <div className="relative group">
+      <pre {...props} ref={snippetRef}>
+        {children}
+      </pre>
+      <button
+        className="text-sm text-gray-300 bg-gray-700 rounded absolute top-4 right-4 px-2 invisible group-hover:visible"
+        onClick={() => {
+            copyToClipboard();
+          }
+        }
+      >
+        Copy
+      </button>
+    </div>
+  );
+};
+
+export default EnhancedPreElement;
+```
+In this component, we are recreating the original code block, but we've added a wrapper including the 'copy to clipboard' button.
+
+Note the three lines through the opening `<pre>` and closing `</pre>` tags. With `{...props}`, we are passing down all the meta parameters used in MDX (language, filename, etc.); with `{children}`, we are passing down the original contents.
+
+The copying action is a little messy (because of cross-browser compatibility issues) – see the comment in `copyToClipboard()` function.
+
+Styling is done using Tailwindcss. If you hate it, you can use a different way to style the markup. 
+
+## 'Signal' that our component is really slick
+
+Preact has recently [added a new api called *Signals*](https://preactjs.com/blog/introducing-signals/). This api is obviously inspired by [Solid's *Signals*](https://www.solidjs.com/guides/reactivity) – but it is even terser and more different from [React's Hooks](https://reactjs.org/docs/hooks-intro.html).
+
+Let's try it! Firstly, we'll need to install a dedicated module (signals are not a part of the Preact's core library):
+
+```bash
+# Using NPM
+npm install @preact/signals
+
+# Using Yarn
+yarn add @preact/signals
+```
+
+Then, we can use the signals add interactivity. It will be simple:
+
+When clicked, our button will change its text to **"Copied!"**. After one second, it will return to the default **"Copy"**. To observe the "Copy" action, we'll use a signal, that will be updated after a timeout. We'll derive the button's current text with *computed signal*:
+
+```jsx
+import { createRef, ComponentChildren } from "preact";
+import { signal, computed } from "@preact/signals";
+
+const EnhancedPreElement = ({ children, ...props }: { children: ComponentChildren }) => {
+  const snippetRef = createRef<HTMLPreElement>();
+  const timeoutRef = createRef<ReturnType<typeof setTimeout>>();
+
+  const hasBeenCopiedRecently = signal(false);
+
+  const buttonText = computed(() => {
+    return hasBeenCopiedRecently.value ? "Copied!" : "Copy";
+  });
+
+  const copyToClipboard = () => {
+    let snippet = snippetRef.current;
+    let area = document.createElement("textarea");
+    area.value = snippet ? snippet.innerText : "";
+    area.select();
+    area.setSelectionRange(0, 99999);
+    navigator.clipboard.writeText(area.value);
+    hasBeenCopiedRecently.value = true;
+
+    timeoutRef.current = setTimeout(() => {
+      timeoutRef.current = null;
+      hasBeenCopiedRecently.value = false;
+    }, 1000);
+  };
+
+  return (
+    <div className="relative group">
+      <pre {...props} ref={snippetRef}>
+        {children}
+      </pre>
+      <button
+        className="text-sm text-gray-300 bg-gray-700 rounded absolute top-4 right-4 px-2 invisible group-hover:visible"
+        onClick={() => {
+          if (timeoutRef.current) {
+            return false;
+          } else {
+            copyToClipboard();
+          }
+        }}
+      >
+        {buttonText}
+      </button>
+    </div>
+  );
+};
+
+export default EnhancedPreElement;
+```
+
+## Use the component in MDX
+
+There are basically two options how to tell the MDX compiler that we want to render `<pre>` elements using our `EnhancedPreElement` component.
+
+We can do it either in a MDX file, inline, like this:
+
+```md
+---
+title: How to sum up two numbers in JavaScript
+category: JavaScript
+---
+import EnhancedPreElement from "../components/EnhancedPreElement"
+export const components = { pre: (props) => <EnhancedPreElement client:load {...props} />}
+
+// The rest of the MDX file…
+```
+
+It's very similar as it was when using Next.js. The one very important difference is that you need to use the `client:load` (or other) directive to tell Astro when and how load the compiled script. Just try to omit it – the component won't load at all.
+
+Alternatively, we can use Astro's template (layout) page, that will make the replacement globally, using the `<Content />` component:
+
+```astro
+---
+import { Content, components } from '../some-mdx-file.mdx';
+import EnhancedPreElement from '../components/EnhancedPreElement';
+---
+<Content components={{...components, pre: (props) => <EnhancedPreElement client:load {...props} /> }} />
+```
+

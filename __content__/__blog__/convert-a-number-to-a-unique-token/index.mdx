@@ -12,6 +12,7 @@ keywords:
   - javascript
 description:
 ---
+import { Image } from "@astrojs/image/components";
 
 # Convert a number to a unique token
 
@@ -58,7 +59,7 @@ The number of combinations was in the order of hundred of thousands, so I was a 
 
 But let's look at one real-life example. The SNES version of [Prince of Persia](https://en.m.wikipedia.org/wiki/Prince_of_Persia) from early 90's used a very simple system of saves – if you successfully reached the end of the level, you were given an alphanumeric code, e. g. `"Y2CQWTB"`.
 
-![Prince of Persia on SNES, end of level save code. Credit: https://www.youtube.com/watch?v=Io6zwExo3jw&t=1257s](assets/prince-of-persia-snes-save-code.png)
+<Image src={import("./assets/prince-of-persia-snes-save-code.png")} alt="Prince of Persia on SNES, end of level save code. Credit: https://www.youtube.com/watch?v=Io6zwExo3jw&t=1257s"/>
 
 I don't know the exact implementation details, but I guess that this coded encoded the unique state of the game, so at least:
 
