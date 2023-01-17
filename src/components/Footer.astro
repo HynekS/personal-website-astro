@@ -2,6 +2,12 @@
 import GithubIcon from "./GithubIcon.astro";
 import LinkedinIcon from "./LinkedinIcon.astro";
 ---
+<script>
+    const target = document.getElementById("currentYear")
+    if (target instanceof HTMLElement) {
+      target.textContent = String(new Date().getFullYear())
+    }
+</script>
 <div class="flex justify-center py-8">
     <footer class="max-w-prose">
       <div class="flex gap-4 justify-center mb-4 text-gray-400">
@@ -24,6 +30,6 @@ import LinkedinIcon from "./LinkedinIcon.astro";
           <LinkedinIcon />
         </a>
       </div>
-      <span class="text-sm font-mono px-4">© 2019–{new Date().getFullYear()} Hynek Svacha</span>
+      <span class="text-sm font-mono px-4">© 2019–<span id="currentYear">present</span> Hynek Svacha</span>
     </footer>
   </div>
