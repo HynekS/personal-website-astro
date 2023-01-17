@@ -1,0 +1,134 @@
+---
+import RecursiveListBranch from "@components/RecursiveListBranch.astro";
+
+export interface AstroHeading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+export interface HeadingNode {
+  nodes?: undefined | HeadingNode[];
+  text?: string;
+  slug?: string;
+  depth?: number;
+}
+
+export interface Props {
+  headings: AstroHeading[];
+}
+
+const { headings } = Astro.props;
+
+const headingsExceptsH1s = headings
+  ? headings.filter((obj: AstroHeading) => obj.depth > 1)
+  : [];
+
+const withAdjustedHeadings = headingsExceptsH1s.map(
+  (heading: AstroHeading) => ({
+    ...heading,
+    depth: heading.depth - 1,
+  })
+);
+
+const buildTree = (array: AstroHeading[]) => {
+  const levels: HeadingNode[] = [{ nodes: undefined }];
+  array.forEach(function (a) {
+    levels.length = a.depth;
+    levels[a.depth - 1].nodes = levels[a.depth - 1].nodes || [];
+    levels[a.depth - 1].nodes?.push(a);
+    levels[a.depth] = a;
+  });
+
+  return levels[0].nodes;
+};
+
+const headingsAsTree = buildTree(withAdjustedHeadings);
+---
+
+<style is:global>
+  [data-is_navigation] {
+    @apply transition-all text-primary p-4 lg:fixed lg:left-0 lg:top-28;
+    transition-duration: 60ms;
+
+    & ul li {
+      @apply pl-3;
+    }
+
+    & a {
+      @apply block ml-2;
+    }
+
+    & li {
+      @apply relative;
+
+      & li {
+        @apply text-sm leading-6;
+        filter: brightness(0.9);
+      }
+      & svg {
+        @apply opacity-0 absolute top-0 left-0 w-[1rem];
+        height: calc(1em * 1.5);
+      }
+
+      & li svg {
+        @apply ml--3;
+      }
+      
+      &.active > svg {
+        @apply opacity-100;
+      }
+    }
+
+    & .active {
+      color: var(--color-primary);
+    }
+  }
+
+  .dark [data-is_navigation] .active {
+    color: var(--color-links);
+  }
+</style>
+<script>
+  let observer: IntersectionObserver | null = null;
+
+  let articleElement = document.querySelector("[data-is_article]");
+  let articleNavigation = document.querySelector("[data-is_navigation]");
+
+  if (articleElement && articleNavigation) {
+    let currentActiveElement: HTMLElement | null = null;
+    observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const id = entry.target.getAttribute("id");
+          if (entry.intersectionRatio > 0) {
+            currentActiveElement &&
+              currentActiveElement.classList.remove("active");
+            // @ts-ignore: Object is possibly 'null'.
+            currentActiveElement = articleNavigation.querySelector(
+              `li a[href="#${id}"]`
+            ).parentElement;
+            currentActiveElement &&
+              currentActiveElement.classList.add("active");
+          }
+        });
+      },
+      { rootMargin: "-45% 0% -55% 0%" }
+    );
+    articleElement.querySelectorAll("h2, h3, h4, h5, h6").forEach((heading) => {
+      observer && observer.observe(heading);
+    });
+  }
+</script>
+<nav data-is_navigation>
+  {
+    headingsAsTree ? (
+      <ul>
+        {headingsAsTree.map((branch) => {
+          const { slug, text, nodes } = branch || {};
+          return <RecursiveListBranch slug={slug} text={text} nodes={nodes} />;
+        })}
+      </ul>
+    ) : null
+  }
+</nav>

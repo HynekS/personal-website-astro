@@ -1,6 +1,7 @@
 ---
-import Layout from "@layouts/Layout.astro"
-import ScrollToTop from "@components/ScrollToTop"
+import Layout from "@layouts/Layout.astro";
+import RecursiveList from "@components/RecursiveList.astro";
+import ScrollToTop from "@components/ScrollToTop";
 
 export interface Props {
   title: string;
@@ -8,15 +9,19 @@ export interface Props {
 }
 
 const { title } = Astro.props.frontmatter;
+const { headings } = Astro.props;
 ---
 <Layout title={title}>
-  <aside class="hidden md:block md:w-1/5">TOC?</aside>
-    <main class="flex-auto max-w-full [margin-right:calc((50% - 30ch)/2)]">
-      <article
-        class="prose prose-sm mx-auto pt-8 px-4 md:prose lg:prose-lg lg:px-0 dark:prose-dark pb-16"
-      >
-        <slot />
-      </article>
-    </main>
-    <ScrollToTop client:load />
+  <aside class="hidden md:block md:w-1/5">
+    <RecursiveList headings={headings}/>
+  </aside>
+  <main class="flex-auto max-w-full [margin-right:calc((50% - 30ch)/2)]">
+    <article
+      class="prose prose-sm mx-auto pt-8 px-4 md:prose lg:prose-lg lg:px-0 dark:prose-dark pb-16"
+      data-is_article
+    >
+      <slot />
+    </article>
+  </main>
+  <ScrollToTop client:load />
 </Layout>

@@ -1,0 +1,50 @@
+---
+import RecursiveListBranch from "@components/RecursiveListBranch.astro"
+
+
+export interface HeadingNode {
+  nodes?: undefined | HeadingNode[];
+  text?: string;
+  slug?: string;
+  depth?: number;
+};
+
+export interface Props {
+  text?: string;
+  nodes?: HeadingNode[]
+  slug?: string
+}
+
+const { text, nodes, slug } = Astro.props
+
+const hasChildren = nodes && nodes.length;
+---
+<li>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    class="inline w-4 h-4 mr-2"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+  >
+    <path
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      d="M14 5l7 7m0 0l-7 7m7-7H3"
+    />
+  </svg>
+  <a
+    href={`#${slug}`}
+  >
+    {text}
+  </a>
+  {hasChildren && (
+    <ul>
+      {nodes.map((branch) => {
+        const { slug, text, nodes } = branch || {};
+        return <RecursiveListBranch slug={slug} text={text} nodes={nodes} />;
+      })}
+    </ul>
+  )}
+</li>
