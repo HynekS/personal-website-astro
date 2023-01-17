@@ -18,6 +18,8 @@ keywords:
   - TypeScript
 description: 'How to create a JAMstack static site using headless WordPress, Next.js and GraphQL, part 2: How to type our queries with TypeScript'
 ---
+import { Image, Picture } from '@astrojs/image/components';
+
 
 # How to type our GraphQL queries (WP GraphQL + Next.js, part 2)
 
@@ -115,7 +117,7 @@ There is one important thing we need to update in our WordPress settings. In the
 
 But we need to enable it – codegen need to know our Schema to generate the types. On our dev environment, there is probably not much to worry about (according to this PR comment, the introspection [should be disabled by default](https://github.com/wp-graphql/wp-graphql/pull/1490#issue-715306162) on _staging_ and _production_ environments). Let's turn the introspection **ON** and save the changes.
 
-![Image of a settings menu with enhanced introspection checkbox](assets/wp-graphql-tutorial-pt2-enable-introspection.png)
+<Image src={import("./assets/wp-graphql-tutorial-pt2-enable-introspection.png")} alt="Image of a settings menu with enhanced introspection checkbox"/>
 
 ## Add the GraphQL Tag Plucks
 
@@ -462,7 +464,7 @@ export default Home
 
 Now, we should be able to see the inferred type when hovering over the `LatestPosts` prop:
 
-![Image of the type 'tooltip' appearing on variable hover in VS Code](assets/wp-graphql-tutorial-pt2-inferred-type.png)
+<Image src={import("./assets/wp-graphql-tutorial-pt2-inferred-type.png")} alt="Image of the type 'tooltip' appearing on variable hover in VS Code"/>
 
 ### Update our component to make TypeScript happy
 

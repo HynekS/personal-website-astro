@@ -21,6 +21,7 @@ gallery:
   - src: assets/windows-powershell-pretty-git-prompt-06.png
   
 ---
+import { Image, Picture } from '@astrojs/image/components';
 import Lightbox from "@components/Lightbox"
 
 # Pretty PowerShell with Windows Terminal, posh-git and oh-my-posh
@@ -38,7 +39,7 @@ You can easily get it from the [Microsoft Store](https://aka.ms/terminal). If th
 
 If you've installed the terminal, let consider that as our starting point (well, at least it's not blue!):
 
-![Screenshot of the appearance of PowerShell on a newly installed Windows Terminal.](assets/Image-00-default-look.png)
+<Image src={import("./assets/Image-00-default-look.png") } alt="Screenshot of the appearance of PowerShell on a newly installed Windows Terminal." />
 
 ## Install posh-git and oh-my-posh
 
@@ -59,7 +60,7 @@ Install-Module oh-my-posh -Scope CurrentUser -AllowPrerelease
 
 You may need to install NuGet first, but the PowerShell is smart enough to offer you a NuGet install if it couldn't find it. You'll also probably get a few warning about untrusted repositories, because both `posh-git` and `oh-my-posh` are not Microsoft official packages. I suppose we can trust them, so feel free to assure PowerShell that we really want to install both of them (see image below).
 
-![Screenshot of a confirmation dialog while installing posh-git and oh-my-posh.](assets/Image-07-nu-get-confirmation.png)
+<Image src={import("./assets/Image-07-nu-get-confirmation.png")} alt="Screenshot of a confirmation dialog while installing posh-git and oh-my-posh."/>
 
 After the install has finished, we need to edit the PowerShells profile. The easiest way how to create or update settings is to open the PowerShell and run `notepad $PROFILE`.
 
@@ -73,7 +74,7 @@ Set-PoshPrompt -Theme paradox
 
 Save the file and reload your terminal. Since PowerShell is still kind of suspicious about these newly installed packages, you'll probably get an error regarding the security policies (as shown in the image below).
 
-![Screenshot of possible Execution policy error while trying to use installed packages.](assets/Image-08-security-error.png)
+<Image src={import("./assets/Image-08-security-error.png")} alt="Screenshot of possible Execution policy error while trying to use installed packages."/>
 
 If that is the case, you can lift the user privileges by running:
 

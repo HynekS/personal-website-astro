@@ -15,6 +15,7 @@ keywords:
   - highlight
 description: "How to create syntax highlighted code blocks using Sanity.io as a CMS and Next.js as a front-end"
 ---
+import { Image, Picture } from '@astrojs/image/components';
 import Note from "@components/Note"
 
 # Highlighted code blocks with Sanity.io and Next.js
@@ -102,7 +103,8 @@ export default {
 
 If everything went well, we could now be able to add a block of code in our rich text editor:
 
-![Image of the Code Block option in Sanity block editor's collapsible menu](assets/code-block-in-sanity-studio-block-editor.png)
+<Image src={import("./assets/code-block-in-sanity-studio-block-editor.png")} alt="Image of the Code Block option in Sanity block editor's collapsible menu" />
+
 
 <Note>To highlight a line, simply click on it. Click again to un-highlight.</Note>
 

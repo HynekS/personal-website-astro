@@ -15,11 +15,12 @@ keywords:
 description: 'There is one simple dirty trick for Redux Devtools that can make logging more useful: convert the constants to functions that accepts arguments.'
 
 ---
+import { Image, Picture } from "@astrojs/image/components";
 import Note from "@components/Note"
 
 # One dirty redux devtools logging trick
 
-While redux is far from being the coolest kid in the playground at the moment (late 2020), I am still using it on some of my projects. There is still one feature, which most of its competitors (like zustand, jotai, recoil, react-query or SWR) lack so far: mature and feature rich devtools.
+While redux is far from being the coolest kid in the playground at the moment (late 2020), I am still using it on some of my projects. There is still one feature, which most of its competitors (like [zustand](https://https://github.com/pmndrs/zustand), [jotai](https://github.com/pmndrs/jotai), [recoil](https://recoiljs.org/), [react-query](https://react-query-v3.tanstack.com/) or [SWR](https://swr.vercel.app/)) lack so far: mature and feature rich devtools.
 
 <Note>This article is not up-to-date. While the proposed trick is still valid, i can't se any reason to keep using vanilla Redux in 2022. 💡 I would suggest to check <a style={{ all: "unset", textDecoration: "underline", cursor: "pointer" }} href="https://redux-toolkit.js.org/">Redux Toolkit</a>, which yields a much better DX (unfortunately, you can't use the proposed trick here).</Note>
 
@@ -34,11 +35,11 @@ const FETCH_PROJECTS_OF_SINGLE_YEAR_FAILURE = "[projects] Fetching projects of s
 
 On the devtools pane, it looks O.K. – not great, not terrible:
 
-![Image of redux devtools without (neutral)](assets/redux_devtools_00_final.png)
+<Image src={import(`./assets/redux_devtools_00_final.png`)} alt="Image of redux devtools (neutral)"/>
 
 However, if I dispatch a lot of these actions in a row, I can't help to think that something is missing here:
 
-![Image of redux devtools without (sad, missing parameters)](assets/redux_devtools_01_final.png)
+<Image src={import(`./assets/redux_devtools_01_final.png`)} alt="Image of redux devtools without parameters (not optimal result)"/>
 
 As it turned out, it would be quite easy! Just turn your constants into functions which receives an argument and returns a string utilizing it:
 
@@ -96,11 +97,11 @@ export default function reducer(state = {}, action = {}) {
 
 And voilà, your redux devtools actions console is much more informative (and fun):
 
-![Image of redux devtools, parametrized](assets/redux_devtools_02_final.png)
+<Image src={import(`./assets/redux_devtools_02_final.png`)} alt="Image of redux devtools, parametrized"/>
 
 I really appreciate this when debugging a lot of actions of the same type being dispatched with different parameters. More than that, it can reveal possible bugs caused by an unexpected argument passes into actions (e. g. react-router params from mistyped url).
 
-![Image of redux devtools without with a lot of actions of the same type being dispatched with different parameters, parametrized](assets/redux_devtools_03_final.png)
+<Image src={import(`./assets/redux_devtools_03_final.png`)} alt="Image of redux devtools without with a lot of actions of the same type being dispatched with different parameters, parametrized"/>
 
 The idea about making constants dynamic may sound like a heresy for some hardcore redux developers. I would argue that:
 
