@@ -48,7 +48,7 @@ const headingsAsTree = buildTree(withAdjustedHeadings);
 
 <style is:global>
   [data-is_navigation] {
-    @apply transition-all text-primary p-4 lg:fixed lg:left-0 lg:top-28;
+    @apply transition-all text-primary p-4 hidden lg:block lg:fixed lg:left-0 lg:top-28;
     transition-duration: 60ms;
 
     & ul li {
@@ -74,7 +74,7 @@ const headingsAsTree = buildTree(withAdjustedHeadings);
       & li svg {
         @apply ml--3;
       }
-      
+
       &.active > svg {
         @apply opacity-100;
       }
@@ -90,14 +90,12 @@ const headingsAsTree = buildTree(withAdjustedHeadings);
   }
 </style>
 <script>
-  let observer: IntersectionObserver | null = null;
-
   let articleElement = document.querySelector("[data-is_article]");
   let articleNavigation = document.querySelector("[data-is_navigation]");
 
   if (articleElement && articleNavigation) {
     let currentActiveElement: HTMLElement | null = null;
-    observer = new IntersectionObserver(
+    let observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           const id = entry.target.getAttribute("id");
@@ -113,7 +111,7 @@ const headingsAsTree = buildTree(withAdjustedHeadings);
           }
         });
       },
-      { rootMargin: "-45% 0% -55% 0%" }
+      { rootMargin: "-42% 0% -52% 0%" }
     );
     articleElement.querySelectorAll("h2, h3, h4, h5, h6").forEach((heading) => {
       observer && observer.observe(heading);
