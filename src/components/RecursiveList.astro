@@ -20,17 +20,6 @@ export interface Props {
 
 const { headings } = Astro.props;
 
-const headingsExceptsH1s = headings
-  ? headings.filter((obj: AstroHeading) => obj.depth > 1)
-  : [];
-
-const withAdjustedHeadings = headingsExceptsH1s.map(
-  (heading: AstroHeading) => ({
-    ...heading,
-    depth: heading.depth - 1,
-  })
-);
-
 const buildTree = (array: AstroHeading[]) => {
   const levels: HeadingNode[] = [{ nodes: undefined }];
   array.forEach(function (a) {
@@ -43,7 +32,25 @@ const buildTree = (array: AstroHeading[]) => {
   return levels[0].nodes;
 };
 
-const headingsAsTree = buildTree(withAdjustedHeadings);
+const prepareHeadings = (headings = [] as AstroHeading[]) => {
+  // Has only H1
+  if (headings.length <= 1) return null;
+
+  const withFlattenedH1 = headings.map((heading) => {
+    return heading.depth === 1
+      ? { ...heading, depth: 2, text: "Overview" }
+      : heading;
+  });
+
+  const withAdjustedHeadings = withFlattenedH1.map((heading) => ({
+    ...heading,
+    depth: heading.depth - 1,
+  }));
+
+  return buildTree(withAdjustedHeadings);
+};
+
+const headingsAsTree = prepareHeadings(headings);
 ---
 
 <style is:global>
@@ -57,6 +64,10 @@ const headingsAsTree = buildTree(withAdjustedHeadings);
 
     & a {
       @apply block ml-2;
+
+      &:hover {
+        text-decoration: underline;
+      }
     }
 
     & li {
@@ -75,47 +86,89 @@ const headingsAsTree = buildTree(withAdjustedHeadings);
         @apply ml--3;
       }
 
+      &.active > a,
+      &.active > svg {
+        color: var(--color-primary);
+      }
       &.active > svg {
         @apply opacity-100;
       }
     }
-
-    & .active {
-      color: var(--color-primary);
-    }
   }
 
-  .dark [data-is_navigation] .active {
+  .dark [data-is_navigation] li.active > a {
     color: var(--color-links);
   }
 </style>
 <script>
+    interface state {
+    active: HTMLLIElement | null;
+    update: (newActiveElement: HTMLLIElement) => void;
+  }
+
   let articleElement = document.querySelector("[data-is_article]");
+  let articleHeadings = articleElement?.querySelectorAll("h1, h2, h3, h4, h5, h6") ?? []
+
   let articleNavigation = document.querySelector("[data-is_navigation]");
+  
+  let articleNavigationFirstItem = articleNavigation?.querySelector("li");
+
+  let observer: IntersectionObserver | null = null;
+
+
+  let state: state = {
+    active: null,
+    update: (newActiveElement: HTMLLIElement) => {
+      if (state.active) state.active.classList.remove("active");
+      state.active = newActiveElement;
+      state.active.classList.add("active");
+    },
+  };
+
+  if (articleNavigationFirstItem) state.update(articleNavigationFirstItem);
 
   if (articleElement && articleNavigation) {
-    let currentActiveElement: HTMLElement | null = null;
-    let observer = new IntersectionObserver(
+    articleNavigation.addEventListener("click", (e) => {
+      e.preventDefault();
+      
+      if (e.target) {
+        const href = (e.target as HTMLElement).getAttribute("href")?.substring(1)
+        document
+          .querySelector(`[id='${href}']`)
+          ?.scrollIntoView({ behavior: "smooth" });
+        
+        history.pushState(null, "", `#${href}`);
+      }
+
+      articleHeadings.forEach(heading => {observer?.unobserve(heading)});
+      let targetElement = (e.target as HTMLElement).closest("li");
+      if (targetElement) {
+        state.update(targetElement);
+      }
+      // This is really a hotfix. What I actually need is to observe the scroll event
+      setTimeout(() => {articleHeadings.forEach(heading => {observer?.observe(heading)})}, 800)
+    });
+
+    observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           const id = entry.target.getAttribute("id");
           if (entry.intersectionRatio > 0) {
-            currentActiveElement &&
-              currentActiveElement.classList.remove("active");
-            // @ts-ignore: Object is possibly 'null'.
-            currentActiveElement = articleNavigation.querySelector(
+            let element = articleNavigation?.querySelector(
               `li a[href="#${id}"]`
-            ).parentElement;
-            currentActiveElement &&
-              currentActiveElement.classList.add("active");
+            )?.parentElement;
+            if (element) state.update(element as HTMLLIElement);
           }
         });
       },
-      { rootMargin: "-42% 0% -52% 0%" }
+      { rootMargin: "-100px 0% -66%", threshold: 1 }
     );
-    articleElement.querySelectorAll("h2, h3, h4, h5, h6").forEach((heading) => {
-      observer && observer.observe(heading);
-    });
+    
+    // To Fix: should observe only while scrolling
+    articleHeadings
+      .forEach((heading) => {
+        observer && observer.observe(heading);
+      });
   }
 </script>
 <nav data-is_navigation>
