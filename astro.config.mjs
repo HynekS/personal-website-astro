@@ -3,16 +3,17 @@ import mdx from "@astrojs/mdx";
 import tailwind from "@astrojs/tailwind";
 import preact from "@astrojs/preact";
 import image from "@astrojs/image";
+import nightOwl from "./src/night-owl.json";
 
 import defaultLayoutPlugin from "./defaultLayout.mjs";
 
 export default defineConfig({
-  markdown: {
-    remarkPlugins: [defaultLayoutPlugin],
-    extendDefaultPlugins: true,
-  },
   integrations: [
-    mdx(),
+    mdx({
+      remarkPlugins: [defaultLayoutPlugin],
+      extendDefaultPlugins: true,
+      drafts: true,
+    }),
     tailwind(),
     preact(),
     image({
