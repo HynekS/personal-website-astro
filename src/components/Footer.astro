@@ -1,6 +1,7 @@
 ---
 import GithubIcon from "./GithubIcon.astro";
 import LinkedinIcon from "./LinkedinIcon.astro";
+import StackOverflowIcon from "./StackOverflowIcon.astro"
 ---
 <script>
     const target = document.getElementById("currentYear")
@@ -28,6 +29,15 @@ import LinkedinIcon from "./LinkedinIcon.astro";
           aria-label="Link to my LinkedIn profile"
         >
           <LinkedinIcon />
+        </a>
+        <a
+          class="block"
+          href="https://stackoverflow.com/users/8252267/hyneks"
+          rel="noopener noreferrer"
+          target="__blank"
+          aria-label="Link to my Stack Overflow profile"
+        >
+          <StackOverflowIcon />
         </a>
       </div>
       <span class="text-sm font-mono px-4">© 2019–<span id="currentYear">present</span> Hynek Svacha</span>
