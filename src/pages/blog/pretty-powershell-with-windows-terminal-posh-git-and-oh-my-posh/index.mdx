@@ -45,7 +45,7 @@ If you've installed the terminal, let consider that as our starting point (well,
 
 I suppose there is a high probability you've already installed Git. If you're unsure, open a terminal window and run:
 
-```PowerShell
+```powershell
 git --version
 ```
 
@@ -53,7 +53,7 @@ If you already have Git, you'll see its version. Otherwise, you'll get an error 
 
 We'll be installing two packages. One, [Oh my posh](https://github.com/JanDeDobbeleer/oh-my-posh), for a colorful and customizable prompt. The second, [posh-git](http://dahlbyk.github.io/posh-git/), for Git integration.
 
-```PowerShell
+```powershell
 Install-Module posh-git -Scope CurrentUser
 Install-Module oh-my-posh -Scope CurrentUser -AllowPrerelease
 ```
@@ -78,7 +78,7 @@ Save the file and reload your terminal. Since PowerShell is still kind of suspic
 
 If that is the case, you can lift the user privileges by running:
 
-```PowerShell
+```powershell
 Set-ExecutionPolicy -Scope CurrentUser Remotesigned
 ```
 
@@ -94,7 +94,7 @@ After another reload, everything should be neat and clean.
 
 If you are using PowerShell Core, the new, open-sourced version of PowerShell, you may need to install [PSReadLine](https://docs.microsoft.com/en-us/powershell/module/psreadline/?view=powershell-7.1) module:
 
-```PowerShell
+```powershell
 Install-Module -Name PSReadLine -Scope CurrentUser -Force -SkipPublisherCheck
 ```
 
@@ -135,7 +135,7 @@ You can tweak the settings whatever you like. I just list mine for the reference
 
 I myself use Sarah Drasners "Night Owl" color theme. You can copy it from this [github repo](https://github.com/edurojasr/Windows-Terminal-Theme-Night-Owl). As far as I can remember I've changed the blue color a little to improve the contrast, so this is my custom version:
 
-```JSON
+```json
   "schemes": [
     {
       "name": "Night Owl",
@@ -165,7 +165,7 @@ For the background image, I searched through the [DeviantArt](https://deviantart
 
 I also tweaked the default prompt a little. I don't want to see the full path, just the username and current working directory. So in the `<USER>/Documents/oh-my-posh/<VERSION>/themes` folder, I opened the `Paradox.psm1` file (as it is my theme) and changed the `$path` variable like that:
 
-```PowerShell
+```powershell
 # original:
 # $path = Get-FullPath -dir $pwd
 # changed to:

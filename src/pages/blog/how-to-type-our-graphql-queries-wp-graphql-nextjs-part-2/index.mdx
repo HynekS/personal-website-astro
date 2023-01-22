@@ -89,7 +89,7 @@ After that, the `init` script will ask us several questions about our app. Let's
 
 The code generator will install some additional dependencies and create a new file in our root directory, `codegen.yml`. It is a config file. If we open it, it should look roughly like that:
 
-```yml
+```yaml
 # codegen.yml
 
 overwrite: true
@@ -151,7 +151,7 @@ This method of tagging strings that are actually GraphQL queries is being referr
 
 When running the codegen, we will generate some files that we probably don't want to be included in our version control. We'll prevent that by adding these lines to `.gitignore`:
 
-```.gitignore
+```
 // ...
 
 # generated schema and types
