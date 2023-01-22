@@ -12,6 +12,7 @@ export default defineConfig({
     mdx({
       remarkPlugins: [defaultLayoutPlugin],
       extendDefaultPlugins: true,
+      shikiConfig: { theme: nightOwl },
       drafts: true,
     }),
     tailwind(),
