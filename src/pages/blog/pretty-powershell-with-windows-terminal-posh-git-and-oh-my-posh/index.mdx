@@ -22,7 +22,6 @@ gallery:
   
 ---
 import { Image, Picture } from '@astrojs/image/components';
-import Lightbox from "@components/Lightbox"
 
 # Pretty PowerShell with Windows Terminal, posh-git and oh-my-posh
 
@@ -33,13 +32,14 @@ If you see the images and want to make your command line look like that, follow 
 
 {/* <Lightbox images={gallery} slug={slug} /> */}
 
+
 ## Get the terminal
 
 You can easily get it from the [Microsoft Store](https://aka.ms/terminal). If that seems way too easy to be interesting, there are [multiple other install options](https://github.com/microsoft/terminal#via-github) listed on the terminals [github repo](https://github.com/microsoft/terminal).
 
 If you've installed the terminal, let consider that as our starting point (well, at least it's not blue!):
 
-<Image src={import("./assets/Image-00-default-look.png") } alt="Screenshot of the appearance of PowerShell on a newly installed Windows Terminal." />
+<Picture src={import("./assets/Image-00-default-look.png")} alt="Screenshot of the appearance of PowerShell on a newly installed Windows Terminal." widths={[400, 800, 1200]} sizes="(max-width: 800px) 100vw, 800px" lightbox />
 
 ## Install posh-git and oh-my-posh
 
@@ -60,7 +60,7 @@ Install-Module oh-my-posh -Scope CurrentUser -AllowPrerelease
 
 You may need to install NuGet first, but the PowerShell is smart enough to offer you a NuGet install if it couldn't find it. You'll also probably get a few warning about untrusted repositories, because both `posh-git` and `oh-my-posh` are not Microsoft official packages. I suppose we can trust them, so feel free to assure PowerShell that we really want to install both of them (see image below).
 
-<Image src={import("./assets/Image-07-nu-get-confirmation.png")} alt="Screenshot of a confirmation dialog while installing posh-git and oh-my-posh."/>
+<Image src={import("./assets/Image-07-nu-get-confirmation.png")} alt="Screenshot of a confirmation dialog while installing posh-git and oh-my-posh." lightbox/>
 
 After the install has finished, we need to edit the PowerShells profile. The easiest way how to create or update settings is to open the PowerShell and run `notepad $PROFILE`.
 
@@ -74,7 +74,7 @@ Set-PoshPrompt -Theme paradox
 
 Save the file and reload your terminal. Since PowerShell is still kind of suspicious about these newly installed packages, you'll probably get an error regarding the security policies (as shown in the image below).
 
-<Image src={import("./assets/Image-08-security-error.png")} alt="Screenshot of possible Execution policy error while trying to use installed packages."/>
+<Image src={import("./assets/Image-08-security-error.png")} alt="Screenshot of possible Execution policy error while trying to use installed packages." lightbox/>
 
 If that is the case, you can lift the user privileges by running:
 
