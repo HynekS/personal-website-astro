@@ -77,7 +77,7 @@ const Lightbox = () => {
 
     if (["ArrowLeft", "A", "a", "ArrowUp", "W", "w"].includes(e.key)) {
       return setCurrentIndex((prevIndex) =>
-        rotateIndexIfOutOfLimits(prevIndex + 1)
+        rotateIndexIfOutOfLimits(prevIndex - 1)
       );
     }
   };
