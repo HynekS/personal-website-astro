@@ -3,6 +3,7 @@ import mdx from "@astrojs/mdx";
 import tailwind from "@astrojs/tailwind";
 import preact from "@astrojs/preact";
 import image from "@astrojs/image";
+import compress from "astro-compress";
 import nightOwl from "./src/night-owl.json";
 
 import defaultLayoutPlugin from "./defaultLayout.mjs";
@@ -20,5 +21,6 @@ export default defineConfig({
     image({
       serviceEntryPoint: "@astrojs/image/sharp",
     }),
+    compress(),
   ],
 });
