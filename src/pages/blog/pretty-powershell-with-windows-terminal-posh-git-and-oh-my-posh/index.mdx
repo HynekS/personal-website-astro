@@ -12,16 +12,10 @@ keywords:
   - PowerShell
   - Windows Terminal
 description: How to make PowerShell fully git-integrated and pretty with Windows Terminal, posh-git and oh-my-posh
-gallery: 
-  - src: ./assets/windows-powershell-pretty-git-prompt-01.png
-  - src: ./assets/windows-powershell-pretty-git-prompt-02.png
-  - src: ./assets/windows-powershell-pretty-git-prompt-03.png
-  - src: ./assets/windows-powershell-pretty-git-prompt-04.png
-  - src: ./assets/windows-powershell-pretty-git-prompt-05.png
-  - src: ./assets/windows-powershell-pretty-git-prompt-06.png
-  
 ---
 import { Image, Picture } from '@astrojs/image/components';
+import Gallery from "@components/Gallery.astro"
+import gallery from "./assets/gallery"
 
 # Pretty PowerShell with Windows Terminal, posh-git and oh-my-posh
 
@@ -30,8 +24,7 @@ As a long-term Windows user, I always felt a twinge of envy for the Mac users wh
 Well, the time has changed! For me, the first breeze of fresh air was the [Cmder](https://cmder.net/) prompt, which I was happily using for a while and can definitely recommend. But I was greedy and I wanted more. And I've got it – with the customized new Windows Terminal.
 If you see the images and want to make your command line look like that, follow along.
 
-{/* <Lightbox images={gallery} slug={slug} /> */}
-
+<Gallery gallery={gallery}/>
 
 ## Get the terminal
 
@@ -133,7 +126,7 @@ You can tweak the settings whatever you like. I just list mine for the reference
 ]
 ```
 
-I myself use Sarah Drasners "Night Owl" color theme. You can copy it from this [github repo](https://github.com/edurojasr/Windows-Terminal-Theme-Night-Owl). As far as I can remember I've changed the blue color a little to improve the contrast, so this is my custom version:
+I myself prefer Sarah Drasner's "Night Owl" color theme. You can copy it from this [github repo](https://github.com/edurojasr/Windows-Terminal-Theme-Night-Owl). As far as I can remember I've changed the blue color a little to improve the contrast, so this is my custom version:
 
 ```json
   "schemes": [
@@ -161,7 +154,7 @@ I myself use Sarah Drasners "Night Owl" color theme. You can copy it from this [
   ],
 ```
 
-For the background image, I searched through the [DeviantArt](https://deviantart.com) until I found what I like. In the screenshots, I use [Dark Mount by Noxypia](https://www.deviantart.com/noxypia/art/Dark-Mount-305013507) as a background image, but with a very low opacity, as I find anything more discernible quite distracting.
+For the background image, I searched through the [DeviantArt](https://deviantart.com) until I found what I like. In the screenshots, I use [Dark Mount by Noxypia](https://www.deviantart.com/noxypia/art/Dark-Mount-305013507) as a background image, but with a very low opacity, as I find anything more discernible too distracting.
 
 I also tweaked the default prompt a little. I don't want to see the full path, just the username and current working directory. So in the `<USER>/Documents/oh-my-posh/<VERSION>/themes` folder, I opened the `Paradox.psm1` file (as it is my theme) and changed the `$path` variable like that:
 
