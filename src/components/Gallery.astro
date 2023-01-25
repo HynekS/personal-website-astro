@@ -1,0 +1,26 @@
+---
+import { Image } from "@astrojs/image/components";
+
+interface Props {
+  gallery: {
+    [key: string]: { src: string; height: number; width: number };
+  };
+}
+
+const { gallery } = Astro.props;
+const sources = Object.values(gallery);
+---
+
+{
+  sources.length === 0 ? null : sources.length === 1 ? (
+    <Image {...sources[0]} alt="" lightbox />
+  ) : (
+    <section class="grid gap-2 md:grid-cols-2 lg:grid-cols-3">
+      {sources.map((source) => (
+        <figure class="flex justify-center mb-0 rounded cursor-pointer bg-secondary">
+          <Image {...source} alt="" lightbox />
+        </figure>
+      ))}
+    </section>
+  )
+}
