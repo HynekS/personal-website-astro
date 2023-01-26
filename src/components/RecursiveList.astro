@@ -38,7 +38,7 @@ const prepareHeadings = (headings = [] as AstroHeading[]) => {
 
   const withFlattenedH1 = headings.map((heading) => {
     return heading.depth === 1
-      ? { ...heading, depth: 2, text: "Overview" }
+      ? { ...heading, depth: 2, text: "Overview", slug: "overview" }
       : heading;
   });
 
