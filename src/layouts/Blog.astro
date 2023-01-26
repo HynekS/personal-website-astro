@@ -6,6 +6,8 @@ import ScrollToTop from "@components/ScrollToTop";
 import Lightbox from "@components/Lightbox";
 import { execSync } from "child_process";
 
+import ListItem from "@components/ListItem";
+
 const allAuthorDates = execSync(
   `git log --follow --name-status --pretty=format:%aI -- ${Astro.props.file}`
 ).toString();
@@ -21,8 +23,19 @@ export interface Props {
   title: string;
   children: Node | Node[];
 }
+/*
+const { title } = Astro.props.frontmatter;*/
 
-const { title } = Astro.props.frontmatter;
+const {
+  title,
+  categories = [],
+  dateCreated,
+  author,
+  timeToRead,
+  ...props
+} = Astro.props.frontmatter;
+
+
 const { headings } = Astro.props;
 ---
 <Layout title={title}>
@@ -34,6 +47,20 @@ const { headings } = Astro.props;
       class="prose prose-sm mx-auto pt-8 px-4 md:prose lg:prose-lg lg:px-0 dark:prose-dark pb-16"
       data-is_article
     >
+      <h1 id="overview">{title}</h1>
+      <div class="not-prose font-mono text-sm dark:(text-gray-400)">
+        {
+          categories.length ? (
+            <ul class="flex gap-1.5 mt-0 mb-1 ml--1">
+              {categories.map((category) => (
+                <ListItem category={category} />
+              ))}
+            </ul>
+          ) : null
+        }
+        posted <PrettyDate date={new Date(dateCreated)} /> ∙ by {author} ∙
+        {timeToRead}
+      </div>
       <slot />
       {
         lastEditExceptPathChangeDate ? (
@@ -55,5 +82,5 @@ const { headings } = Astro.props;
     </article>
   </main>
   <ScrollToTop client:load />
-  <Lightbox client:only="preact"/>
+  <Lightbox client:only="preact" />
 </Layout>

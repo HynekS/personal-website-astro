@@ -1,0 +1,21 @@
+---
+import BlogPostHeader from "@components/BlogPostHeader.astro"
+import Code from "@components/Code.astro"
+import EmptyComponent from "@components/EmptyComopnent.astro"
+
+export async function getStaticPaths() {
+  const posts = await Astro.glob("../../../__content__/blog/**/*.mdx");
+
+  return posts.map(post => ({
+    params: { 
+      slug: post.file.split("/").at(-2)
+    },
+    props: {
+      post
+    },
+  }))
+}
+
+const { Content } = Astro.props.post
+---
+<Content components={{pre: Code, h1: EmptyComponent}}/>
