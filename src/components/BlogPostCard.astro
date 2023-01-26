@@ -1,9 +1,9 @@
 ---
-import PrettyDate from "@components/PrettyDate"
-import ListItem from "@components/ListItem"
+import PrettyDate from "@components/PrettyDate";
+import ListItem from "@components/ListItem";
 
 const { post } = Astro.props;
-const { dateCreated, categories } = post.frontmatter || {}
+const { dateCreated, categories } = post.frontmatter || {};
 ---
 
 <li
@@ -18,21 +18,28 @@ const { dateCreated, categories } = post.frontmatter || {}
     <h2 class="text-3xl font-semibold">
       <a href={post.url}>{post.frontmatter.title}</a>
     </h2>
-    {categories ? (
-      <ul class="flex gap-1.5 mt-2 mb-1">
-        {categories.map(category => (
-          <ListItem category={category} />
-        ))}
-      </ul>
-    ) : null}
+    {
+      categories ? (
+        <ul class="flex gap-1.5 mt-2 mb-1">
+          {categories.map((category) => (
+            <ListItem category={category} />
+          ))}
+        </ul>
+      ) : null
+    }
     <span class="font-mono text-sm pl-1 dark:text-gray-400">
-      {dateCreated ? <span class="font-mono text-sm pl-1 dark:text-gray-400">
-        posted{" "}
-        <PrettyDate
-          date={new Date(dateCreated)}
-          dateStyles="text-sm dark:text-gray-400"
-        />
-      </span> : null}
+      {
+        dateCreated ? (
+          <span class="font-mono text-sm pl-1 dark:text-gray-400">
+            posted{" "}
+            <PrettyDate
+              date={new Date(dateCreated)}
+              dateStyles="text-sm dark:text-gray-400"
+              client:load
+            />
+          </span>
+        ) : null
+      }
     </span>
   </div>
 </li>
