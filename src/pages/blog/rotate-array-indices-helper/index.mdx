@@ -1,0 +1,151 @@
+---
+title: Loop over array if index is out of bounds
+author: Hynek Svacha
+type: blog post
+dateCreated: Jan 24, 2023 13:45
+dateLastModified:
+featuredImage:
+categories:
+  - javascript
+keywords:
+  - JavaScript
+  - loops
+description: TODO.
+---
+import BlogPostHeader from "@components/BlogPostHeader.astro"
+
+# {frontmatter.title}
+
+For most of developers who hasn't just start with programming, iterating over arrays is a mundane job. However, there are some cases when it can become a little bit tricky. The example is an **"indefinite iteration": after reaching the last element of the array, the next one will be the first again and so on**.
+
+## TL;DR
+
+```js
+function loopOverIfIndexOutOfBounds(i, len) {
+  return ((i % len) + len) % len;
+}
+
+
+function loopOverIfIndexOutOfBounds(index, array = []) {
+  let len = array.length;
+  return ((index % len) + len) % len; // should it return element?
+}
+```
+
+
+```ts
+function loopOverIfIndexOutOfBounds(index: number, array = [] as unknown[]) {
+  let len = array.length;
+  return ((index % len) + len) % len; // should it return element?
+}
+```
+--
+
+```js
+function loopOverIfIndexOutOfBounds(index, array = []) {
+  return array.at(index % array.length); // This is returning element!
+}
+```
+
+## The modulo trick
+
+When I encounter this scenario the first time, I just reached for a bunch of `if` statements checking if the desired index is not larger than `array.length - 1` or smaller than `0`. Needless to say the resulting code was not especially elegant.
+
+Than I saw [Ryan Florence using this magic trick in his talk about that time brand new React hooks](https://youtu.be/wXLf18DsV-I?t=865):
+
+```js
+// Somewhere in a React component...
+setCurrentIndex((current.index + 1) % slides.length);
+```
+
+So that's it. Just use the ~~modulo~~ remainder operator and you're fine. Thats it, nice to seeing you, bye.
+
+Or…?
+
+Well, it is _almost_ that, but as usual, the devil's in the details and there is a small caveat that caused me a little headache in the past.
+
+## Caveat: going backwards
+
+One of the caveats was foreshadowed in the previous sections: The `%` operator is often referred to as "modulo", which it is not. It is a "remainder". Why? Because it is behaving like modulo, but only as far as you don't use it on negative numbers.
+
+```js
+let array = ["apple", "orange", "banana"];
+
+let positiveIndex = 4;
+
+let testIndex1 = positiveIndex % array.length; // 1
+
+console.log(array[test1]); // "orange"
+
+let negativeIndex = -4;
+
+let testIndex2 = negativeIndex % array.length; // -1!!! 🤔
+
+console.log(array[testIndex2]); // undefined 🤔
+```
+
+As you can see, remainders of negative dividends are also negative, and there is no `Math.abs()` shortcut to correct the result (if applied, the result will be a non-negative, but incorrect number).
+
+So how can we correct it? Quite simply, if we use this formula:
+
+- compute the remainder of *desired index / array length*
+- *add array length* to the first result (now, you can't get a negative number!),
+- compute the remainder of *the intermediate result / array length*
+
+The resulting code is a little cryptic, but it will work:
+
+```js
+function loopOverIfIndexOutOfBounds(i, len) {
+  return ((i % len) + len) % len;
+}
+```
+
+## Off-topic: stale props in React
+
+This is a little off topic (sorry for that), but probably good to mention, considering how many people use React these days. If you are one of them, chances are you've already encountered this obnoxious issue.
+
+You are trying to update state, but it is not changing; it has outdated, stale references. It is usually caused by JavaScript lexical scope and closures and it often occurs inside event handlers.
+
+For example, the `currentIndex` won't be set properly in this `keyup` handler:
+
+```js
+const handleKeyup = (e) => {
+  if (e.key === "Escape") {
+    //...
+  }
+  if (e.key === "ArrowRight") {
+    return setCurrentIndex(
+      loopOverIfIndexOutOfBounds(currentIndex + 1, someStateSlice.length)
+    );
+  }
+
+  if (e.key === "ArrowLeft") {
+    return setCurrentIndex(
+      loopOverIfIndexOutOfBounds(currentIndex - 1, someStateSlice.length)
+    );
+  }
+};
+```
+
+However, it will work if you take advantage of the "updater function" that takes previous state as an argument and as such, it has _always_ access to the current state:
+
+```js
+const handleKeyup = (e) => {
+  if (e.key === "Escape") {
+    //...
+  }
+  if (e.key === "ArrowRight") {
+    return setCurrentIndex((prevIndex) =>
+      loopOverIfIndexOutOfBounds(prevIndex + 1)
+    );
+  }
+
+  if (e.key === "ArrowLeft") {
+    return setCurrentIndex((prevIndex) =>
+      loopOverIfIndexOutOfBounds(prevIndex - 1)
+    );
+  }
+};
+```
+
+👍 Enjoy!
