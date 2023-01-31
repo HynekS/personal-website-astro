@@ -10,11 +10,13 @@ import defaultLayoutPlugin from "./defaultLayout.mjs";
 import { remarkReadingTime } from "./remark-reading-time.mjs";
 
 export default defineConfig({
+  markdown: {
+    shikiConfig: { theme: nightOwl },
+  },
   integrations: [
     mdx({
       remarkPlugins: [defaultLayoutPlugin, remarkReadingTime],
       extendDefaultPlugins: true,
-      shikiConfig: { theme: nightOwl },
       drafts: true,
     }),
     tailwind(),
