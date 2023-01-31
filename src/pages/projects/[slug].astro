@@ -1,0 +1,17 @@
+---
+export async function getStaticPaths() {
+  const posts = await Astro.glob("../../../__content__/projects/**/*.mdx");
+
+  return posts.map(post => ({
+    params: { 
+      slug: post.file.split("/").at(-2)
+    },
+    props: {
+      post
+    },
+  }))
+}
+
+const { Content } = Astro.props.post
+---
+<Content />
