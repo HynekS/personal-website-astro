@@ -14,7 +14,6 @@ const { dateCreated, categories } = post.frontmatter || {};
     ) : null
   }
   <div>
-    <pre>{JSON.stringify(post, null, 2)}</pre>
     <h2 class="text-3xl font-semibold">
       <a href={post.url.split("/").slice(1,3).join("/")}>{post.frontmatter.title}</a>
     </h2>

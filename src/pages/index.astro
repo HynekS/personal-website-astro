@@ -2,7 +2,6 @@
 import Layout from '../layouts/Layout.astro';
 import BlogPostCard from '../components/BlogPostCard.astro';
 
-//const posts = await Astro.glob("./blog/**/*.{md,mdx}");
 const posts = await Astro.glob("../../__content__/blog/**/*.{md,mdx}");
 posts.sort((a, b) => Date.parse(b.frontmatter.dateCreated) - Date.parse(a.frontmatter.dateCreated));
 ---
