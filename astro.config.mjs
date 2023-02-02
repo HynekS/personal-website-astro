@@ -16,7 +16,6 @@ export default defineConfig({
   integrations: [
     mdx({
       remarkPlugins: [defaultLayoutPlugin, remarkReadingTime],
-      extendDefaultPlugins: true,
       drafts: true,
     }),
     tailwind(),
