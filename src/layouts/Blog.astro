@@ -23,8 +23,6 @@ export interface Props {
   title: string;
   children: Node | Node[];
 }
-/*
-const { title } = Astro.props.frontmatter;*/
 
 const {
   title,
@@ -32,7 +30,6 @@ const {
   dateCreated,
   author,
   timeToRead,
-  ...props
 } = Astro.props.frontmatter;
 
 

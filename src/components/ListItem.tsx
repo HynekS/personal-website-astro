@@ -5,12 +5,11 @@ import { ALL_TECH_COLORS as techColors } from "@constants/colors";
 const ListItem = ({ category }: { category: keyof typeof techColors }) => {
   return (
     <li
-      className="font-mono text-xs rounded-md py-0.5 px-1.5 dark:[filter:brightness(1.25)] flex items-center /* before:hidden (Typography issue) */"
+      className="font-mono text-xs rounded-md py-0.5 px-1.5 dark:[filter:brightness(1.25)] flex items-center"
       key={category}
       style={{
         backgroundColor: hexToRgba(techColors[category] || "#ccc", 0.25),
         border: `1px solid ${hexToRgba(techColors[category] || "#ccc", 0.3)}`,
-        // paddingLeft: 6 /* Dirty fix of typography issue */,
       }}
     >
       {techColors[category] ? (
