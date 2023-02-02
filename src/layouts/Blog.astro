@@ -45,10 +45,10 @@ const { headings } = Astro.props;
       data-is_article
     >
       <h1 id="overview">{title}</h1>
-      <div class="not-prose font-mono text-sm dark:(text-gray-400)">
+      <div class="not-prose font-mono text-sm dark:text-gray-400">
         {
           categories.length ? (
-            <ul class="flex gap-1.5 mt-0 mb-1 ml--1">
+            <ul class="flex gap-1.5 mt-0 mb-1 ml--1 py-2">
               {categories.map((category) => (
                 <ListItem category={category} />
               ))}
