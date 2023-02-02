@@ -15,31 +15,31 @@ keywords:
 description: Fiddling with a simple Node.js script for testing Collatz Conjecture, the simple yet still unsolved math problem.
 ---
 
-# Simple Collatz Conjecture testing script
+# {frontmatter.title}
 
-It is seemingly a simple problem: We take a number _n_. If _n_ is even, divide it by 2. If it's odd, multiply it by 3, then add 1. Proceed with the resulting number (the result is our new _n_). The conjecture is that no matter what the initial value is, the sequence will always results in a _4 – 2 – 1_ loop.
+It is seemingly a simple problem: We take a number _n_. If _n_ is even, divide it by 2. If it's odd, multiply it by 3, then add 1. Proceed with the resulting number (the result is our new _n_). The conjecture is that no matter what the initial value is, the sequence will always result in a _4 – 2 – 1_ loop.
 
-My older son (eight years old) developed some passion for math. Because I'd like to feed his passion as far as I could, I introduced him to the above mentioned problem – the [Collatz Conjecture](https://en.wikipedia.org/wiki/Collatz_conjecture).
+My older son (eight years old) has developed some passion for math. Because I'd like to feed his passion as far as I can, I introduced him to the above mentioned problem: the [Collatz Conjecture](https://en.wikipedia.org/wiki/Collatz_conjecture).
 
-The problem that "looks very simple, but even the most famous and clever mathematicians with the help of the fastest computers haven't solved it yet 🤷" actually caught his attention. We tried to test a couple of numbers just with paper and pen. It was fine, but as soon as we finish the first one, I was itching to write some code that will test the number and relieve us of the chores of manually counting every step.
+The problem that "looks very simple, but even the most famous and clever mathematicians, with the help of the fastest computers, haven't solved it yet 🤷" actually caught his attention. We tried to test a couple of numbers just with paper and a pen. It was fine, but as soon as we finished the first one, I was itching to write some code that would test the number and relieve us of the chore of manually counting every step.
 
-So I did it. And the kids were actually excited! Both of them spent at least an hour testing (mainly) ridiculously big numbers. In the meantime, I was fiddling a little with the script, adding some colors and such, which also caught their attention. They're on the way to become some nice geeks 🤓!
+So I did it. And the kids were actually excited! Both of them spent at least an hour testing (mainly) ridiculously large numbers. In the meantime, I was fiddling a little with the script, adding some colors and such, which also caught their attention. They're on the way to becoming some nice geeks 🤓!
 
-So, is Collatz a good way to introduce kids to math AND coding? I wouldn't dare to say so. But if you'd like to try, I can show you how I did it.
+So, is Collatz a good way to introduce kids to math _AND_ coding? I wouldn't dare to say so. But if you'd like to try, I can show you how I did it.
 
 ## The algorithm
 
-The algorithm itself is very simple (yes, it can be written in more fancy way, but I'm O.K. with good ol' `while` loops).
+The algorithm itself is very simple (yes, it can be written in a more fancy way, but I'm O.K. with good ol' `while` loops).
 
 ```js
 /*
- *  Take a number. Let's assume it is positive integer (we'll check for that later).
+ *  Take a number. Let's assume it is a positive integer (we'll check for that later).
  *
  *  If it's even (the remainder of division by 2 is 0), divide it by 2.
  *  Otherwise, multiply it by 3 and add 1. Proceed with the result.
  *
  *  If the result ever gets to 1, stop. Collatz was right about that number!
- *  (If we won't stop, we'd get into the infinite 4 – 2 – 1 – 4… loop.)
+ *  (If we didn't stop, we'd get into the infinite 4 – 2 – 1 – 4… loop.)
  */
 
 let n = 42;
@@ -55,13 +55,13 @@ while (n !== 1) {
 console.log("Regarding number 42, it seems that Collatz was right.");
 ```
 
-Well, it is really nice it works for one arbitrary number (even if the number is [The Answer to the Ultimate Question of Life, the Universe, and Everything](https://en.wikipedia.org/wiki/Phrases_from_The_Hitchhiker%27s_Guide_to_the_Galaxy#The_Answer_to_the_Ultimate_Question_of_Life,_the_Universe,_and_Everything_is_42)), but how about the user input?
+Well, it is really nice that it works for one arbitrary number (even if the number is [The Answer to the Ultimate Question of Life, the Universe, and Everything](https://en.wikipedia.org/wiki/Phrases_from_The_Hitchhiker%27s_Guide_to_the_Galaxy#The_Answer_to_the_Ultimate_Question_of_Life,_the_Universe,_and_Everything_is_42)), but how about the user input?
 
 ## The `readline` module
 
 In Node.js, there is a built-in class `readline` (I am sure there are multiple third-party libraries, but let's use the default one). Since it is built-in, there is no need to install it, we'll just require it.
 
-This is the example from [official docs](https://nodejs.org/en/knowledge/command-line/how-to-prompt-for-command-line-input/). First, we'll instantiate a `rl` object by calling a `readline.createInterface()`. Then, we'll use a `rl.question()` method to get the user input from prompt; we can also listen to events using the `rl.on()` method (in the example, we're listening to `close` event).
+This is the example from the [official docs](https://nodejs.org/en/knowledge/command-line/how-to-prompt-for-command-line-input/). First, we'll instantiate a `rl` object by calling `readline.createInterface()`. Then, we'll use an `rl.question()` method to get the user input from the prompt; we can also listen to events using the `rl.on()` method (in the example, we're listening to `close` event).
 
 ```js
 const readline = require("readline");
@@ -122,11 +122,11 @@ rl.on("close", function () {
 
 ## Add type guard
 
-Looks neat, doesn't it? It actually work, most of the times. The problem with this code arises when we input anything that is not a positive integer, e. g. a string. Then, it results in an infinite stream of `NaN`s.
+It looks neat, doesn't it? It actually works most of the time. The problem with this code arises when we input anything that is not a positive integer, e.g., a string. Then, it results in an infinite stream of `NaN`s.
 
-So we probably need to check the user input before using it (which is **always** a good practice). We can end check if the input (explicitly cast to number by `Number(input)` earlier) is an integer (this way we'll be safe from `NaN`s and floats) and that it's a positive one (there is a native `Math.sign` method, but it is IMO **slightly** easier to just check if it's bigger than `0`).
+So we probably need to check the user input before using it (which is **always** a good practice). We can end up checking if the input (explicitly cast to a number by `Number(input)` earlier) is an integer (this way we'll be safe from `NaN`s and floats) and that it's a positive one (there is a native `Math.sign` method, but it is IMO **slightly** easier to just check if it's bigger than `0`).
 
-It the check fails, we finish the execution:
+If the check fails, we finish the execution:
 
 ```js
 //...
@@ -139,13 +139,13 @@ if (!Number.isInteger(n) || Number(n) <= 0) {
 //...
 ```
 
-But is the best user experience? I don't think so. I think our poor user deserves a second chance. But how can we do that?
+But is it the best user experience? I don't think so. I think our poor user deserves a second chance. But how can we do that?
 
 ## Add recursion
 
-We'll use a simple recursion. We extract our procedure to its own function, `collatz`, and we'll call it over and over until our oblivious user finally inputs the right input or give up.
+We'll apply a simple recursion. We extract our procedure to its own function, `collatz`, and we'll call it over and over until our oblivious user finally inputs the right input or gives up.
 
-What? That **doesn't sound** like a best UX either? All right. We'll give our tormented user a hint. Better than that, we'll give him a chance to quit our script execution by typing `exit`.
+What? That **doesn't sound** like the best UX either? All right. We'll give our tormented user a hint. Better than that, we'll give him a chance to quit our script execution by typing `exit`.
 
 ```js
 const readline = require("readline");
@@ -163,7 +163,7 @@ function collatz() {
 
     if (!Number.isInteger(n) || Number(n) <= 0) {
       console.log(
-        "Please, insert a positive integer, e. g. 7, 42, 1234, or type 'exit' to quit."
+        "Please, insert a positive integer, e.g., 7, 42, or 1234, or type 'exit' to quit."
       );
       return collatz();
     }
@@ -195,7 +195,7 @@ Great! We have our first MVP. But it is a little dull, is't it? Let's change it.
 
 ## Add some swag
 
-For our final product, let's polish it a little bit. I, as an adult, like stats. Kids, on the other hand like colors. We'll add both. Also, I don't like the exponential display of the outputted large numbers; if the number is huge, it should _look_ huge. Also, it wouldn't hurt to use some numeric separators to make the numbers on output more legible. We'll use the `Number.toLocaleString()` method to achieve that.
+For our final product, let's polish it a little bit. I, as an adult, like stats. Kids, on the other hand, like colors. We'll add both. Also, I don't like the scientific notation on the large numbers; if the number is huge, it should _look_ huge.. Also, it wouldn't hurt to use some numeric separators to make the numbers on the output more legible. We'll use the `Number.toLocaleString()` method to achieve that.
 
 We'll need to install some dependencies. The first one is [chalk](https://www.npmjs.com/package/chalk) module, which will give us the desired colors. For simplicity sake, we will not use the latest version (because it fully moved to ES modules, which brings some difficulties), but version 4. The other one is [dedent](https://www.npmjs.com/package/dedent) module, which will fix ([hopefully](https://twitter.com/garybernhardt/status/1260676494566674432)) the [obnoxious problem](https://github.com/tc39/proposal-string-dedent) with template strings indentation.
 
@@ -286,11 +286,11 @@ rl.on("close", function () {
 collatz();
 ```
 
-Another cool idea would be outputting the series as a graph. Damn, let's implement that right now!
+Another cool idea would be to output the series as a graph. Damn, let's implement that right now!
 
-It is actually not that hard. We need to know how wide our terminal is – and that information is stored in `process.stdout.columns` property. Why we need to know that? Because then we can display the highest number in sequence as a full width bar, while the others will scale proportionally. Therefore, we just don't log the actual *n* right away, but store it in an array – because we need to know the value of the biggest number before any output.
+It is actually not that hard. We need to know how wide our terminal is, and that information is stored in `process.stdout.columns` property. What is the point of knowing that? Because then we can display the highest number in sequence as a full-width bar, while the others will scale proportionally. Therefore, we just don't log the actual *n* right away but store it in an array because we need to know the value of the biggest number before any output.
 
-Once the sequence is done, we'll iterate over the collected values and after each value, we'll display a bar that will show the ratio between the biggest number in sequence (which will take full terminal width) and the current number. To display the bars, we'll create arrays of `▅` characters (and join them right away). We'll need to handle situations when some of the numbers too small and considering they ratio, they shouldn't have any bar whatsoever. That would look kinda weird, thus in these cases, we'll apply a single `▌` character:
+Once the sequence is done, we'll iterate over the collected values, and after each value, we'll display a bar that will show the ratio between the biggest number in sequence (which will take up full terminal width) and the current number. To display the bars, we'll create arrays of `█` characters (and join them right away). We'll need to handle situations when some of the numbers are too small, and considering the ratio, they shouldn't have any bars whatsoever. That would look kind of weird, so in these cases, we'll apply a single `▏` character:
 
 ```js
 // ...
@@ -325,15 +325,15 @@ let maxNum = 0;
       console.log(
         chalk.yellow(
           Math.floor(num * ratio) < 1
-            ? `▌`
-            : new Array(Math.floor(num * ratio)).fill(`▅`).join("")
+            ? `▏`
+            : new Array(Math.floor(num * ratio)).fill(`█`).join("")
         )
       );
     }
 // ...
 ```
 
-The script can be further enhanced in a numerous ways. For dealing with a really big numbers, it is probably a good idea to cast all the numeric variables to a `BigInt` type.
+The script can be further enhanced in numerous ways. For dealing with really large numbers, it is probably a good idea to cast all the numeric variables to a `BigInt` type.
 
 For making the output more vivid, it can be cool to print the sequence with a noticeable delay, wrapping the logging functions in `setTimeout()`.
 

@@ -12,19 +12,19 @@ keywords:
   - Redux
   - logging
   - devtools
-description: 'There is one simple dirty trick for Redux Devtools that can make logging more useful: convert the constants to functions that accepts arguments.'
+description: 'There is one simple dirty trick for Redux DevTools that can make logging more useful: convert the constants to functions that accept arguments.'
 
 ---
 import { Image, Picture } from "@astrojs/image/components";
 import Note from "@components/Note"
 
-# One dirty redux devtools logging trick
+# {frontmatter.title}
 
-While redux is far from being the coolest kid in the playground at the moment (late 2020), I am still using it on some of my projects. There is still one feature, which most of its competitors (like [zustand](https://https://github.com/pmndrs/zustand), [jotai](https://github.com/pmndrs/jotai), [recoil](https://recoiljs.org/), [react-query](https://react-query-v3.tanstack.com/) or [SWR](https://swr.vercel.app/)) lack so far: mature and feature rich devtools.
+While redux is far from being the coolest kid in the playground at the moment (late 2020), I am still using it on some of my projects. There is still one feature that most of its competitors (like [zustand](https://https://github.com/pmndrs/zustand), [jotai](https://github.com/pmndrs/jotai), [recoil](https://recoiljs.org/), [react-query](https://react-query-v3.tanstack.com/) or [SWR](https://swr.vercel.app/)) lack so far: mature and feature-rich devtools.
 
-<Note>This article is not up-to-date. While the proposed trick is still valid, i can't se any reason to keep using vanilla Redux in 2022. 💡 I would suggest to check <a style={{ all: "unset", textDecoration: "underline", cursor: "pointer" }} href="https://redux-toolkit.js.org/">Redux Toolkit</a>, which yields a much better DX (unfortunately, you can't use the proposed trick here).</Note>
+<Note>This article is not up-to-date. While the proposed trick is still valid, I can't see any reason to keep using vanilla Redux in 2022. 💡 I would suggest checking out <a style={{ all: "unset", textDecoration: "underline", cursor: "pointer" }} href="https://redux-toolkit.js.org/">Redux Toolkit</a>, which yields a much better DX (unfortunately, you can't use the proposed trick here).</Note>
 
-But even on redux-devtools, there was something which makes me think meh… and that thing is logging constants. Even though I made my redux constants (thanks mostly ducks inspiration) much less GENERATED_CODE_LOOKALIKE and more human readable, I'd like to have a possibility to use parametrize them.
+But even on redux-devtools, there was something that made me think, "meh…", and that thing is logging constants.  Even though I made my redux constants less GENERATED_CODE_LOOKALIKE and more human readable (thanks mostly to [ducks](https://github.com/erikras/ducks-modular-redux) for inspiration), I'd like to be able to parametrize them.
 
 ```js
 // These constants are quite pleasant to read, but they are still, well… constant. 
@@ -33,15 +33,15 @@ const FETCH_PROJECTS_OF_SINGLE_YEAR_SUCCESS = "[projects] Fetching projects of s
 const FETCH_PROJECTS_OF_SINGLE_YEAR_FAILURE = "[projects] Fetching projects of single year has failed"
 ```
 
-On the devtools pane, it looks O.K. – not great, not terrible:
+On the devtools pane, it looks OK; not great, not terrible:
 
 <Image src={import(`./assets/redux_devtools_00_final.png`)} alt="Image of redux devtools (neutral)"/>
 
-However, if I dispatch a lot of these actions in a row, I can't help to think that something is missing here:
+However, if I dispatch a lot of these actions in a row, I can't help but think that something is missing here:
 
 <Image src={import(`./assets/redux_devtools_01_final.png`)} alt="Image of redux devtools without parameters (not optimal result)"/>
 
-As it turned out, it would be quite easy! Just turn your constants into functions which receives an argument and returns a string utilizing it:
+As it turned out, it would be quite easy! Just turn your constants into functions that receive an argument and return a string utilizing it:
 
 ```js
 const FETCH_PROJECTS_OF_SINGLE_YEAR_INITIALIZED = year =>
@@ -52,7 +52,7 @@ const FETCH_PROJECTS_OF_SINGLE_YEAR_FAILURE =  year =>
   `[projects] Fetching projects of year ${year} has failed`
 ```
 
-Well, O.K. then, but what about actions reducers? No worries! In the case of actions, just make their type property a function call and pass your argument in:
+Well, OK, then, but what about action reducers? No worries! In the case of actions, just make their type property a function call and pass your argument in:
 
 ```js
 const fetchProjectsOfSingleYearInit = year => ({
@@ -95,19 +95,19 @@ export default function reducer(state = {}, action = {}) {
 }
 ```
 
-And voilà, your redux devtools actions console is much more informative (and fun):
+And voilà, your redux devtools actions console is now much more informative (and fun):
 
 <Image src={import(`./assets/redux_devtools_02_final.png`)} alt="Image of redux devtools, parametrized"/>
 
-I really appreciate this when debugging a lot of actions of the same type being dispatched with different parameters. More than that, it can reveal possible bugs caused by an unexpected argument passes into actions (e. g. react-router params from mistyped url).
+I really appreciate this when debugging a lot of actions of the same type  dispatched with different parameters. More than that, it can reveal possible bugs caused by unexpected arguments passed into actions (e.g., react-router params from a mistyped url).
 
 <Image src={import(`./assets/redux_devtools_03_final.png`)} alt="Image of redux devtools without with a lot of actions of the same type being dispatched with different parameters, parametrized"/>
 
-The idea about making constants dynamic may sound like a heresy for some hardcore redux developers. I would argue that:
+The idea of making constants dynamic may sound like heresy to some hardcore Redux developers. I would argue that:
 
-- the pattern is deterministic, using solely pure functions,
-- it is meant to be used rather temporarily, for the purpose of debugging.
+- The pattern is deterministic, with only pure functions used.
+- It is meant to be used rather temporarily, for the purpose of debugging.
 
-So far, I did't encounter any issue using it.
+So far, I haven't encountered any issues using it.
 
 👍 Enjoy!

@@ -1,5 +1,5 @@
 ---
-title: Loop over array if index is out of bounds
+title: Iterating in a closed loop, forwards and backwards
 author: Hynek Svacha
 type: blog post
 dateCreated: Jan 24, 2023 13:45
@@ -10,142 +10,130 @@ categories:
 keywords:
   - JavaScript
   - loops
-description: TODO.
+description: In this post, I'm going to write about "closed loop iteration," or how to use JavaScript to iterate over an array so that after reaching its last element, the following one will be the first element again. It has to work both forwards and backwards!
 ---
-import BlogPostHeader from "@components/BlogPostHeader.astro"
 
 # {frontmatter.title}
 
-For most of developers who hasn't just start with programming, iterating over arrays is a mundane job. However, there are some cases when it can become a little bit tricky. The example is an **"indefinite iteration": after reaching the last element of the array, the next one will be the first again and so on**.
+Iterating over arrays is a routine task for the majority of developers who have experience with programming. However, there are some cases when it can become a little bit more interesting—but also a little bit more tricky.
+
+In this post, I'm going to focus on **"closed loop iteration,"** or **how to iterate over an array so that after reaching its last element, the following one will be the first element again (and so on)**. To make things more interesting, it has to work *both* forwards *and* backwards!
 
 ## TL;DR
 
 ```js
-function loopOverIfIndexOutOfBounds(i, len) {
-  return ((i % len) + len) % len;
-}
+function clampIndex(desiredIndex, array = []) {
+  let length = array.length;
+  if (length === 0) return 0;
 
-
-function loopOverIfIndexOutOfBounds(index, array = []) {
-  let len = array.length;
-  return ((index % len) + len) % len; // should it return element?
+  return ((desiredIndex % length) + length) % length;
 }
 ```
 
+## The imperative way
 
-```ts
-function loopOverIfIndexOutOfBounds(index: number, array = [] as unknown[]) {
-  let len = array.length;
-  return ((index % len) + len) % len; // should it return element?
-}
-```
---
+We can write that logic imperatively, using simple conditionals. If the updated index is out of bounds, it falls back to the index of the first (if incrementing) or last (if decrementing) element:
 
 ```js
-function loopOverIfIndexOutOfBounds(index, array = []) {
-  return array.at(index % array.length); // This is returning element!
-}
+let array = ["apple", "banana", "cherry"];
+let index = 0;
+
+const incrementIndex = () => {
+  if (index + 1 >= array.length) {
+    index = 0;
+  } else {
+    index += 1;
+  }
+};
+
+const decrementIndex = () => {
+  if (index - 1 < 0) {
+    index = array.length - 1;
+  } else {
+    index -= 1;
+  }
+};
 ```
 
-## The modulo trick
+This code is not terrible (and despite what some edgy content makers may say, using `if/else` is okay), but there are still two aspects that I don't particularly enjoy. It is rather verbose, and it is prone to [off-by-one errors](https://en.wikipedia.org/wiki/Off-by-one_error).
 
-When I encounter this scenario the first time, I just reached for a bunch of `if` statements checking if the desired index is not larger than `array.length - 1` or smaller than `0`. Needless to say the resulting code was not especially elegant.
+## The declarative way
 
-Than I saw [Ryan Florence using this magic trick in his talk about that time brand new React hooks](https://youtu.be/wXLf18DsV-I?t=865):
+### The modulo trick
+
+I've got this trick from [Ryan Florence's talk about (at the time brand-new) React hooks](https://youtu.be/wXLf18DsV-I?t=865):
 
 ```js
 // Somewhere in a React component...
-setCurrentIndex((current.index + 1) % slides.length);
+setCurrentIndex((currentIndex + 1) % slides.length);
 ```
 
-So that's it. Just use the ~~modulo~~ remainder operator and you're fine. Thats it, nice to seeing you, bye.
+What is going on here? We're using a modulo operator (which is actually a remainder operator) to keep the index in bounds. It doesn't matter if it's much bigger than the actual array; it is always going to be clamped.
 
-Or…?
+Example: Our array has 3 items: `["apple", "banana", "cherry"]`, but we incremented our index too many times and got to '4'. Since the remainder of 4 divided by 3 (the array's length) is 1, we got the index of "banana," which is correct (try to count if you don't trust me).
 
-Well, it is _almost_ that, but as usual, the devil's in the details and there is a small caveat that caused me a little headache in the past.
+### The caveat (decrementing)
 
-## Caveat: going backwards
-
-One of the caveats was foreshadowed in the previous sections: The `%` operator is often referred to as "modulo", which it is not. It is a "remainder". Why? Because it is behaving like modulo, but only as far as you don't use it on negative numbers.
+However, the example above has one significant flaw. If we try to decrease and get below 0, it won't work correctly:
 
 ```js
 let array = ["apple", "orange", "banana"];
 
-let positiveIndex = 4;
-
-let testIndex1 = positiveIndex % array.length; // 1
-
-console.log(array[test1]); // "orange"
-
-let negativeIndex = -4;
-
-let testIndex2 = negativeIndex % array.length; // -1!!! 🤔
-
-console.log(array[testIndex2]); // undefined 🤔
+let testIndex = -4 % array.length; // -1!!! 🤔
 ```
 
-As you can see, remainders of negative dividends are also negative, and there is no `Math.abs()` shortcut to correct the result (if applied, the result will be a non-negative, but incorrect number).
+As you can see, remainders of negative dividends are also negative (and there is no `Math.abs()` shortcut to correct the result; if applied, the result will be a non-negative, but incorrect number).
 
-So how can we correct it? Quite simply, if we use this formula:
+### The solution
 
-- compute the remainder of *desired index / array length*
-- *add array length* to the first result (now, you can't get a negative number!),
-- compute the remainder of *the intermediate result / array length*
+Can we fix that? Of course we can, if we use this simple math formula:
 
-The resulting code is a little cryptic, but it will work:
+- find the remainder of the _desired index / array length_,
+- to the first result, _add array length_ (no negative numbers!),
+- determine the remainder of _the intermediate result / array length_
+
+The resulting code is a little cryptic, but it will work for any positive and negative integer as `desiredIndex`:
 
 ```js
-function loopOverIfIndexOutOfBounds(i, len) {
-  return ((i % len) + len) % len;
+function clampIndex(desiredIndex, array = []) {
+  let length = array.length;
+  // Or throw an error, it's up to you; n % 0 === NaN!:
+  if (length === 0) return 0;
+  // Here comes our math formula:
+  return ((desiredIndex % length) + length) % length;
 }
 ```
 
-## Off-topic: stale props in React
+### Alternative: `Array.prototype.at()`
 
-This is a little off topic (sorry for that), but probably good to mention, considering how many people use React these days. If you are one of them, chances are you've already encountered this obnoxious issue.
-
-You are trying to update state, but it is not changing; it has outdated, stale references. It is usually caused by JavaScript lexical scope and closures and it often occurs inside event handlers.
-
-For example, the `currentIndex` won't be set properly in this `keyup` handler:
+Is there an alternative? Yes, if we are careful about browser support, we can use the brand new EcmaScript 2023's [`Array.prototype.at`](https://tc39.es/ecma262/#sec-array.prototype.at):
 
 ```js
-const handleKeyup = (e) => {
-  if (e.key === "Escape") {
-    //...
-  }
-  if (e.key === "ArrowRight") {
-    return setCurrentIndex(
-      loopOverIfIndexOutOfBounds(currentIndex + 1, someStateSlice.length)
-    );
-  }
-
-  if (e.key === "ArrowLeft") {
-    return setCurrentIndex(
-      loopOverIfIndexOutOfBounds(currentIndex - 1, someStateSlice.length)
-    );
-  }
-};
+function loopOverIfIndexOutOfBounds(desiredIndex, array = []) {
+  let length = array.length;
+  // Or throw an error, it's up to you; n % 0 === NaN!:
+  if (length === 0) return undefined;
+  return array.at(desiredIndex % length);
+}
 ```
 
-However, it will work if you take advantage of the "updater function" that takes previous state as an argument and as such, it has _always_ access to the current state:
+This code is easier to understand than the previous, remainder math-based version. However, there is a fundamental difference between those two functions! While the first one returns the *index*, the second returns the *element* at (sic!) that index. That's why it returns `undefined` instead of `0` if the array has no items.
+
+### Off-topic tip for React devs
+
+There is a footgun hidden in the snippet I've cited before:
 
 ```js
-const handleKeyup = (e) => {
-  if (e.key === "Escape") {
-    //...
-  }
-  if (e.key === "ArrowRight") {
-    return setCurrentIndex((prevIndex) =>
-      loopOverIfIndexOutOfBounds(prevIndex + 1)
-    );
-  }
-
-  if (e.key === "ArrowLeft") {
-    return setCurrentIndex((prevIndex) =>
-      loopOverIfIndexOutOfBounds(prevIndex - 1)
-    );
-  }
-};
+// Somewhere in a React component...
+setCurrentIndex((currentIndex + 1) % slides.length);
 ```
+
+Due to the asynchronous state handling in React, this way of setting derived state is quite prone to the dreaded stale props/state error (been there, done that). I highly recommend being cautious and doing it like that:
+
+```js
+setCurrentIndex((prevIndex) => (prevIndex + 1) % slides.length);
+```
+
+The anonymous function inside the state setter is always guaranteed to have access to the most recent state.
 
 👍 Enjoy!

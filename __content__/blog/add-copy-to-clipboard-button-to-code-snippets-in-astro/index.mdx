@@ -10,37 +10,39 @@ categories:
   - Preact
   - MDX
 keywords:
-description:
+description: With Astro, it is easy to use any UI framework. In this tutorial, we're creating a Preact component that will replace the original Markdown code block with an interactive "copy to clipboard" button.
 ---
 
 # {frontmatter.title}
 
-I am currently migrating my blog from Next.js to Astro. I also recently fell in love with Preact. I decided that in this new blog iteration, I will ditch React completely and I will recreate the small amount of interactive components using that great 3Kb library.
+I am currently migrating my blog from Next.js to Astro. I also recently fell in love with Preact. In this new blog iteration, I decided to abandon React entirely and recreate the small number of interactive components using its cool 3Kb… sibling?
 
-Since Astro has the 'next-gen island architecture', it is actually easy to bring any library/framework for an island component – you can have a dropdown in React, dialog in Svelte and theme toggle button as a web component. I wouldn't do _that_, but it makes decision like the above mentioned easier to make.
+Since Astro has the 'next-gen island architecture', it is actually easy to bring any library/framework for an island component – you can have a Dropdown in React, Dialog in Svelte and ThemeToggle button as a web component. I wouldn't do _that_, but it makes decisions like the one above easier to make.
 
-I write my blog posts in MDX, which is a superset of Markdown that allows (among other things) using interactive components. A code block with a button that would copy the contained snippet to a clipboard is a nice and simple example of this component.
+I write my blog posts in MDX, which is a superset of Markdown that allows, among other things, using interactive components. A code block with a button that would copy the contained snippet to the clipboard is a nice and simple example of this component.
 
 ## Install Astro and create a MDX post
 
-If you don't have a previous experience with Astro, you can [follow this tutorial](https://docs.astro.build/en/tutorial/0-introduction/). Of course using Markdown and MDX in Astro can be a little different than in other frameworks – if you are not sure, [check the docs](https://docs.astro.build/en/guides/markdown-content/).
+If you don't have previous experience with Astro, you can [follow this tutorial](https://docs.astro.build/en/tutorial/0-introduction/). Of course, using Markdown and MDX in Astro can be a little different than in other frameworks; if you are not sure, [check the docs](https://docs.astro.build/en/guides/markdown-content/).
 
-
-So let's suppose that we have Astro installed and we have a simple simple MDX  blog post with a frontmatter and code block:
+So let's suppose that we have Astro installed, and we have a simple MDX blog post with a frontmatter and code block:
 
 ````md
 ---
 title: How to sum up two numbers in JavaScript
 category: JavaScript
 ---
+
 # How to sum up two numbers in JavaScript
 
 Let's make a function:
+
 ```js
 function sum(a, b) {
-  return a + b
+  return a + b;
 }
 ```
+
 And this is how we do it!
 ````
 
@@ -57,7 +59,7 @@ npx astro add preact
 yarn astro add preact
 ```
 
-However, I am using TypeScript and the default config is considering JSX as React. So I would also update the `tsconfig.json` file to prevent type errors:
+However, I am using TypeScript, and the default config considers JSX as React. So I would also update the `tsconfig.json` file to prevent type errors:
 
 ```js
 {
@@ -77,7 +79,7 @@ As the docs suggests, you can also use pragma comment (which is handy if you are
 
 ## Create an enhanced `<pre>` component
 
-In most markdown compilers, the block between the triple backticks is being converted to a `<pre>` element. So we need to enhance it.
+In most markdown compilers, the block between the triple backticks is  converted to a `<pre>` element. So we need to enhance it.
 
 First, let's make a file for our component in `components` folder, called `EnhancedPreElement.tsx`
 
@@ -88,17 +90,10 @@ import { createRef, ComponentChildren } from "preact";
 const EnhancedPreElement = ({ children, ...props }: { children: ComponentChildren }) => {
   const snippetRef = createRef<HTMLPreElement>();
 
-  const copyToClipboard = () => {
-    /* This is kinda messy, but I am afraid there is currently not 
-    *  a better way than creating a <textarea> element, putting the <pre>
-    *  element's `innerText` in it, select it and copy it to clipboard :/
-    */
+  const copyToClipboard = async () => {
     let snippet = snippetRef.current;
-    let area = document.createElement("textarea");
-    area.value = snippet ? snippet.innerText : "";
-    area.select();
-    area.setSelectionRange(0, 99999);
-    navigator.clipboard.writeText(area.value);
+    let snippetText = snippet?.innerText ?? "";
+    await navigator.clipboard.writeText(snippetText);
   };
 
   return (
@@ -121,19 +116,20 @@ const EnhancedPreElement = ({ children, ...props }: { children: ComponentChildre
 
 export default EnhancedPreElement;
 ```
-In this component, we are recreating the original code block, but we've added a wrapper including the 'copy to clipboard' button.
+
+In this component, we are recreating the original code block, but we've added a wrapper that includes the "copy to clipboard" button.
 
 Note the three lines through the opening `<pre>` and closing `</pre>` tags. With `{...props}`, we are passing down all the meta parameters used in MDX (language, filename, etc.); with `{children}`, we are passing down the original contents.
 
-The copying action is a little messy (because of cross-browser compatibility issues) – see the comment in `copyToClipboard()` function.
+The copying action is a little messy (because of cross-browser compatibility issues)—see the comment in `copyToClipboard()` function.
 
-Styling is done using Tailwindcss. If you hate it, you can use a different way to style the markup. 
+Styling is done using Tailwind. If you hate it, you can use a different way to style the markup.
 
 ## 'Signal' that our component is really slick
 
-Preact has recently [added a new api called *Signals*](https://preactjs.com/blog/introducing-signals/). This api is obviously inspired by [Solid's *Signals*](https://www.solidjs.com/guides/reactivity) – but it is even terser and more different from [React's Hooks](https://reactjs.org/docs/hooks-intro.html).
+Preact has recently [added a new api called _Signals_](https://preactjs.com/blog/introducing-signals/). This api is obviously inspired by [Solid's _Signals_](https://www.solidjs.com/guides/reactivity), but it is even terser and more different from [React's Hooks](https://reactjs.org/docs/hooks-intro.html).
 
-Let's try it! Firstly, we'll need to install a dedicated module (signals are not a part of the Preact's core library):
+Let's try it! Firstly, we'll need to install a dedicated module (signals are not a part of Preact's core library):
 
 ```bash
 # Using NPM
@@ -143,9 +139,9 @@ npm install @preact/signals
 yarn add @preact/signals
 ```
 
-Then, we can use the signals add interactivity. It will be simple:
+Then we can use the signals to add interactivity. It will be simple:
 
-When clicked, our button will change its text to **"Copied!"**. After one second, it will return to the default **"Copy"**. To observe the "Copy" action, we'll use a signal, that will be updated after a timeout. We'll derive the button's current text with *computed signal*:
+When clicked, our button will change its text to **"Copied!"**. After one second, it will return to the default **"Copy"**. To observe the "Copy" action, we'll use a signal, that will be updated after a timeout. We'll derive the button's current text from _computed signal_:
 
 ```jsx
 import { createRef, ComponentChildren } from "preact";
@@ -161,13 +157,11 @@ const EnhancedPreElement = ({ children, ...props }: { children: ComponentChildre
     return hasBeenCopiedRecently.value ? "Copied!" : "Copy";
   });
 
-  const copyToClipboard = () => {
+  const copyToClipboard = async () => {
     let snippet = snippetRef.current;
-    let area = document.createElement("textarea");
-    area.value = snippet ? snippet.innerText : "";
-    area.select();
-    area.setSelectionRange(0, 99999);
-    navigator.clipboard.writeText(area.value);
+    let snippetText = snippet?.innerText ?? "";
+    await navigator.clipboard.writeText(snippetText);
+
     hasBeenCopiedRecently.value = true;
 
     timeoutRef.current = setTimeout(() => {
@@ -202,30 +196,67 @@ export default EnhancedPreElement;
 
 ## Use the component in MDX
 
-There are basically two options how to tell the MDX compiler that we want to render `<pre>` elements using our `EnhancedPreElement` component.
+There are basically two options for telling the MDX compiler that we want to render `<pre>` elements using our `EnhancedPreElement` component.
 
-We can do it either in a MDX file, inline, like this:
+We can do it either inline in a MDX file like this:
 
 ```md
 ---
 title: How to sum up two numbers in JavaScript
 category: JavaScript
 ---
+
 import EnhancedPreElement from "../components/EnhancedPreElement"
 export const components = { pre: (props) => <EnhancedPreElement client:load {...props} />}
 
 // The rest of the MDX file…
 ```
 
-It's very similar as it was when using Next.js. The one very important difference is that you need to use the `client:load` (or other) directive to tell Astro when and how load the compiled script. Just try to omit it – the component won't load at all.
+It's very similar to what it was when using Next.js. The one very important difference is that you need to use the `client:load` (or other) directive to tell Astro when and how to load the compiled script. Just try to omit it—the component won't load at all.
 
-Alternatively, we can use Astro's template (layout) page, that will make the replacement globally, using the `<Content />` component:
+Alternatively, we can use Astro's template (layout) page, which will make the replacement globally using the `<Content />` component. There is one catch, though: We can't use JSX syntax in `.astro` files, so we need to wrap our Preact component in an `.astro` component:
+
+**EnhancedPreElement.astro (the wrapper):**
 
 ```astro
 ---
-import { Content, components } from '../some-mdx-file.mdx';
-import EnhancedPreElement from '../components/EnhancedPreElement';
+// This is our Preact component
+import EnhancedPreElement from "../components/EnhancedPreElement";
 ---
-<Content components={{...components, pre: (props) => <EnhancedPreElement client:load {...props} /> }} />
+
+<EnhancedPreElement client:load {...props}>
+  <slot />
+</EnhancedPreElement>
 ```
 
+**A dynamic route file (e.g., \[slug\].astro)**:
+
+```astro
+---
+// This is the Astro wrapper
+import EnhancedPreElement from "../components/EnhancedPreElement.astro";
+
+export async function getStaticPaths() {
+  const posts = await Astro.glob("../some-path/**/*.mdx");
+
+  return posts.map((post) => ({
+    params: {
+      slug: post.frontmatter.slug,
+    },
+    props: {
+      post,
+    },
+  }));
+}
+
+const { Content } = Astro.props.post;
+---
+
+<Content
+  components={{
+    pre: EnhancedPreElement,
+  }}
+/>
+```
+
+👍 Enjoy!

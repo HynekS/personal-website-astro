@@ -1,5 +1,5 @@
 ---
-title: Create Preact component from existing DOM element
+title: Create a Preact component from an existing DOM element
 author: Hynek Svacha
 type: blog post
 dateCreated: Jan 30, 2023 11:50
@@ -11,45 +11,40 @@ categories:
 keywords:
   - Preact
   - cloneElement
-description:
+description: Although probably not a common use case, it can be pretty useful to know how to create a Preact component from an existing DOM element. Preact's "h()" or "createElement()" method gives you complete control over what's going to be attached to your virtual DOM component.
 ---
 
 # {frontmatter.title}
 
-How to clone an existing DOM element (e. g. image of a kitten with caption) in a Preact tree? Well, there is a simple (but a little dirty) way:
+How to clone an existing DOM element (e.g., an image of a kitten with a caption) into the Preact component tree? Although it's probably not such a common use case, it can be pretty useful to know. 
+
+There are two basic ways I know of. The first one is extremely simple, and it works in Preact the same way as it does in React:
+
+## `dangerouslySetInnerHTML`
 
 ```jsx
+// somewhere, probably in effect:
+let element = document.getElementById("myElement");
+
+// later in the component
 <div dangerouslySetInnerHTML={{ __html: element ? element.outerHTML : null }}></div>
 ```
 
-and there is little more complex, but much more nuanced and customizable way: to clone the Element (and its descendants) using `Preact.h()` (which is the shorthand for `Preact.createElement()`).
+The real catch here is probably only one: If we want to clone the whole target element, we need to use its `outerHTML` instead of `innerHTML` however counter-intuitive it is due to the prop name (we are setting the `div's` `innerHTML`, not the element's).
 
-## Why
+## `h()` (`createElement()`) method
 
-While converting my Next.js blog to Astro, I was reconsidering if how to convert the former Lightbox component. For the Next.js iteration, I was using MDX replacer component based on reactjs-popup. It was working, but it felt a little heavy-handed for the simple use case. Also, I ran into issues with relative images paths in markdown files (I made it working in the Next.js iteration, but with a load of hacks that I really didn't want to dive again).
+The second way is to use `Preact.h()` method (which is shorthand for `Preact.createElement()`). It is definitely more complex, but it gives us almost complete control over what's going to be attached to our virtual DOM. We can sanitize the input, alter the attributes, assign refs, or do whatever else we want.
 
-So, the decision was made: I'll just create an overlay Preact node, and I'll be cloning the images (that are part of the static HTML) onto it. No need for Portals, BTW.
+There isn't currently any api that would just take an existing DOM element and convert it to a virtual DOM element (there is `cloneElement()` method, but it's only for cloning elements that are already part of the virtual DOM).
 
-## How
+However, we can take an existing DOM Element and create its copy in the shape that Preact's `h()` would accept. If we peek at [the docs](https://preactjs.com/guide/v10/api-reference#h--createelement), we'll learn that the expected shape is `h(type, props, ...children)`.
 
-Unfortunately, there is currently not an existing api that would just take an existing DOM element and convert it to a Virtual DOM Element (there is `cloneElement()` method, but it's only for cloning Virtual DOM Elements).
+The `type` parameter is rather simple—it's the name of the HTML element (e.g., `h1`, `code`).
 
-What we *can* do is to take an existing DOM Element and create its copy with the shape Preact's `h()` would accept. If we peek at [the docs](https://preactjs.com/guide/v10/api-reference#h--createelement), we'll learn that the expected shape is `h(type, props, ...children)`.
+For the purpose of cloning DOM elements, the `props` parameter can be thought of as an object containing the DOM element's attributes (e.g., `id`, `class`, `width`).
 
-The `type` parameter is rather simple – it's the name of the HTML element (e. g. `div`, `h1`, `code`). There is one catch (that costs me an hour of my life) –
-in the case of text node, `type` is not `null` or empty, it's `"text"`.
-
-For the purpose of cloning DOM elements, the `props` parameter can be thought of as an object containing the DOM element's attributes (e. g. `id`, `class`, `width`).
-
-```jsx
-/// TODO remove
-import { h } from 'preact';
-
-h('img', { src: "https://placekitten.com/800/600", alt: "Purr purr!" }');
-// <img src="https://placekitten.com/800/600" alt="Purr purr!" />
-```
-
-How can we get those attributes? Unfortunately, there is currently no simple self explanatory api. There are `Element.attributes`, `Element.getAttributeNames()` and `Element.getAttribute()` methods, but none of them would give use an object with all names and values of DOM Element attributes. But we can leverage those in a simple utility function:
+How can we get those attributes? Unfortunately, there is currently no simple, self explanatory DOM api. There are `Element.attributes`, `Element.getAttributeNames()` and `Element.getAttribute(), but none of them will give us an object with all DOM Element attributes right off the bat. But we can leverage those apis in a utility function:
 
 ```js
 const getAttributes = (element) => {
@@ -63,10 +58,9 @@ const getAttributes = (element) => {
 };
 ```
 
-If we'd need to clone single empty element, like `<img />` element, we'd be done. However, it would be much better to have more flexible api capable of cloning a whole DOM branch!
+If we'd need to clone a single childless element, like the `<img />` element, we'd be done now. However, it would be much better to have a more flexible API capable of cloning a whole DOM branch!
 
-So what about the `...children` parameter? It accepts a simple virtual DOM tree of the same shape `h()` expects, so we can help ourselves with a rather simple recursive function that will recursively convert our browser DOM to Preact's virtual DOM:
-
+So what's the `...children` parameter about? It accepts a simple virtual DOM tree of the same shape `h()` expects (or a string or array of strings in case the only children are text). We can create a function that will convert our browser DOM to Preact's virtual DOM recursively:
 
 ```js
 import { h } from 'preact';
@@ -76,7 +70,7 @@ const toVNodeTree = (childNodes) => {
   childNodes.forEach((node) => {
     // Text node
     if (node.nodeType === 3) {
-      return tree.push(h('text', null, node.data));
+      return tree.push(node.data);
     }
     // Element node
     if (node.nodeType === 1) {
@@ -89,7 +83,11 @@ const toVNodeTree = (childNodes) => {
 };
 ```
 
+If we'd like to sanitize, attach classes, other attributes of refs, pad the text nodes, or so, we'd be able to do it inside this function.
+
 ## Putting it together
+
+Put together, our code could look like this simple example:
 
 ```tsx
 import { h } from 'preact';
@@ -107,7 +105,7 @@ const toVNodeTree = (childNodes) => {
   const tree = [];
   childNodes.forEach((node) => {
     if (node.nodeType === 3) {
-      return tree.push(h('text', null, node.data));
+      return tree.push(node.data);
     }
     if (node.nodeType === 1) {
       return tree.push(
@@ -129,8 +127,6 @@ export const App = () => {
   });
 
   return (
-    <div>
-      <h1>Hello StackBlitz!</h1>
       <div>
         {element
           ? h(
@@ -140,11 +136,16 @@ export const App = () => {
             )
           : null}
       </div>
-    </div>
   );
 };
 ```
 
 ## What about React?
 
-React has a very similar api (`React.createElement()`) that works basically the same way. The issue with it is that React's JSX diverged from HTML DOM quite a bit. There is no `class`, but `className`, there is no `for` but `htmlFor` and so on (the list is quite long). It also breaks if `style` attribute contains a style string, rather than the style object. There are some libraries 
+React has a very similar api, [`React.createElement()`](https://beta.reactjs.org/reference/react/createElement#createelement). It works basically the same way, but unlike Preact, which is aiming to stay very close to the platform, React has diverged from it quite a bit.
+
+There is no `class`, but `className`, there is no `for` but `htmlFor` and so on ([the list would be rather long](https://www.geeksforgeeks.org/attributes-that-work-differently-between-react-and-html/)). It would also choke if the `style` attribute contained a string, rather than a style object.
+
+There are some libraries that are aiming to convert standard DOM properties to the ones React accepts (e.g., [react-attr-converter](https://www.npmjs.com/package/react-attr-converter)) or [style-to-object](https://www.npmjs.com/package/style-to-object) (they are being downloaded quite a bit, despite being unmaintained for quite a long time). Bottom line: Yes, it can be done in React, but with a fair amount of caution.
+
+👍 Enjoy!

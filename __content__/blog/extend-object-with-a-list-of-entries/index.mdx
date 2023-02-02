@@ -1,5 +1,5 @@
 ---
-title: Extend object with a list of entries
+title: Extend an object with a list of entries
 slug: extend-object-with-a-list-of-entries
 author: Hynek Svacha
 type: blog post
@@ -11,12 +11,12 @@ categories:
 keywords:
   - JavaScript
   - Object.fromEntries
-description: How to easily extend a JavaScript object with an array of entries using the 'Object.fromEntries' method
+description: How to easily extend a JavaScript object with an array of entries using the "Object.fromEntries" method
 ---
 
-# Extend object with a list of entries
+# {frontmatter.title}
 
-While coding, I repeatedly encountered a need to extend an object with a list of some entries (key-value pairs).
+I frequently had to add a list of certain entries (key-value pairs) to an object while I was coding.
 
 Let's say we have an object mapping Markdown (or MDX) HTML elements to our custom components:
 
@@ -36,7 +36,7 @@ const components = {
 }
 ```
 
-What if we want to add every heading tag (to return custom heading component)? There are six of them (`h1` to `h6`). We _could_, by all means, just add every heading tag manually:
+What if we want to add every heading tag (to return a custom heading component)? There are six of them (`h1` to `h6`). By all means, we _could_ just add every heading tag manually:
 
 ```jsx
 const components = {
@@ -60,11 +60,11 @@ const components = {
 }
 ```
 
-I don't want to evangelize DRY principle here – I think it can be perfectly fine to repeat ourself sometimes (see [Sandi's](https://sandimetz.com/blog/2016/1/20/the-wrong-abstraction) or [Dan's](https://overreacted.io/goodbye-clean-code/) or [Kent's](https://kentcdodds.com/blog/aha-programming) articles).
+I don't want to evangelize the DRY principle here; I think it can be perfectly fine to repeat ourselves sometimes (see [Sandi's](https://sandimetz.com/blog/2016/1/20/the-wrong-abstraction) or [Dan's](https://overreacted.io/goodbye-clean-code/) or [Kent's](https://kentcdodds.com/blog/aha-programming) articles).
 
-But let's say we want to save ourself from the hassle of editing six different lines in our code in the case we want to update the heading component.
+But let's say we want to save ourselves the hassle of editing six different lines in our code in the event we want to update the heading component.
 
-We can create take an array of all the heading tags `map` over them like that:
+We can create an array of all the heading tags and `map` over them like that:
 
 ```jsx
 // Let's assume we want to add an id to every heading tag to allow anchoring:
@@ -84,7 +84,8 @@ const headings = ["h1", "h2", "h3", "h4", "h5", "h6"].map(headingTag => [
 
 Then, the simplest option is to use `Object.fromEntries()` method to add the `headings` into our `components` object.
 
-[`Object.fromEntries`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/fromEntries), a feature introduced by the 10th edition of ECMAScript in 2019, transforms an iterable into an object. It can be considered as an inverse method to older `Object.entries`, which does the opposite (object into iterable).
+The [`Object.fromEntries`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/fromEntries) method, introduced in the 10th edition of ECMAScript in 2019, converts an iterable into an object. It can be considered an inverse method to the older `Object.entries`, which does the opposite (turn an object into an iterable).
+
 
 ```jsx
 const components = {

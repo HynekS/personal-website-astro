@@ -1,5 +1,5 @@
 ---
-title: Pretty PowerShell with Windows Terminal, posh-git and oh-my-posh
+title: Pretty PowerShell with Windows Terminal, posh-git, and oh-my-posh
 slug: pretty-powershell-with-windows-terminal-posh-git-and-oh-my-posh
 author: Hynek Svacha
 type: blog post
@@ -17,20 +17,21 @@ import { Image, Picture } from '@astrojs/image/components';
 import Gallery from "@components/Gallery.astro"
 import gallery from "./assets/gallery"
 
-# Pretty PowerShell with Windows Terminal, posh-git and oh-my-posh
+# {frontmatter.title}
 
-As a long-term Windows user, I always felt a twinge of envy for the Mac users whenever I seen their joyful, colorful terminals. In comparison, the Windows command line prompt looked like their broke, hopeless relative. The PowerShell, blue as a screen of death, was't much better (in the terms of look, not the features – these were pretty cool).
+As a long-term Windows user, I always felt a twinge of envy for the Mac users whenever I saw their joyful, colorful terminals. In comparison, the Windows command-line prompt resembled a bankrupt, hopeless relative.The PowerShell, blue as a screen of death, wasn't much better (in terms of look, not the features—these were pretty cool).
 
-Well, the time has changed! For me, the first breeze of fresh air was the [Cmder](https://cmder.net/) prompt, which I was happily using for a while and can definitely recommend. But I was greedy and I wanted more. And I've got it – with the customized new Windows Terminal.
-If you see the images and want to make your command line look like that, follow along.
+Well, the time has changed! For me, the first breath of fresh air was the [Cmder](https://cmder.net/) prompt, which I was happily using for a while and can definitely recommend. But I was greedy, and I wanted more. And I've got it—with the customized new Windows Terminal.
+
+If you can see the images and want to make your command line look like that, follow along.
 
 <Gallery gallery={gallery}/>
 
 ## Get the terminal
 
-You can easily get it from the [Microsoft Store](https://aka.ms/terminal). If that seems way too easy to be interesting, there are [multiple other install options](https://github.com/microsoft/terminal#via-github) listed on the terminals [github repo](https://github.com/microsoft/terminal).
+You can easily get it from the [Microsoft Store](https://aka.ms/terminal). If that seems way too easy to be interesting, there are [multiple other install options](https://github.com/microsoft/terminal#via-github) listed on the terminals' [github repo](https://github.com/microsoft/terminal).
 
-If you've installed the terminal, let consider that as our starting point (well, at least it's not blue!):
+If you've installed the terminal, let's consider that as our starting point (well, at least it's not blue!):
 
 <Picture src={import("./assets/Image-00-default-look.png")} alt="Screenshot of the appearance of PowerShell on a newly installed Windows Terminal." widths={[400, 800, 1200]} sizes="(max-width: 800px) 100vw, 800px" lightbox />
 
@@ -42,7 +43,7 @@ I suppose there is a high probability you've already installed Git. If you're un
 git --version
 ```
 
-If you already have Git, you'll see its version. Otherwise, you'll get an error which means you'll have to download and install [Git for Windows first](https://git-scm.com/download/win) first.
+If you already have Git, you'll see its version. Otherwise, you'll get an error, which means you'll have to download and install [Git for Windows first](https://git-scm.com/download/win) first.
 
 We'll be installing two packages. One, [Oh my posh](https://github.com/JanDeDobbeleer/oh-my-posh), for a colorful and customizable prompt. The second, [posh-git](http://dahlbyk.github.io/posh-git/), for Git integration.
 
@@ -51,11 +52,11 @@ Install-Module posh-git -Scope CurrentUser
 Install-Module oh-my-posh -Scope CurrentUser -AllowPrerelease
 ```
 
-You may need to install NuGet first, but the PowerShell is smart enough to offer you a NuGet install if it couldn't find it. You'll also probably get a few warning about untrusted repositories, because both `posh-git` and `oh-my-posh` are not Microsoft official packages. I suppose we can trust them, so feel free to assure PowerShell that we really want to install both of them (see image below).
+You may need to install NuGet first, but the PowerShell is smart enough to offer you one if it can't find it. You'll also probably get a few warnings about untrusted repositories because both `posh-git` and `oh-my-posh` are not Microsoft official packages. I suppose we can trust them, so feel free to assure PowerShell that we really want to install both of them (see image below).
 
 <Image src={import("./assets/Image-07-nu-get-confirmation.png")} alt="Screenshot of a confirmation dialog while installing posh-git and oh-my-posh." lightbox/>
 
-After the install has finished, we need to edit the PowerShells profile. The easiest way how to create or update settings is to open the PowerShell and run `notepad $PROFILE`.
+After the install has finished, we need to edit the PowerShell profile. The easiest way to create or update settings is to open PowerShell and run `notepad $PROFILE`.
 
 A notepad window should emerge (probably an empty one). Add these three lines:
 
@@ -75,23 +76,23 @@ If that is the case, you can lift the user privileges by running:
 Set-ExecutionPolicy -Scope CurrentUser Remotesigned
 ```
 
-After a reload (it is sufficient to open a new tab), you should be able to see a nice new colorful prompt.
+After a reload (it is sufficient to open a new tab), you should be able to see a nice, colorful prompt.
 
-**"But I see some weird ugly rectangles instead of the Git symbols!"**
+**"But I see some weird, ugly rectangles instead of the Git symbols!"**
 
-No worries. That would mean we have to install a [powerline font](https://github.com/powerline/fonts). There are lots of them; I personally like [DejaVu Sans Mono for Powerline](https://github.com/powerline/fonts/tree/master/DejaVuSansMono), so I would recommend to download and install it.
+No worries. That would mean we have to install a [powerline font](https://github.com/powerline/fonts). There are lots of them; I personally like [DejaVu Sans Mono for Powerline](https://github.com/powerline/fonts/tree/master/DejaVuSansMono), so I would recommend downloading and installing it.
 
 After another reload, everything should be neat and clean.
 
 ### Possible gotchas
 
-If you are using PowerShell Core, the new, open-sourced version of PowerShell, you may need to install [PSReadLine](https://docs.microsoft.com/en-us/powershell/module/psreadline/?view=powershell-7.1) module:
+If you are using PowerShell Core, the new, open-sourced version of PowerShell, you may need to install the [PSReadLine](https://docs.microsoft.com/en-us/powershell/module/psreadline/?view=powershell-7.1) module:
 
 ```powershell
 Install-Module -Name PSReadLine -Scope CurrentUser -Force -SkipPublisherCheck
 ```
 
-In the past, I've encountered an error where PowerShell wasn't able to load the installed packages. The hot fix I've found on Stack Exchange was to set the full paths to modules, e. g.:
+In the past, I've encountered an error where PowerShell wasn't able to load the installed packages. The hot fix I've found on Stack Exchange was to set the full paths to modules, e.g.:
 
 ```
 Import-Module "$HOME\Documents\WindowsPowerShell\Modules\posh-git\<VERSION NUMBER>\posh-git.psm1"
@@ -102,9 +103,9 @@ Set-PoshPrompt -Theme Paradox
 
 ## Customize
 
-For the full customization, there is a JSON file you can edit, similar to VSCode settings. You can open it by clicking the down arrow on the top bar, which will open the menu. In the lower part, there should be a "Settings" choice with a sprocket-wheel icon.
+For full customization, there is a JSON file you can edit, similar to VSCode settings. You can open it by clicking the down arrow on the top bar, which will open the menu. In the lower part, there should be a "Settings" choice with a sprocket-wheel icon.
 
-You can tweak the settings whatever you like. I just list mine for the reference:
+You can tweak the settings however you like. I'll just list mine as a reference:
 
 ```json
 "profiles": [
@@ -126,7 +127,7 @@ You can tweak the settings whatever you like. I just list mine for the reference
 ]
 ```
 
-I myself prefer Sarah Drasner's "Night Owl" color theme. You can copy it from this [github repo](https://github.com/edurojasr/Windows-Terminal-Theme-Night-Owl). As far as I can remember I've changed the blue color a little to improve the contrast, so this is my custom version:
+I myself prefer Sarah Drasner's "Night Owl" color theme. You can copy it from this [github repo](https://github.com/edurojasr/Windows-Terminal-Theme-Night-Owl). As far as I can remember, I've changed the blue color a little to improve the contrast, so this is my custom version:
 
 ```json
   "schemes": [
@@ -154,9 +155,9 @@ I myself prefer Sarah Drasner's "Night Owl" color theme. You can copy it from th
   ],
 ```
 
-For the background image, I searched through the [DeviantArt](https://deviantart.com) until I found what I like. In the screenshots, I use [Dark Mount by Noxypia](https://www.deviantart.com/noxypia/art/Dark-Mount-305013507) as a background image, but with a very low opacity, as I find anything more discernible too distracting.
+For the background image, I searched through the [DeviantArt](https://deviantart.com) until I found what I liked. In the screenshots, I use [Dark Mount by Noxypia](https://www.deviantart.com/noxypia/art/Dark-Mount-305013507) as a background image, but with very low opacity, as I find anything more discernible too distracting.
 
-I also tweaked the default prompt a little. I don't want to see the full path, just the username and current working directory. So in the `<USER>/Documents/oh-my-posh/<VERSION>/themes` folder, I opened the `Paradox.psm1` file (as it is my theme) and changed the `$path` variable like that:
+I also tweaked the default prompt a little. I don't want to see the full path, just the username and current working directory. So in the `<USER>/Documents/oh-my-posh/<VERSION>/themes` folder, I opened the `Paradox.psm1` file (as it is my theme) and changed the `$path` variable like this:
 
 ```powershell
 # original:

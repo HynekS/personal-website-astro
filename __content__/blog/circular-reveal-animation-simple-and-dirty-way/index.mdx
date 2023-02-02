@@ -1,5 +1,5 @@
 ---
-title: "Circular reveal animation: simple & dirty way"
+title: "Circular reveal animation: a simple (and dirty) way"
 author: Hynek Svacha
 type: blog post
 dateCreated: Apr 22, 2022 16:59
@@ -8,17 +8,17 @@ featuredImage:
 categories:
   - css
 keywords:
-description:
+description: The basic rule of CSS animations is that you will animate only transform or opacity. But sometimes you don't want to play by the rules, and I show you how to recreate a circular reveal effect (inspired by Paul Lewis) by animating box-shadow.
 ---
 
 import { Image, Picture } from "@astrojs/image/components";
 import Demo from "./assets/Demo.astro"
 
-# Circular reveal animation: simple & dirty way
+# {frontmatter.title}
 
-This post is inspired by a youtube video by [Paul Lewis](https://twitter.com/aerotwist), named [Creating a circular reveal animation with JavaScript and CSS!](https://www.youtube.com/watch?v=YdvQPkJd0gc). He is explaining how to make a cool image animation using CSS and Javascript.
+This post is inspired by a  YouTube  video by [Paul Lewis](https://twitter.com/aerotwist), titled [Creating a circular reveal animation with JavaScript and CSS!](https://www.youtube.com/watch?v=YdvQPkJd0gc). He is explaining how to make a cool image animation using CSS and Javascript.
 
-Paul's approach is quite sophisticated. He is putting the image into a circular container that is a little bit smaller than the image itself. When the animation is triggered, the container is _expanding_, while the contained image is _contracting_ with the same speed. This is creating the 'reveal' effect. To make the easing of the two motions synced, Paul is using JavaScript and some clever maths. Just take a look:
+Paul's approach is quite sophisticated. He is putting the image into a circular container that is a little bit smaller than the image itself. When the animation is triggered, the container is _expanding_, while the contained image is _contracting_ at the same speed. This is creating the "reveal" effect. Paul is using JavaScript and some clever math to sync the easing of the two motions. Just take a look:
 
 <iframe
   width="560"
@@ -30,9 +30,9 @@ Paul's approach is quite sophisticated. He is putting the image into a circular 
   allowfullscreen
 ></iframe>
 
-The video made me wonder why he is using such a complex approach. Most likely because Paul is a decent guy who play by the rules. And the basic rule of CSS animations is: You will animate only [transform or opacity](https://web.dev/animations-guide/) (if you are wondering why, [here is the detailed explanation](https://www.smashingmagazine.com/2016/12/gpu-animation-doing-it-right/)).
+The video made me wonder why Paul is using such a complex approach. Most likely because he's a decent guy who plays by the rules. And the basic rule of CSS animations is that you will animate only [transform or opacity](https://web.dev/animations-guide/) (if you are wondering why, [here is the detailed explanation](https://www.smashingmagazine.com/2016/12/gpu-animation-doing-it-right/)).
 
-But I am nowhere near as smart as Paul, hence I'd rather avoid such sophisticated stuff. So I decided to play dirty. Hold to your hats – here is a way how to replicate the reveal effect using _a box shadow animation_!
+But I am nowhere near as smart as Paul, hence I'd rather avoid such sophisticated stuff. So I decided to play dirty. Hold onto your hats—here is a way to replicate the reveal effect using a _box shadow animation_!
 
 First things first, the CSS:
 
@@ -69,7 +69,7 @@ First things first, the CSS:
 .image {
   position: absolute;
 
-  /* We need to center the image (*inset*) and make it little bit  smaller than the container (exactly: 1px on both sides, so 2px in sum). If we'd skip this, an ugly crispy 'halo' would appear (try it yourself). */
+  /* We need to center the image (*inset*) and make it a little bit smaller than the container (exactly: 1 px on both sides, so 2 px in sum). If we skip this, an ugly, crispy 'halo' would appear (try it yourself). */
   inset: 1px;
   max-width: calc(100% - 2px);
   max-height: calc(100% - 2px);
@@ -94,3 +94,5 @@ And here is the markup:
 ## Demo
 
 <Demo/>
+
+👍 Enjoy!

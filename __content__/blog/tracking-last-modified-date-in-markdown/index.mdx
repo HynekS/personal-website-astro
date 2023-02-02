@@ -1,5 +1,5 @@
 ---
-title: Tracking last modify date in markdown
+title: Tracking the "last modified" date in markdown
 slug: tracking-last-modify-date-in-markdown
 author: Hynek Svacha
 type: blog post
@@ -13,24 +13,22 @@ keywords:
   - javascript
   - markdown
   - git
-description:
+description: How can we track the "last modified" date when our content (e.g., blog posts) is in markdown files? The traditional CMSs usually handle that themselves. However, we can mimic those features using filesystem metadata or, even better, by leveraging Git to our advantage.
 ---
-import Code from "@components/Code"
-export const components = {pre: (props) => <Code client:load {...props} />}
 
-# Tracking last modified date in markdown
+# {frontmatter.title}
 
-I have migrated my blog completely to Markdown (MDX) after I realized that it's probably the best match my workflow. I am quite happy with the decision. However, I was missing a few features that typically come out of the box when using a conventional CMS – like tracking the date of the last edit.
+I have migrated my blog completely to Markdown (MDX) after I realized that it's probably the best match for my workflow. I am quite happy with the decision. However, I was missing a few features that typically come out of the box when using a conventional CMS, like tracking the date of the last edit.
 
 I will go through a couple of possible solutions to this problem.
 
 ## Use a Markdown CMS
 
-If you are using VSCode, there is the [vscode-front-matter](https://github.com/estruyf/vscode-front-matter) plugin that claims to "give you the power and control of a full-blown CMS running straight in the editor".
+If you are using VSCode, there is the [vscode-front-matter](https://github.com/estruyf/vscode-front-matter) plugin that claims to "give you the power and control of a full-blown CMS running straight in the editor."
 
-I tested it briefly, and it looks cool. It has some issues, e. g. it doesn't seem to fully support MDX at the time (although this is probably [being fixed recently](https://github.com/estruyf/vscode-front-matter/issues/218)).
+I tested it briefly, and it looks cool. It has some issues, e.g., it doesn't seem to fully support MDX at the time (although this is probably [being fixed recently](https://github.com/estruyf/vscode-front-matter/issues/218)).
 
-While I would probably recommend this plugin to a friend if being asked, it was not the solution I choose. Why?
+While I would probably recommend this plugin to a friend if asked, it was not the solution I chose. Why?
 
 Firstly, I like the pristine experience of creating posts solely by editing text files (just like the elders around the campfires remember creating web pages using nothing but HTML and CSS).
 
@@ -38,15 +36,15 @@ Secondly, I didn't want to become dependent on another tool (however cool it cou
 
 ## Use filesystem metadata
 
-My first – rather naïve – attempt was to use metadata that are accessible from the filesystem.
+My first, rather naïve, attempt was to use metadata that are accessible from the filesystem.
 
 But there is an issue: while _some_ metadata do live in the file itself (like image EXIF data), the main info (including the last edit) is stored in the filesystem itself. That's why it is available even when the file is completely empty (its length is exactly `0` bytes).
 
 (I don't want to dive too deep into details, because I am nowhere near an expert on this topic.)
 
-The `fs` built-in library of Node.js has multiple methods to access file metadata. For simplicity sake, I will only refer to a synchronous api method, [`fs.statSync`](https://nodejs.org/api/fs.html#fsstatsyncpath-options).
+The `fs` built-in library of Node.js has multiple methods to access file metadata. For the sake of simplicity, I will only refer to the synchronous api method, [`fs.statSync`](https://nodejs.org/api/fs.html#fsstatsyncpath-options).
 
-This method takes a path and returns a `fs.Stats` instance. So, to get the last edit date, you can do something like that:
+This method takes a path and returns a `fs.Stats` instance. So, to get the last edit date, you can do something like this:
 
 ```js
 import * as fs from "fs"
@@ -59,11 +57,11 @@ const { mtime } = fs.statSync(filePath)
 
 Using the edit date from file system can be helpful, but has a quite limited use case.
 
-It can be used _if_ your are directly deploying the static build – like when you build the site using Next.js or Gatsby and then you deploy the contents of an `out` or `public` dir using [Netlify](https://Netlify.com) [drag'n'drop feature](https://app.netlify.com/drop) (or good ol' FTP).
+It can be used _if_ you are directly deploying the static build, like when you build the site using Next.js or Gatsby and then deploy the contents of an `out` or `public` dir using Netlify's (https://Netlify.com) [drag'n'drop feature](https://app.netlify.com/drop) (or good ol' FTP).
 
-It _won't_ work if you are deploying using continuous integration – like when your site is linked to a Github repo and is being built from scratch on someone's (e. g. Netilfy's) sever each time when you push a new commit to Github.
+It _won't_ work if you are deploying using continuous integration, like when your site is linked to a Github repo and is being built from scratch on someone's (e.g., Netilfy's) server each time you push a new commit to Github.
 
-Why? Because the files are created from scratch on every build. So, while it hopefully won't break anything, the last modify date on _all_ your files will match the date of the last build, which is probably not what you want.
+Why? because the files are created from scratch on every build. So, while it hopefully won't break anything, the last modify date on _all_ your files will match the date of the last build, which is probably not what you want.
 
 ### Next.js `getStaticProps` example (filesystem)
 
@@ -100,9 +98,9 @@ export const getStaticProps = async context => {
 
 There are good news though – if you are deploying using continuous integration, then you most likely track your files with Git. And Git actually stores **a lot** of metadata about the committed files.
 
-Using `git log` command, we can obtain two meta properties related to last modify date: **author date** and **committer date**. Author date is the original date of the commit, while the committer date is the date of the last commit's' edit (e. g. using `--amend` or `rebase`). In the examples, I'll be using the author date.
+Using `git log` command, we can obtain two meta properties related to the last modify date: **author date** and **committer date**. The "author date" is the original date of the commit, while the "committer date" is the date of the last commit's' edit (e.g., using `--amend` or `rebase`). In the examples, I'll be using the "author date."
 
-But how to obtain it in Node.js? There is a built-in library `child_process`, which enables us to spawn a separate process that can run any system command. For simplicity sake, we will use its synchronous method `execSync` to capture the return value of the parametrized `git log` command. The method will return a `Buffer`, so we'll need to convert it to date string using `toString()` method:
+But how do you obtain it in Node.js? There is a built-in library `child_process`, which enables us to spawn a separate process that can run any system command. For simplicity's sake, we will use its synchronous method `execSync` to capture the return value of the parameterized `git log` command. The method will return a `Buffer`, so we'll need to convert it to a date string using `toString()` method:
 
 ```js
 import { execSync } from "child_process"
@@ -114,11 +112,11 @@ const lastAuthorDate = execSync(
 
 ### Caveats(?)
 
-There are just a few minor ones I know of. We need to keep in mind that Git doesn't track the moment edits are saved, but the one they are committed. Which is not necessarily bad, just different from the filesystem way to track updates. (Once I was baffled by funny dates of my posts edits; then I realized that I just _kinda forget about_ the need to commit them.) 
+There are just a few minor ones that I know of. We need to keep in mind that Git doesn't track the moment edits are saved, but rather the moment they are committed. Which is not necessarily bad, just different from the filesystem way to track updates. (Once I was baffled by the funny dates of my post edits, then I realized that I just _kinda forget about_ the need to commit them.)
 
-The second difference I can think of is in the way Git tracks _file path change_. When renaming or moving file, you'll have to make a commit and the commit date will appear as the last modification date, which is not optimal (the present-day filesystems, AFAIK, would ignore such a name and/or path change).
+The second difference I can think of is in the way Git tracks _file path changes_. When renaming or moving a file, you'll have to make a commit, and the commit date will appear as the last modification date, which is not optimal (the present-day filesystems, AFAIK, would ignore such a name and/or path change).
 
-We can avoid this, but it'll take some effort. Git is, among other stuff, saving the brief commit status of a file (A for added, M for modified, R for renamed/moved – see the [full docs](https://git-scm.com/docs/git-status#_short_format)). Therefore, if we log the status among the other stats, we can easily filter out those starting with `R`:
+We can avoid this, but it'll take some effort. Git, among other things, saves the brief commit status of a file (A for added, M for modified, R for renamed/moved; see the [full docs](https://git-scm.com/docs/git-status#_short_format)). Therefore, if we log the status among the other stats, we can easily filter out those starting with `R`:
 
 ```js
 import { execSync } from "child_process"
@@ -185,17 +183,17 @@ export const getStaticProps = async context => {
 
 ## Appendix: What about the date of publishing?
 
-Honestly: I am tracking it manually (when I'm done writing, I'd update the frontmatter). One of the reasons is that I've migrated my older blog posts to MDX, thus neither the file creation dates nor the commit dates do match the genuine birth dates.
+Honestly, I am tracking it manually (when I'm done writing, I'd update the frontmatter). One of the reasons is that I've migrated my older blog posts to MDX, so neither the file creation dates nor the commit dates match the genuine birth dates.
 
 But _can_ it be done programmatically?
 
-If you are deploying the already built static site, you can use the filesystem meta: you get it as a `ctime` using Node.js. But beware: the date when the file was created can vastly differ from the actual date of publishing (e. g. a long post that takes two weeks to finish).
+If you are deploying the already-built static site, you can use the filesystem meta: you get it as a `ctime` using Node.js. But beware: the date when the file was created can vastly differ from the actual date of publishing (e.g., a long post that takes two weeks to finish).
 
-So how about Git? Well, it _can_ be done, but it is not safe. As far as I investigated, there is no reliable way you can get the date of the first file commit once you rename/move the original file. See [answers in this SO thread](https://stackoverflow.com/questions/2314652/is-it-possible-to-move-rename-files-in-git-and-maintain-their-history).
+So how about Git? Well, it _can_ be done, but it is not safe. According to my research, there is no reliable way to determine the date of the first file commit after renaming or moving the original file. See [answers in this SO thread](https://stackoverflow.com/questions/2314652/is-it-possible-to-move-rename-files-in-git-and-maintain-their-history).
 
-I made some tests. Once, I've lost a file history as soon as I renamed a text file _and_ added a question mark to its "Hello World!" content in single commit. On the other hand, my blog posts history _sustained_ its path updates. Generally, if the content is big enough (how exactly?), Git should be able to track the file path updates, but it's not guaranteed.
+I made some tests. Once, I lost a file history as soon as I renamed a text file _and_ added a question mark to its "Hello World!" content in single commit. My blog's post history, on the other hand, has sustained through the path updates. Generally, if the content is big enough (how big exactly? ), Git should be able to track the file path updates, but it's not guaranteed.
 
-If you are willing to take the risk, you can get the first commit date like that:
+If you're willing to take a chance, you can get the first commit date as follows:
 
 ```js
 // ✋ WARNING: read the above before copy & paste!

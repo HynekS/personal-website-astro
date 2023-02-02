@@ -1,5 +1,5 @@
 ---
-title: Highlighted code blocks with Sanity and Nextjs
+title: Highlighted code blocks with Sanity.io and Next.js
 author: Hynek Svacha
 type: blog post
 dateCreated: Apr 3, 2021 20:10
@@ -18,16 +18,16 @@ description: "How to create syntax highlighted code blocks using Sanity.io as a 
 import { Image, Picture } from '@astrojs/image/components';
 import Note from "@components/Note"
 
-# Highlighted code blocks with Sanity.io and Next.js
+# {fontmatter.title}
 
 In this tutorial, we will create an input for code blocks in **Sanity.io**. Subsequently, we will create a component for displaying our code blocks in a **Next.js** app.
 
 ## Prerequisites
 
 *   We already know how to install and use Sanity Studio (it is [pretty straightforward](https://www.sanity.io/docs/getting-started-with-sanity-cli)).
-*   We already know how to install Next.js and connect it to Sanity api. In the case of uncertainty, there is a [great tutorial on the company blog](https://www.sanity.io/blog/build-your-own-blog-with-sanity-and-next-js).
+*   We already know how to install Next.js and connect it to the Sanity api. In the case of uncertainty, there is a [great tutorial on the company blog](https://www.sanity.io/blog/build-your-own-blog-with-sanity-and-next-js).
 
-## How to add the code input to Sanity
+## How to integrate code input into Sanity 
 
 Sanity.io does not come with a dedicated input for code blocks out of the box, but there is a nice [official plugin](https://www.sanity.io/plugins/code-input) available. Let's install it:
 
@@ -48,7 +48,7 @@ export default {
       title: "Block",
       type: "block",
       // Styles let you set what your user can mark up blocks with. These
-      // corrensponds with HTML tags, but you can set any title or value
+      // correspond with HTML tags, but you can set any title or value
       // you want and decide how you want to deal with it where you want to
       // use your content.
       styles: [
@@ -113,7 +113,7 @@ If everything went well, we could now be able to add a block of code in our rich
 When it comes to rendering our code blocks on the front end, we have basically two options.
 
 *   To render the code blocks **client-side** (the "old school" way),
-*   To **prerender** the code blocks. Using Next.js, this can mean either server-side rendering or (preferably) the new Static Site Generating option (available since v 9.3).
+*   To **prerender** the code blocks. Using Next.js, this can mean either server-side rendering or (preferably) the new Static Site Generating option (available since v9.3).
 
 In either case, we need to install another official module, [block-content-to-react](https://github.com/sanity-io/block-content-to-react).
 
@@ -121,7 +121,7 @@ In either case, we need to install another official module, [block-content-to-re
 npm i @sanity/block-content-to-react
 ```
 
-This module contains default serializers for portable text (like headings, paragraphs etc.). Unfortunately, code blocks are not among the defaults, hence we'll need to create a dedicated serializer ourselves. The serializers will be used as a prop in our `<BlockContent />` component (probably in a of post template, but that exceeds the scope of this post).
+This module contains default serializers for portable text (like headings, paragraphs, etc.). Unfortunately, code blocks are not among the defaults, so we'll need to create a dedicated serializer ourselves. The serializers will be used as a prop in our `<BlockContent />` component (probably in a post template, but that exceeds the scope of this post).
 
 ```jsx
 // The portable text serializers
@@ -149,11 +149,11 @@ First, we gonna need to install the PrismJS module:
 ```sh
 npm i prismjs
 ```
-Once the module is installed, we need to create a React component which will be responsible to rendering our code blocks.
+Once the module is installed, we need to create a React component, which will be responsible for rendering our code blocks.
 
-The component would look like the one below. Since we are rendering client-side, we need to initialize a ref on the wrapper element first. Then, in the `useEffect` hook, when the DOM is available, we invoke the `Prism.highlightAllUnder()` method on that ref – which should make our code highlighted.
+The component would look like the one below. Since we are rendering client-side, we need to initialize a ref on the wrapper element first. Then, in the `useEffect` hook, when the DOM is available, we invoke the `Prism.highlightAllUnder()` method on that ref, which should make our code highlighted.
 
-Note the third line – I am manually importing the file for jsx support. That's not an optimal solution, because we need to add manually a module each time we want to use a new language (or to add them all together, but it will significantly increase our bundle size). I would suggest to take a look to [babel-plugin-prism](https://www.npmjs.com/package/babel-plugin-prismjs) library for a better way to handle this.
+Note the third line. I am manually importing the file for JSX support. That's not an optimal solution, because we need to manually add a module each time we want to use a new language (or add them all together, but that will significantly increase our bundle size). I would suggest taking a look at [babel-plugin-prism](https://www.npmjs.com/package/babel-plugin-prismjs) module.
 
 ```jsx
 import React, { useEffect, useRef } from "react"
@@ -185,7 +185,7 @@ export default CodeBlock
 
 ### Option #2: Prerender
 
-While server-side rendering or static generation is definitely possible using bare PrismJS, i've run into some issues with it. Therefore, I would recommend to install the library, which is using PrismJS under the hood, but is enhanced to use specifically with React. That library is [prism-react-renderer](https://github.com/FormidableLabs/prism-react-renderer) from [Formidable labs](https://github.com/FormidableLabs).
+While server-side rendering or static generation is definitely possible using bare PrismJS, i've run into some issues with it. Therefore, I would recommend installing the library, which uses PrismJS under the hood but is enhanced to be used specifically with React. That library is [prism-react-renderer](https://github.com/FormidableLabs/prism-react-renderer) from [Formidable labs](https://github.com/FormidableLabs).
 
 So let's install it:
 
@@ -193,7 +193,7 @@ So let's install it:
 npm i prism-react-renderer
 ```
 
-Once the module is installed, we need to create a code block component alike the one above:
+Once the module is installed, we need to create a code block component similar to the one above:
 
 ```jsx
 // if we use Next.js as frontend, no need to import React
@@ -218,11 +218,11 @@ const CodeBlock = ({ code, language, highlightedLines }) => (
 export default CodeBlock
 ```
 
-We also need to create a _serializer_. Since the props used by PrismJS and prism-react-renderer are the same, we can reuse the serializer (take a look on the _serializers.js_ snippet above).
+We also need to create a _serializer_. Since the props used by PrismJS and prism-react-renderer are the same, we can reuse the serializer (take a look at the _serializers.js_ snippet above).
 
 ### Bonus: line highlighting
 
-One neat thing which might be useful is the ability to highlight chosen lines. This is quite simple using client-side `PrismJS`, and with a little effort can be done using `prism-react-renderer` as well:
+One neat thing that might be useful is the ability to highlight selected lines.This is quite simple using client-side `PrismJS`, and with a little effort can be done using `prism-react-renderer` as well.
 
 Either way, we need to enhance our serializer with `highlightedLines` prop:
 
@@ -251,7 +251,7 @@ export default serializers
 
 #### PrismJS
 
-To add line highlight support, import the corresponding module and stylesheet. Add `highlightedLines` to props. Use that prop as the `data-line` attribute value. Because PrismJS expect that prop to be a string (currently an array of numbers), we need to serialize it using `Array.join()` method:
+To add line highlight support, import the corresponding module and stylesheet. Add `highlightedLines` to props. Use that prop as the `data-line` attribute value. Because PrismJS expects that prop to be a string (currently an array of numbers), we need to serialize it using `Array.join()` method:
 
 ```jsx
 import React, { useEffect, useRef } from "react"
@@ -289,7 +289,7 @@ export default CodeBlock
 
 #### prism-react-renderer
 
-First, we need to create a custom styles for a highlighted line (I am using CSS modules here, but feel free to choose your own preferable way to style it):
+First, we need to create custom styles for a highlighted line (I am using CSS modules here, but feel free to choose your own preferred way to style it):
 
 ```css
 .line_highlight {
@@ -302,11 +302,11 @@ First, we need to create a custom styles for a highlighted line (I am using CSS 
 }
 ```
 
-The `highlightedLines` prop comes from Sanity code input in the shape of an array of line numbers.The simplest way how to use it would be checking on every line if the line number is included (e. g. using `Array.includes()` method), but this comes with _O(n<sup>2</sup>)_ complexity 🤔. I therefore recommend to convert the `higlightedLines` prop to a `Set`. Because `Set` itself has _O(1)_ complexity, the result should be _O(n)_, where _n_ is a number of lines 👍.
+The `highlightedLines` prop comes from Sanity code input as an array of line numbers. The simplest way to use it would be to check on every line if the line number is included (e.g., using `Array.includes()` method), but this comes with _O(n<sup>2</sup>)_ complexity 🤔. Because of this, I would recommend transforming the `highlightedLines` prop into a `Set`. Because `Set` itself has _O(1)_ complexity, the result should be _O(n)_, where _n_ is a number of lines 👍.
 
 When we encounter a line that is in our `Set`, we simply add a proper `className` to its props.
 
-There is one little caveat: while the `highlightedLines` are counted from 0, the rendered lines are counted from 1 – hence the `(i + 1)`:
+There is one little caveat: while the `highlightedLines` are counted from 0, the rendered lines are counted from 1. Hence the `(i + 1)`:
 
 ```jsx
 import Highlight, { defaultProps } from "prism-react-renderer"
@@ -347,6 +347,6 @@ const HighlightedCode = ({ code, language, highlightedLines }) => {
 
 ## Conclusion
 
-I hope this article helps you with creating wonderful colorful code snippets. Thank you for reading.
+I hope this article helps you create wonderful, colorful code snippets. Thank you for reading.
 
 👍 Enjoy!

@@ -1,5 +1,5 @@
 ---
-title: Get type of the first and the last tuple element in TypeScript
+title: Get the type of the first and last tuple elements in TypeScript
 author: Hynek Svacha
 type: blog post
 dateCreated: July 27, 2022 17:45
@@ -9,19 +9,19 @@ categories:
   - typescript
 keywords:
 	- typescript
-description:
+description: How can we get the exact type of a tuple of the first and last tuple elements in TypeScript? With the help of a combo of "extends" and  "infer" keywords and spread operator, it's actually quite easy.
 ---
 import Note from "@components/Note"
 
-# Get type of the first and the last tuple element in TypeScript 
+# {frontmater.title}
 
-How can we get the exact type of the first and the last tuple element in TypeScript?
+How can we get the exact type of the first and last tuple elements in TypeScript?
 
-<Note>What is a tuple? Tuple is a list-like data structure with a fixed length. JavaScript doesn't have a native tuple type, but you can tell TypeScript that „this array will never change“ by using `as const` or `readonly` type assertions.</Note>
+<Note>What is a tuple? Tuple is a list-like data structure with a fixed length. JavaScript doesn't have a native tuple type, but you can tell TypeScript that "this array will never change" by using `as const` or `readonly` type assertions.</Note>
 
-## Get type of the first element
+## Get the type of the first element
 
-Get the type of the first tuple element is actually very simple:
+Getting the type of the first tuple element is actually very simple:
 
 ```ts
 type First<T extends readonly unknown[]> = T[0]
@@ -49,7 +49,7 @@ const test = [1, 2, 3, 4, 5] as const
 type TestLast = Last<typeof test> // 5
 ```
 
-Note that we can't do equivalent to `[...any, infer R]` in JavaScript: it would cause the syntax error: `Rest element must be last element`. In this case, TypeScript is more flexible then JavaScript.
+In JavaScript, we cannot do the equivalent of `[...any, infer R]` because it would result in the syntax error "Rest element must be last element". In this case, TypeScript is more flexible than JavaScript.
 
 ## What about arrays?
 

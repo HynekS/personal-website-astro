@@ -30,13 +30,13 @@ description: "There is one VS Code snippet for React I've always missed. It allo
 
 ## The complete Why and How
 
-Using React, I frequently run into a need to quickly inspect a nested data payload of unknown/uncertain shape.
+Using React, I frequently run into the need to quickly inspect a nested data payload of unknown or uncertain shape.
 
 Yes, I can definitely use `console.log(data)` and inspect it using devtools. But then I would need to use a mouse click to open every single subtree, which can be really tedious.
 
-Most of the times, my best solution personally would be to create a `<pre>` element and inside this element, display a serialized JSON in a pretty format (`JSON.stringify(data, null, 2)`). If you'd omit the `<pre>` tag or the [third (space) parameter](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify#parameters) of the serializing function, it wouldn't work (it would display the JSON string, but it wouldn't be formatted, thus probably completely unreadable).
+Most of the time, my best solution personally would be to create a `<pre>` element and, inside this element, display a serialized JSON in a pretty format (`JSON.stringify(data, null, 2)`). If I'd omitted the `<pre>` tag or the [third (space) parameter](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify#parameters) of the serializing function, it wouldn't work (it would display the JSON string, but it wouldn't be formatted, thus probably completely unreadable).
 
-Because I've been using this quite a lot, I was looking for a way to avoid typing it manually every single time. I tried to take advantage of emmet abbreviations, but for some reason (probably conflicting snippet packages),  expanding `pre` was giving me `private name() {}` and if I wanted to get to actual `<pre>` tag from intellisense, I have to scroll down the list five items down 🤔. So, I've come with my own snippet:
+Because I've been using this quite a lot, I was looking for a way to avoid typing it manually every single time. I tried to take advantage of emmet abbreviations, but for some reason (probably conflicting snippet packages),  expanding `pre` was giving me `private name() {}` and if I wanted to get to the actual `<pre>` tag from intellisense, I had to scroll down the list five items down 🤔. So, I've come up with my own snippet:
 
 ```json
 "show data as preformatted JSON": {
@@ -51,8 +51,8 @@ Expanding the snippet gives us this:
 <pre>{JSON.stringify(data, null, 2)}</pre>
 ```
 
-How to use it? Open Command Palette (Ctrl/Command+Shift+P), select Configure User Snippets, select the proper language file (`javascriptreact.json` or `typescritreact.json`), copy and past the snippet in the root object and save the file.
+How do I use it? Open the Command Palette (Ctrl/Command+Shift+P), choose Configure User Snippets, then choose the appropriate language file (`javascriptreact.json` or `typescritreact.json`), copy and paste the snippet into the root object, and save the file.
 
-The "pson" abbreviation can be explained as "Pre tag containing jSON data" – I find it memorable enough and if you don't like it, you can easily change it to whatever you like.
+The "pson" abbreviation can be explained as "Pre tag containing jSON data"; I find it memorable enough, and if you don't like it, you can easily change it to whatever you like.
 
-Enjoy!
+👍 Enjoy!

@@ -14,7 +14,7 @@ keywords:
   - DiceBear avatars
   - avatars
   - custom input
-description: "Sanity.io: how to build a custom input widget that will call the DiceBear avatar api to get an avatar image"
+description: "Sanity.io: How to build a custom input widget that will call the DiceBear avatar api to get an avatar image"
 ---
 import { Image } from "@astrojs/image/components";
 import Note from "@components/Note"
@@ -23,13 +23,13 @@ import Note from "@components/Note"
 
 In this tutorial, we will build a custom input widget fot Sanity studio. The input will be calling an external api to fetch an avatar image. It is inspired by my previous tinkering with a custom input for fetching tweets from the twitter api.
 
-<Note>This article is a little outdated. It was written at the time of a transition to the new Sanity UI kit (which explains why some of the code is a little 'hairy' here). While the fundamentals of this tutorial are still valid, I would suggest to check the <a style={{ all: "unset", textDecoration: "underline", cursor: "pointer" }} href="https://www.sanity.io/docs/custom-input-widgets">new docs</a> at first.</Note>
+<Note>This article is a little outdated. It was written at the time of a transition to the new Sanity UI kit (which explains why some of the code is a little 'hairy' here). While the fundamentals of this tutorial are still valid, I would suggest checking the <a style={{ all: "unset", textDecoration: "underline", cursor: "pointer" }} href="https://www.sanity.io/docs/custom-input-widgets">new docs</a> first.</Note>
 
 The source we'll be using to get our avatar is [DiceBear Avatars](https://avatars.dicebear.com/) api.
 
 ## Prerequisites
 
-Amongst the general knowledge of React, I highly recommend to check those two official tutorials for custom widget creation:
+Among the general knowledge of React, I highly recommend checking out those two official tutorials for custom widget creation:
 
 - https://www.sanity.io/guides/how-to-make-a-custom-input-component
 
@@ -40,11 +40,11 @@ Amongst the general knowledge of React, I highly recommend to check those two of
 Great question! There are two main topics the official tutorials don't cover:
 
 - create a custom input as functional component (both official tutorials use class components),
-- get the value from an external api using user input as argument in the api call.
+- retrieve a value from an external api by passing user input as an argument to the api call.
 
 ## The Schema
 
-First, we need to create a schema for our data structure. In the schema folder, create a file named avatar.js. It will be quite simple schema: it needs only two fields, `seed` and `markup`. Both will be of type string – we will store the received avatar string in that serialized format. Because the value of `markup` field will be derived from the `seed` value, we don't want to access it directly – hence the `hidden` prop.
+First, we need to create a schema for our data structure. In the schema folder, create a file named avatar.js. It will be a quite simple schema: it needs only two fields, `seed` and `markup`. Both will be of type string, and we will store the received avatar string in that serialized format. Because the value of `markup` field will be derived from the `seed` value, we don't want to access it directly—hence the `hidden` prop.
 
 ```javascript
 // avatar.js
@@ -67,7 +67,7 @@ export default {
 }
 ```
 
-Then we will import our schema in the default one (pass it in the `createSchema` function):
+Then we will import our schema into the default one (pass it in the `createSchema` function):
 
 ```javascript
 // schema.js
@@ -120,9 +120,9 @@ export default {
 
 ## The Input
 
-Now it is the time to create our custom input. Let's create a folder named `inputs` and in that folder, create a file named `AvatarInput.js`.
+Now it is time to create our custom input. Let's create a folder named `inputs` and in that folder, create a file named `AvatarInput.js`.
 
-The file below will serve as a boilerplate. We will import bunch of React methods (including a few rather exotic ones), `TextInput` from the brand new `@sanity/ui` library and `FormField` from `@sanity/components`. Everything we will be using should be already installed during the initial Sanity init, but if you encounter any issue with missing dependencies, you can install them manually.
+The file below will serve as a boilerplate. We will import a bunch of React methods (including a few rather exotic ones), `TextInput` from the brand new `@sanity/ui` library, and `FormField` from `@sanity/components`. Everything we will be using should be already installed during the initial Sanity init, but if you encounter any issues with missing dependencies, you can install them manually.
 
 One important quote from the official docs:
 
@@ -137,13 +137,13 @@ One important quote from the official docs:
 > - Call `props.onChange` with a patch describing the operation that should be applied on the value
 > - Implement a `.focus()` method, that sets focus on the underlying dom node that represents the input.
 
-Note the quite essential `{ onChange, type, value } = props`: these are props coming from Sanity. The Type prop is describing the shape of our partial schema. The value prop is an object containing current values of the fields (if there are any). The `onChange` prop is a function that is responsible for propagating the change of input value into our dataset. Note that its name can be a little confusing: There will be two functions of that same name, the one coming from the aforementioned props, the second which is the event handler of the text input (there will be no collision due to different lexical scopes).
+Note the quite essential `{ onChange, type, value } = props`: these are props coming from Sanity. The shape of our partial schema is described by the Type prop. The value prop is an object containing the current values of the fields (if there are any). The `onChange` prop is a function that is responsible for propagating the change of an input value into our dataset. Note that its name can be a little confusing: There will be two functions of that same name, the first coming from the aforementioned props, and the second being the event handler of the text input (there will be no collision due to different lexical scopes).
 
-If you've taken a look at the official tutorials, you've seen them using React class components. Because I don't like class components much (sorry), I will use a functional one. Also, showing how to use a functional component as Sanity input might be one of the rationales fot this post.
+If you've taken a look at the official tutorials, you've seen them using React class components. Because I don't like class components very much (sorry), I will use a functional one. Also, showing how to use a functional component as Sanity input might be one of the rationales for this post.
 
-There is a little drawback regarding functional components as Sanity input widgets. When using class component, it is sufficient to add a `focus()` method, but with a functional one, we need to wrap the component in a `forwardRef` call and to invoke `useImperativeHandle` hook inside of it (with an object containing focus method as argument). It might be a little heavy-handed, but I would still go for it.
+There is one minor disadvantage to using functional components such as Sanity input widgets. When using a class component, it is sufficient to add a `focus()` method, but with a functional one, we need to wrap the component in a `forwardRef` call and invoke `useImperativeHandle` hook inside of it (with an object containing the focus method as an argument). It might be a little heavy-handed, but I would still go for it.
 
-The two `useState` hooks will be used to update our UI as the input value change (not implemented yet).
+The two `useState` hooks will be used to update our UI as the input value changes (not yet implemented).
 
 ```javascript
 // AvatarInput.js
@@ -186,7 +186,7 @@ const AvatarInput = forwardRef((props, ref) => {
 export default AvatarInput
 ```
 
-We'll have to import our newly created custom input component (which is not doing anything yet) in our avatar schema:
+We'll have to import our newly created custom input component (which is not doing anything yet) into our avatar schema:
 
 ```javascript
 // avatar.js
@@ -212,7 +212,7 @@ export default {
 }
 ```
 
-All right! Now let's make the input working. We'll implement the functionality to trigger a request to the DiceBear Avatar api whenever the seed changes:
+All right! Now let's make the input work. We'll implement the functionality to trigger a request to the DiceBear Avatar api whenever the seed changes:
 
 ```javascript
 //AvatarInput.js
@@ -274,11 +274,11 @@ const AvatarInput = forwardRef((props, ref) => {
 export default AvatarInput
 ```
 
-If we type something in our text input, we should receive a response which contains a svg avatar string in its body. If we open our console, we should be able to see it:
+If we type something in our text input, we should receive a response that contains a svg avatar string in its body. If we open our console, we should be able to see it:
 
-But we don't want just some silly text in the console. We want to see the actual avatar! Lets update our our UI widget to make it possible.
+But we don't want just some silly text in the console. We want to see the actual avatar! Let's update our UI widget to make it possible.
 
-I am using Styled components to style the preview (styled-components is a peer dependency of @sanity/ui, so it should be already installed).
+I am using Styled Components to style the preview (styled-components is a peer dependency of @sanity/ui, so it should be already installed).
 
 ```javascript
 //AvatarInput.js
@@ -356,7 +356,7 @@ const AvatarInput = forwardRef((props, ref) => {
 export default AvatarInput
 ```
 
-Note: while it is always a good idea to regard security and sanitize user input (including public apis), svgs included in an `<img>` tag are not allowed to reach for external sources, nor to execute scripts.
+Note: While it is always a good idea to regard security and sanitize user input (including from public apis), svgs included in an `<img>` tag are not allowed to reach external sources, or execute scripts.
 
 Splendid! So right now, we can fetch an avatar and see it in our UI widget. But… we are not actually saving it to our dataset. Let's implement that!
 
@@ -444,13 +444,13 @@ const AvatarInput = forwardRef((props, ref) => {
 export default AvatarInput
 ```
 
-Good job! our avatar should now be saved when the request succeeds (you can check it by leaving the document and coming back again). So… is it ready now? Unfortunately, not. We are saving our desired avatar, which is great – but currently there is no way to get rid of it. The usual way how to tell Sanity that we want to delete some value is to clear its input, it doesn't work here. The avatar value is being derived from the seeds input value. The seeds input value is being used as the "seed" parameter for the query to DiceBear Avatar api, and it is considered "random" when its empty. Thus, when we clear the input, instead od deleting the avatar, we'll receive a random one.
+Good job! Our avatar should now be saved when the request succeeds (you can check it by leaving the document and coming back again). So… is it ready now? Unfortunately, not. We are saving our desired avatar, which is great – but currently there is no way to get rid of it. The usual way to tell Sanity that we want to delete some value is to clear its input, that doesn't work here. The avatar value is being derived from the seeds input value. The seeds input value is being used as the "seed" parameter for the query to the DiceBear Avatar api, and it is considered "random" when it's empty. Thus, when we clear the input, instead of deleting the avatar, we'll receive a random one.
 
 O.K., but what can we do about it?
 
-Well, it would be probably the best idea to implement the default Sanity dealing with empty inputs (deleting the value) and make ourself responsible for creating random seeds. While it would be probably a better idea to install a library for random seeds generation (like uuid), I will implement a simple custom one (which means a one-liner copied from github, to be honest).
+Well, it would probably be the best idea to implement the default Sanity handling of empty inputs (deleting the value) and make ourselves responsible for creating random seeds. While it would probably be a better idea to install a library for random seed generation (like uuid), I will implement a simple custom one (which means a one-liner copied from github, to be honest).
 
-We will need to change our component a little, because we will add a button. The button, when being click, will generate a new seed (and therefore trigger a request for new avatar):
+We will need to change our component a little, because we will add a button. The button, when clicked, will generate a new seed (and therefore trigger a request for a new avatar):
 
 ```javascript
 import React, { useRef, useState, forwardRef, useImperativeHandle } from "react"
@@ -571,11 +571,11 @@ Now, it should be working fine, as shown in the animation beneath:
 There are still things that should probably be added, e. g.:
 
 - `propTypes` definitions,
-- actual error handling of the fetch request (currently just logging errors to console),
-- debounce on the inputs `onChange` handler to prevent unnecessary fetch requests.
+- actual error handling of the fetch request (currently, errors are only logged to the console);
+- debounce the `onChange` handler of the inputs to avoid unnecessary fetch requests.
 
-But I sense that the resulting code has an rather scary length already, so I'll just left it that way. Feel free to go further if you'd feel like.
+But I sense that the resulting code has a rather scary length already, so I'll just leave it that way. Feel free to go further if you'd like.
 
-I hope this post helps you to get a firmer grasp on the vast array of possibilities of customization that is Sanity.io offering.
+I hope this post helps you get a firmer grasp on the vast array of possibilities for customization that Sanity.io offers.
 
 👍 Enjoy!
