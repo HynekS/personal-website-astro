@@ -10,13 +10,11 @@ const Code = ({ children, ...props }: { children: ComponentChildren }) => {
     return hasBeenCopiedRecently.value ? "Copied!" : "Copy";
   });
 
-  const copyToClipboard = () => {
+  const copyToClipboard = async () => {
     let snippet = snippetRef.current;
-    let area = document.createElement("textarea");
-    area.value = snippet ? snippet.innerText : "";
-    area.select();
-    area.setSelectionRange(0, 99999);
-    navigator.clipboard.writeText(area.value);
+    let snippetText = snippet?.innerText ?? "";
+    await navigator.clipboard.writeText(snippetText);
+
     hasBeenCopiedRecently.value = true;
 
     timeoutRef.current = setTimeout(() => {
