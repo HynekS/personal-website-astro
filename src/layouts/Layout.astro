@@ -17,6 +17,19 @@ const { title } = Astro.props;
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
+    <link
+      rel="preload"
+      href="/assets/fonts/Nunito[wght]-subset.woff2"
+      as="font"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="preload"
+      href="/assets/fonts/Nunito-Italic[wght]-subset.woff2"
+      as="font"
+      crossorigin="anonymous"
+    />
+
     <link rel="stylesheet" href="/assets/styles/base.css" />
     <title>{title}</title>
     <script is:inline>
