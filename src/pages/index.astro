@@ -6,10 +6,9 @@ const posts = await Astro.glob("../../__content__/blog/**/*.{md,mdx}");
 posts.sort((a, b) => Date.parse(b.frontmatter.dateCreated) - Date.parse(a.frontmatter.dateCreated));
 ---
 
-<Layout title="Welcome to Astro.">
+<Layout title="HynekS | Home Page">
 	<div class="h-full px-4 mx-auto max-w-prose text-secondary">
 		<h1 class="text-4xl font-bold">Blog</h1>
-	
 		{
 			posts.length ? (
 				<ul class="mt-4 list-none">

@@ -18,6 +18,7 @@
     "@preact/signals": "^1.1.2",
     "@types/body-scroll-lock": "^3.1.0",
     "astro": "^2.0.4",
+    "astro-seo": "^0.7.0",
     "body-scroll-lock": "vercel/body-scroll-lock",
     "hex-to-rgba": "^2.0.1",
     "mdast-util-to-string": "^3.1.1",

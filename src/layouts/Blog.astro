@@ -26,16 +26,17 @@ export interface Props {
 
 const {
   title,
+  description,
   categories = [],
+  keywords=[],
   dateCreated,
   author,
   timeToRead,
 } = Astro.props.frontmatter;
 
-
 const { headings } = Astro.props;
 ---
-<Layout title={title}>
+<Layout title={title} description={description} categories={categories} keywords={keywords} dateCreated={dateCreated} author={author}>
   <aside class="hidden md:block md:w-1/5">
     <RecursiveList headings={headings} />
   </aside>
@@ -58,7 +59,7 @@ const { headings } = Astro.props;
         posted <PrettyDate date={new Date(dateCreated)} /> ∙ by {author} ∙
         {timeToRead}
       </div>
-      <slot />
+      <slot/>
       {
         lastEditExceptPathChangeDate ? (
           <p class="text-xs">
