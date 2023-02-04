@@ -20,7 +20,7 @@ How to clone an existing DOM element (e.g., an image of a kitten with a caption)
 
 There are two basic ways I know of. The first one is extremely simple, and it works in Preact the same way as it does in React:
 
-## `dangerouslySetInnerHTML`
+## Use `dangerouslySetInnerHTML`
 
 ```jsx
 // somewhere, probably in effect:
@@ -32,7 +32,7 @@ let element = document.getElementById("myElement");
 
 The real catch here is probably only one: If we want to clone the whole target element, we need to use its `outerHTML` instead of `innerHTML` however counter-intuitive it is due to the prop name (we are setting the `div's` `innerHTML`, not the element's).
 
-## `h()` (`createElement()`) method
+## Use `h()` (`createElement()`) method
 
 The second way is to use `Preact.h()` method (which is shorthand for `Preact.createElement()`). It is definitely more complex, but it gives us almost complete control over what's going to be attached to our virtual DOM. We can sanitize the input, alter the attributes, assign refs, or do whatever else we want.
 
