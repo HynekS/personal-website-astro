@@ -4,19 +4,19 @@ import tailwind from "@astrojs/tailwind";
 import preact from "@astrojs/preact";
 import image from "@astrojs/image";
 import compress from "astro-compress";
-import nightOwl from "./src/night-owl.json";
+import remarkPrism from "remark-prism";
 
 import defaultLayoutPlugin from "./defaultLayout.mjs";
 import { remarkReadingTime } from "./remark-reading-time.mjs";
 
 export default defineConfig({
   markdown: {
-    shikiConfig: { theme: nightOwl },
+    syntaxHighlight: false,
   },
   integrations: [
     mdx({
-      remarkPlugins: [defaultLayoutPlugin, remarkReadingTime],
-      drafts: true,
+      remarkPlugins: [defaultLayoutPlugin, remarkReadingTime, remarkPrism],
+      drafts: false,
     }),
     tailwind(),
     preact({ compat: true }),
