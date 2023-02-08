@@ -29,7 +29,7 @@ const Code = ({ children, ...props }: { children: ComponentChildren }) => {
         {children}
       </pre>
       <button
-        className="text-sm text-gray-300 bg-gray-700 rounded absolute top-4 right-4 px-2 invisible group-hover:visible"
+        className="text-sm text-primary border dark:border-gray-800 dark:bg-primary dark:bg-primary rounded absolute top-4 right-4 px-2 opacity-0 group-hover:opacity-100 transition-opacity"
         onClick={() => {
           if (timeoutRef.current) {
             return false;
