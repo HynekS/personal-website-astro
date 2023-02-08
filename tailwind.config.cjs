@@ -105,6 +105,9 @@ module.exports = {
               padding: "0.25em 0.4em",
               fontWeight: 400,
             },
+            "a > code": {
+              backgroundColor: "inherit",
+            },
             "figure, video": {
               marginLeft: "-1rem",
               marginRight: "-1rem",
@@ -159,6 +162,9 @@ module.exports = {
             },
             code: {
               color: "#d1d5db",
+            },
+            "a > code": {
+              color: "var(--color-links)",
             },
             hr: {
               opacity: 0.3,
