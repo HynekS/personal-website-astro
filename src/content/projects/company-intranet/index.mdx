@@ -1,5 +1,5 @@
 ---
-title: A small company intranet
+title: Project management app for a small company
 author: Hynek Svacha
 type: project
 dateCreated: July 24, 2022 10:55
@@ -17,37 +17,45 @@ keywords:
   - typescript
 description: An intranet app for a small company built in Laravel (as a backend) and React (as a frontend) showcase.
 ---
+import { Image } from '@astrojs/image/components';
 import DevstackItem from "@components/DevstackItem.astro"
+import MacBookMockup from "@components/MacBookMockup.astro"
 
-# A small company intranet
+<MacBookMockup />
+
+# Project management app for a small company
+
+<DevstackItem item="react" label="React" />
+<DevstackItem item="redux" label="Redux" />
+<DevstackItem item="tailwindcss" label="Tailwind" />
+<DevstackItem item="laravel" label="Laravel" />
+<DevstackItem item="mysql" label="MySQL" />
+<DevstackItem item="aws" label="AWS Lightsail" />
 
 ## Demo
 A demo of this project is available on [http://my-demo-app.site](http://my-demo-app.site)
 
 ## Repo
 
-## Tech stack
+## The problem
 
-### Frontend
+One of my clients was using internal applications to manage his company's projects. I had to use this app very often due to our close cooperation.
 
-<DevstackItem item="react" label="React" />
-<DevstackItem item="redux" label="Redux" />
-<DevstackItem item="tailwindcss" label="Tailwind" />
+The app was written years ago in bare PHP 5. While it mostly served its purpose, the technical debt began to show. It was often *very slow*. Rendering some pages would take almost a minute! It was also tedious to navigate, search, or filter the data.
 
-### Backend
+## The solution
 
-<DevstackItem item="laravel" label="Laravel" />
-<DevstackItem item="mysql" label="MySQL" />
+I created a new version of the application with an emphasis on speed and ease of use.
 
-### Deployment
+## Techs I used
 
-<DevstackItem item="aws" label="AWS Lightsail" />
+The front-end is a single-page app built with React. Since it's for logged-in users only, i didn't care much about SSR. The codebase was initially written in JavaScript, but I've since migrated it to TypeScript. State management is done by the Redux toolkit.
 
-## Comment
+Because of the focus on speed, the code is being pretty aggressively code-splitted and preloaded. For a production build, React is being aliased to Preact, which results in a much smaller bundle size.
 
-Classic client side SPA. This project is build on top of React. The codebase was initially written in JavaScript, but I've earlier migrated it to TypeScript. State management is done by redux (I've lately migrated from vanilla redux to redux toolkit.
+Styling is being done using twin.macro.
 
-The code is being pretty aggressively code-splitted. For a production build, React is being aliased to Preact, which results in a much smaller bundle size.
+The backend is built on Laravel, which provides a robust, future-proof solution.
 
-Styling is being done using Tailwindcss via twin.macro.
+Because of the stack, the application is very easy to deploy. I use AWS Lightsail's VPS for hosting.
 

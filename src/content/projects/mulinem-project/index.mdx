@@ -1,5 +1,5 @@
 ---
-title: Website of a scientific project
+title: Website for a scientific project
 author: Hynek Svacha
 type: project
 dateCreated: July 25, 2022 17:34
@@ -15,9 +15,18 @@ keywords:
   - typescript
 description: An intranet app for a small company built in Laravel (as a backend) and React (as a frontend) showcase.
 ---
+import { Image, Picture } from '@astrojs/image/components';
+import Gallery from "@components/Gallery.astro"
+import gallery from "./assets/gallery"
 import DevstackItem from "@components/DevstackItem.astro"
+import MacBookMockup from "@components/MacBookMockup.astro"
 
-# Website of a scientific project
+<MacBookMockup />
+
+# Website for a scientific project
+
+<DevstackItem item="nextjs" label="NextJS" />
+<DevstackItem item="sanity" label="Sanity" />
 
 ## Live site
 A demo of this project is available on [https://mulinem.net](https://mulinem.net).
@@ -26,18 +35,25 @@ A demo of this project is available on [https://mulinem.net](https://mulinem.net
 
 https://github.com/HynekS/mulinem-nextjs-sanity
 
-## Tech stack
+## <span class="text-lg [filter:opacity(0.8)]">⚠</span> The problem
 
-<DevstackItem item="nextjs" label="NextJS" />
-<DevstackItem item="sanity" label="Sanity" />
+The scientific project (on which I did participate) needed a website for presentation. There was a WordPress site with a slightly modified default theme, but it wasn't really representative. Also, for a rarely updated site, it was probably unnecessary to pay for WordPress hosting.
+
+## <span class="text-lg [filter:opacity(0.8)]">💡</span> The solution
+
+Initially, I converted the site into a static one with Gatsby on the frontend and Netlify CMS on the backend. The site was OK, but the colleagues were somewhat struggling with the CMS.
+
+ I decided to migrate it to Sanity (which I have used in the past and is more user friendly). Because Gatsby has silently passed away in the meantime, I decided to move to Next.js. I also ditched SSG in favor of SSR.
+
+ The site is [up and running](https://mulinem.net), being hosted on Vercel.
+
+ <Gallery gallery={gallery}/>
 
 ## Comment
 
-This was initially a simple WordPress site with a slightly modified default theme. During the "JAMstack rush" I migrated it to a static site with Gatsby on frontend and Netlify CMS on backend. The site was O.K., but the client was struggling a little with the CMS UI, thus I decided to migrate it to Sanity (which I have used in the past and is more user friendly). Because Gatsby has silently passed away in the meantime, I decided to move to Next.js. I also ditched SSG in the favor of SSR.
+One thing I wasn't happy about was the frontend-to-backend type of safety. It is not officially supported yet for GROQ queries (it might work better with GraphQL). There are some promising open source projects working on solutions, but they are still in alpha, and I wasn't able to make them really work. In the end, I just used the codegen and wrote the types for API responses by hand, which is a little _meh_, but for a small project like this, probably acceptable.
 
-One thing I wasn't happy about is the frontend to backend type safety. It is not officialy supported yet when for GROQ queries (it might work better with GraphQL). There are some promising open source projects working on solution (EXAMPLES), but they are still in development and I wasn't able to make them really work. In the end, I've just use the codegen (MORE) and wrote the types for API responses by hand, which is quite _meh_, but for a small project like this probably acceptable.
+In general, migrating from Gatsby to Next.js went smoothly. The result is much cleaner (which is probably due to the fact that I have more experience with Next than I did with Gatsby when building the previous version). The only thing I've struggled with a little is the different APIs, mainly for media.
 
-In general, migrating from Gatsby to Next.js went smooth. The result is much cleaner (which is probably due to the fact that I have more experience with Next then I have with Gatsby when building the previous version). The only thing I've struggled a little was the different API's, mainly for media.
-
-The site is being deployed with Vercel, so I have CI for free. As in my other projects, I am using Preact instead of React for smaller bundles on production.
+During the build, I am replacing React with Preact to get smaller production bundles.
 

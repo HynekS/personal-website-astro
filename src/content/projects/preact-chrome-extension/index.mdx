@@ -16,25 +16,37 @@ keywords:
 description: Chrome extension built with Preact
 ---
 import DevstackItem from "@components/DevstackItem.astro"
+import MacBookMockup from "@components/MacBookMockup.astro"
+
+<MacBookMockup />
 
 # CSFD blocker Chrome extension
-
-## Chrome web store Store link
-
-
-## Repo
-https://github.com/HynekS/csfd-blocker
-
-## Tech stack
 
 <DevstackItem item="preact" label="Preact" />
 <DevstackItem item="typescript" label="TypeScript" />
 <DevstackItem item="tailwindcss" label="Tailwind" />
 <DevstackItem item="sass" label="SASS" />
 
-### Comment
+{/* ## Chrome web store Store link */}
 
-The injected script adds a little Preact component to each element which is considered "blockable" – review, comment etc. The component consists of a simple collapsible menu (inspired by Twitter) that allows add/remove users from a blocklist, show/hide blocked posts etc. Blocking can be also done using the extension popup.
+## Repo
+https://github.com/HynekS/csfd-blocker
+
+## The problem
+
+⚠ There are many people in the world one can find, let's be honest, quite annoying. As controversial as this topic might be, I believe one has the right to avoid people who are harassing, abusive, or just plain boring, either in real life or on the internet. That's why most social networks have a 'mute' or 'block' button.
+
+Sadly, one of the quite popular pages in my home country, https://www.csfd.cz/, lacked such a feature.
+
+## The solution
+
+I created this little extension for Google Chrome. It injects the pages DOM and hide all the elements containing content from users you find obnoxious. You can also very easily manage the current blocklist.
+
+🚫 **Now, you can avoid any user with just one click!**
+
+## The tech
+
+The injected script adds a little Preact component to each element that is considered "blockable" (review, comment, etc.). The component consists of a simple collapsible menu (inspired by Twitter) that allows users to add or remove users from a blocklist, show or hide blocked posts, etc. Blocking can also be done using the extension popup.
 
 All the business logic is contained in the extension's background script (service worker). The shared state is managed with a super simple[react-hooks-global-state](https://github.com/dai-shi/react-hooks-global-state) library from  [Daishi](https://twitter.com/dai_shi), the creator of [Jotai](https://jotai.org/), which also guarantees reactivity.
 
