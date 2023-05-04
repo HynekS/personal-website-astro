@@ -2,7 +2,7 @@ const SunIcon = () => (
   <svg
     className="w-6 h-6"
     fill="none"
-    stroke="#e4d1bb"
+    stroke="#97dae3"
     viewBox="0 0 24 24"
     xmlns="http://www.w3.org/2000/svg"
   >
