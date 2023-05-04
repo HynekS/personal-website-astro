@@ -99,7 +99,7 @@ const Lightbox = () => {
   }, []);
 
   return elements.length && isOpen ? (
-    <div class="fixed inset-0 px-12 pt-10 pb-16 flex items-center justify-center bg-black bg-opacity-75 text-white">
+    <div class="fixed inset-0 px-12 flex items-center justify-center bg-black bg-opacity-75 text-white">
       <button
         onClick={() => {
           setCurrentIndex(rotateIndexIfOutOfLimits(currentIndex - 1));
@@ -108,7 +108,7 @@ const Lightbox = () => {
       >
         <ChevronLeftIcon aria-label="previous" />
       </button>
-      <div class="flex flex-1 basis-8/12 justify-center">
+      <div class="flex flex-1 basis-8/12 justify-center max-h-screen max-w-screen pt-10 pb-10">
         {h(
           elements[currentIndex].nodeName,
           Object.assign(
@@ -124,7 +124,7 @@ const Lightbox = () => {
         onClick={() => {
           setCurrentIndex(rotateIndexIfOutOfLimits(currentIndex + 1));
         }}
-        class="flex h-full basis-1/12 items-center justify-end  opacity-75 hover:opacity-100"
+        class="flex h-full basis-1/12 items-center justify-end opacity-75 hover:opacity-100"
       >
         <ChevronLeftIcon aria-label="next" class="transform rotate-180" />
       </button>
