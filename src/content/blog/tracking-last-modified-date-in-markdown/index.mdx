@@ -9,11 +9,13 @@ featuredImage:
 categories:
   - javascript
   - markdown
+  - git
 keywords:
   - javascript
   - markdown
   - git
 description: How can we track the "last modified" date when our content (e.g., blog posts) is in markdown files? The traditional CMSs usually handle that themselves. However, we can mimic those features using filesystem metadata or, even better, by leveraging Git to our advantage.
+draft:
 ---
 
 # {frontmatter.title}
@@ -180,6 +182,30 @@ export const getStaticProps = async context => {
   }
 }
 ```
+
+## 🔔 Update: A year later
+
+While the above *can* work fine, it surely did not withstand the migration of my site from Next.js to Astro. The issue is that there is a fine chance that some non-content-related updates will become necessary, e.g., updating imported libraries. Yeah, it can be fine with pure clear markdown, but I want to be fancy and use MDX. So I have to change some meta-stuff, and I lost track of the *content* updates.
+
+So is there some hope?
+
+There is. But you can’t rely fully on Git; it needs a hint to determine which changes were content-related and which weren’t. Lucky for us, there is a place we can put such a hint: the commit message.
+
+Let’s say we add the "Edit content" key phrase to every commit that is content related. Then, we can acquire the commit message like this:
+
+```bash
+git log --follow --name-status --pretty=\"format:%aI|%s\" -- <OUR_FILE>
+```
+
+This will give us the date as before, but with a commit message delimited by the pipe '|' character. As before, we can use regular expressions to parse the data. The nasty regex in the snippet below will match everything that's a date followed by a pipe followed by a string that starts with "Edit content", followed by a new line that doesn't start with "R":
+
+```js
+// Using this, we'll get our date in the second capture group:
+const [_, lastContentEditDate] = allAuthorDates.match(/(20[\d\-T:.Z+]+)\|(Edit content?.+)$(?!\r?\nR)/im) || []
+```
+
+Probably not bulletproof, but for a blog? Good enough.
+
 
 ## Appendix: What about the date of publishing?
 
