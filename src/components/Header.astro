@@ -1,17 +1,19 @@
 ---
 import Logo from "./Logo.astro";
 import ThemeToggle from "./ThemeToggle"
+
+const currentPath = Astro.url.pathname;
 ---
 <header
   class="top-0 flex justify-between pr-6 pl-4 pt-6 pb-4 w-full mb-8 h-[4.5rem] /* added explicit height and width to fight the layout shift*/ lg:pl-[2.25rem] lg:sticky"
 >
-  <div class="flex items-center gap-4">
-    <a href="/" aria-label="Link to homepage">
+  <div class="flex items-center gap-4 [&>a]:font-medium [&>a]:border-b-2 [&>a]:border-transparent [&>a.active]:border-b-2 [&>a.active]:[border-color:var(--color-primary)]">
+    <a href="/" aria-label="Link to homepage" class="relative -top-px">
       <Logo />
     </a>
-    <a href="/">blog</a>
-    <a href="/projects">projects</a>
-    <a href="/about">about</a>
+    <a href="/" class={currentPath.startsWith("/blog") || currentPath === "/" ? 'active' : ''}>blog</a>
+    <a href="/projects" class={currentPath.startsWith("/projects") ? 'active' : ''}>projects</a>
+    <a href="/about" class={currentPath.startsWith('/about') ? 'active' : ''}>about</a>
   </div>
 
   <div>
