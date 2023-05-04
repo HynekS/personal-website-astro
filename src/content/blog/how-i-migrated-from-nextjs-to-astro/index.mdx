@@ -11,7 +11,7 @@ categories:
 keywords:
   - Next.js
   - Astro
-description:
+description: TODO
 draft: true
 ---
 
@@ -19,7 +19,7 @@ draft: true
 
 I've migrated my website from Next.js to Astro.
 
-What makes me decide to do so? There were multiple reasons, actually, but the bottom line was that the developer experience of my blog was quite bad. To be fair, I don't blame Next.js itself for that. I've most likely just picked a bunch of libraries (for some features that Next doesn't provide out of the box) which, as it turns out, don't get along well.
+What makes me decide to do so? There were multiple reasons, actually, but the bottom line was that the developer experience of my blog become, well, bad. To be fair, I don't blame Next.js itself for that. I've most likely just picked a bunch of libraries (for some features that Next doesn't provide out of the box) which, as it turns out, don't get along well.
 
 What were the problems?
 
@@ -31,7 +31,7 @@ In this codebase, though, it turned out to have more drawbacks than advantages. 
  [Grouping variants together](https://github.com/tailwindlabs/tailwindcss/discussions/8337)
 
 
-The most serious issue was the speed of the development server. To put it bluntly, it was just unbearable. Every simple change in a results in a delay that usually takes as much as 30 seconds. I honestly don't know what was causing that (probably a markdown compilation related issue), but it was just awful.
+The most serious issue was the speed or rather slowness of the development server. To put it bluntly, it was just unbearable. Every simple change in a results in a delay that usually takes as much as 30 seconds. I honestly don't know what was causing that (probably a markdown compilation related issue), but it was just awful (to be fair her, what seemed like a lightning speed after switching to Astro rapidly becomes 'meh' while I was adding more content, but it's still *much* better).
 
 What made it even worse was the Tailwind typography customizing. In the version of typography I was using (and I couldn't update, because the newer was incompatible with twin.macro), I have to put overrides in the `tailwind.config.js`, which means to use the JavaScript object form of the selectors and rules, which is kind of painful by itself. Some selectors were causing the build tool to silently fail, and just omit the selector AND rest of the rules. It was VERY painful to debug. The worst part is, I needed to wipe out the `.next` folder and recreate it every single time I wanted to see if the recreated stylesheets are correct (which takes a LOT of time…). Awful.
 
