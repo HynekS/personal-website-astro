@@ -1,14 +1,29 @@
 ---
+import { CollectionEntry, getCollection } from 'astro:content';
+
 import Layout from '../layouts/Layout.astro';
 import BlogPostCard from '../components/BlogPostCard.astro';
 
-const posts = await Astro.glob("../../__content__/blog/**/*.{md,mdx}");
-posts.sort((a, b) => Date.parse(b.frontmatter.dateCreated) - Date.parse(a.frontmatter.dateCreated));
+const rawPosts = await getCollection('blog')
+
+type PublishedPost = CollectionEntry<"blog"> & { data: { draft: null | false | undefined }}
+
+
+function isPublishedPost(post: typeof rawPosts[number]): post is PublishedPost {
+	return post.data.draft !== true
+}
+
+const posts = rawPosts.filter(isPublishedPost)
+
+posts.sort(
+  (a, b) =>
+    +(b.data.dateCreated) - +(a.data.dateCreated)
+);
 ---
 
 <Layout title="HynekS | Home Page">
-	<div class="h-full px-4 mx-auto max-w-prose text-secondary">
-		<h1 class="text-4xl font-bold">Blog</h1>
+	<div class="h-full px-4 pb-24 mx-auto max-w-prose text-secondary">
+		<h1 class="text-4xl font-medium relative left-[1.25rem]">Blog</h1>
 		{
 			posts.length ? (
 				<ul class="mt-4 list-none">
