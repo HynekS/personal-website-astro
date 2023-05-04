@@ -12,12 +12,20 @@ const allAuthorDates = execSync(
   `git log --follow --name-status --pretty=format:%aI -- ${Astro.props.file}`
 ).toString();
 
+const allAuthorDatesWithExplicitContentEdit = execSync(
+  `git log --follow --name-status --pretty=\"format:%aI|%s\" -- ${Astro.props.file}`
+).toString();
+
 const [lastEditExceptPathChangeDate] =
   allAuthorDates.match(/20[\d-T:.Z+]+$(?!\r?\nR)/m) || [];
 
-// Get commit date AND message:
-// git log --follow --name-status --pretty='format:%aI|%s'
-// /(20[\d\-T:.Z+]+)\|(.*)$(?!\r?\nR)/m
+const [_, lastContentEditDate] =
+  allAuthorDatesWithExplicitContentEdit.match(
+    /(20[\d\-T:.Z+]+)\|(Edit content?.+)$(?!\r?\nR)/im
+  ) || [];
+
+const resolvedDateOfLastEdit =
+  lastContentEditDate || lastEditExceptPathChangeDate || undefined;
 
 export interface Props {
   title: string;
@@ -28,7 +36,7 @@ const {
   title,
   description,
   categories = [],
-  keywords=[],
+  keywords = [],
   dateCreated,
   author,
   timeToRead,
@@ -36,7 +44,15 @@ const {
 
 const { headings } = Astro.props;
 ---
-<Layout title={title} description={description} categories={categories} keywords={keywords} dateCreated={dateCreated} author={author}>
+
+<Layout
+  title={title}
+  description={description}
+  categories={categories}
+  keywords={keywords}
+  dateCreated={dateCreated}
+  author={author}
+>
   <aside class="hidden md:block md:w-1/5">
     <RecursiveList headings={headings} />
   </aside>
@@ -59,12 +75,11 @@ const { headings } = Astro.props;
         posted <PrettyDate date={new Date(dateCreated)} /> ∙ by {author} ∙
         {timeToRead}
       </div>
-      <slot/>
+      <slot />
       {
-        lastEditExceptPathChangeDate ? (
+        resolvedDateOfLastEdit ? (
           <p class="text-xs">
-            last modified{" "}
-            <PrettyDate date={new Date(lastEditExceptPathChangeDate)} />
+            last modified <PrettyDate date={new Date(resolvedDateOfLastEdit)} />
           </p>
         ) : null
       }
