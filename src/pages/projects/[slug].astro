@@ -1,17 +1,20 @@
 ---
-export async function getStaticPaths() {
-  const posts = await Astro.glob("../../../__content__/projects/**/*.mdx");
+import { getCollection } from 'astro:content';
 
-  return posts.map(post => ({
+export async function getStaticPaths() {
+  const projectEntries = await getCollection('projects');
+
+  return projectEntries.map(entry => ({
     params: { 
-      slug: post.file.split("/").at(-2)
+      slug: entry.slug
     },
     props: {
-      post
+      entry
     },
   }))
 }
 
-const { Content } = Astro.props.post
+const { entry } = Astro.props;
+const { Content } = await entry.render();
 ---
 <Content />

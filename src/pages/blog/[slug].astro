@@ -1,20 +1,23 @@
 ---
+import { getCollection } from 'astro:content';
+
 import Code from "@components/Code.astro"
 import EmptyComponent from "@components/EmptyComopnent.astro"
 
 export async function getStaticPaths() {
-  const posts = await Astro.glob("../../../__content__/blog/**/*.mdx");
+  const blogEntries = await getCollection('blog');
 
-  return posts.map(post => ({
+  return blogEntries.map(entry => ({
     params: { 
-      slug: post.file.split("/").at(-2)
+      slug: entry.slug
     },
     props: {
-      post
+      entry
     },
   }))
 }
 
-const { Content } = Astro.props.post
+const { entry } = Astro.props;
+const { Content } = await entry.render();
 ---
 <Content components={{pre: Code, h1: EmptyComponent}}/>
