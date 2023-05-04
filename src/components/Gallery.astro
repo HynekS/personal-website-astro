@@ -18,7 +18,7 @@ const sources = Object.values(gallery);
     <section class="grid gap-2 md:grid-cols-2 lg:grid-cols-3">
       {sources.map((source) => (
         <figure class="flex justify-center mb-0 rounded cursor-pointer bg-secondary">
-          <Image {...source} alt="" lightbox />
+          <Image {...source} alt="" lightbox class="object-contain"/>
         </figure>
       ))}
     </section>
