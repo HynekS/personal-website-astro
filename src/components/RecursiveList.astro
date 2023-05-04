@@ -55,15 +55,15 @@ const headingsAsTree = prepareHeadings(headings);
 
 <style is:global>
   [data-is_navigation] {
-    @apply transition-all text-primary p-4 hidden lg:block lg:fixed lg:left-0 lg:top-28;
+    @apply transition-all text-primary p-4 pl-6 hidden lg:block lg:fixed lg:left-0 lg:top-28;
     transition-duration: 60ms;
 
     & ul li {
-      @apply pl-3;
+      @apply pl-2;
     }
 
     & a {
-      @apply block ml-2;
+      @apply block ml-1;
 
       &:hover {
         text-decoration: underline;
@@ -78,7 +78,7 @@ const headingsAsTree = prepareHeadings(headings);
         filter: brightness(0.9);
       }
       & svg {
-        @apply opacity-0 absolute top-0 left-0 w-[1rem];
+        @apply opacity-0 absolute top-0 left-0 w-1;
         height: calc(1em * 1.5);
       }
 
@@ -91,7 +91,7 @@ const headingsAsTree = prepareHeadings(headings);
         color: var(--color-primary);
       }
       &.active > svg {
-        @apply opacity-100;
+        @apply opacity-100 dark:opacity-75;
       }
     }
   }
