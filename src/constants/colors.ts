@@ -1,10 +1,14 @@
 const OVERRIDES = {
-  css: "#704ea3",
+  css: "#764abc",
+  markdown: "#2774fd",
 };
 
 const LIB_COLORS = {
+  astro: "#ff7e33",
+  git: "#F44D27",
   sanity: "#F04B3A",
   react: "#61DBFB",
+  mdx: "#fcb32c",
   preact: "#664A9E",
   redux: "#764abc",
   tailwindcss: "#07B6D5",
