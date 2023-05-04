@@ -1,6 +1,7 @@
 ---
 import Layout from "@layouts/Layout.astro";
 import ScrollToTop from "@components/ScrollToTop";
+import Lightbox from "@components/Lightbox"
 
 const { title } = Astro.props.frontmatter;
 ---
@@ -14,4 +15,5 @@ const { title } = Astro.props.frontmatter;
     </article>
   </main>
   <ScrollToTop client:load />
+  <Lightbox client:only="preact" />
 </Layout>
