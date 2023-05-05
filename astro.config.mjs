@@ -7,7 +7,7 @@ import compress from "astro-compress";
 import remarkPrism from "remark-prism";
 import defaultLayoutPlugin from "./defaultLayout.mjs";
 import { remarkReadingTime } from "./remark-reading-time.mjs";
-import vercel from "@astrojs/vercel/serverless";
+import vercel from "@astrojs/vercel/static";
 
 // https://astro.build/config
 export default defineConfig({
@@ -28,6 +28,5 @@ export default defineConfig({
     }),
     compress(),
   ],
-  output: "server",
   adapter: vercel(),
 });
