@@ -1,8 +1,35 @@
 ---
-// macbookair-mockup-cropped
-//csfd_blocker_popup.png
+import { Image } from "@astrojs/image/components";
+
+const { image } = Astro.props || {};
 ---
-<div class="relative mb-12">
-  <img src="/assets/device-mockups/macbookair-mockup-cropped.png" alt="" class="[filter:drop-shadow(12px_12px_25px_rgba(0,0,0,0.35))]"/>
-  <div class="absolute [transform:scale(0.787)] origin-top top-0 w-full"><img src="/assets/device-mockups/csfd_blocker_popup.png" class="object-contain"></div>
+<style>
+  .container {
+    overflow-y: scroll;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+  }
+  .container::-webkit-scrollbar {
+    /* WebKit */
+    width: 0;
+    height: 0;
+  }
+</style>
+<div class="relative mb-12 not-prose">
+  <Image
+    src="/assets/device-mockups/macbookair-mockup-cropped.png"
+    alt=""
+    width={800}
+    aspectRatio={1.571428}
+    class="[filter:drop-shadow(12px_12px_25px_rgba(0,0,0,0.35))]"
+  />
+  <div
+    class="absolute [transform:scale(0.78633)] origin-top top-[5%] w-full overflow-hidden /*overflow-y-scroll*/"
+  >
+    <div class="relative pt-[62.45%]">
+      <div class="container absolute inset-0">
+        {image?.src && <img src={image.src} alt="" />}
+      </div>
+    </div>
+  </div>
 </div>
