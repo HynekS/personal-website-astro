@@ -10,6 +10,8 @@ import defaultLayoutPlugin from "./defaultLayout.mjs";
 import { remarkReadingTime } from "./remark-reading-time.mjs";
 
 export default defineConfig({
+  site: "https://HynekS.github.io",
+  // base: "/personal-website-astro",
   markdown: {
     syntaxHighlight: false,
   },
