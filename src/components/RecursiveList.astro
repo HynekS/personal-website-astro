@@ -96,25 +96,30 @@ const headingsAsTree = prepareHeadings(headings);
     }
   }
 
-  .dark [data-is_navigation] li.active > a {
-    color: var(--color-links);
+  .dark [data-is_navigation] {
+    li.active > a {
+      color: var(--color-links);
+    }
+    li.active > svg {
+      color: var(--color-links);
+    }
   }
 </style>
 <script>
-    interface state {
+  interface state {
     active: HTMLLIElement | null;
     update: (newActiveElement: HTMLLIElement) => void;
   }
 
   let articleElement = document.querySelector("[data-is_article]");
-  let articleHeadings = articleElement?.querySelectorAll("h1, h2, h3, h4, h5, h6") ?? []
+  let articleHeadings =
+    articleElement?.querySelectorAll("h1, h2, h3, h4, h5, h6") ?? [];
 
   let articleNavigation = document.querySelector("[data-is_navigation]");
-  
+
   let articleNavigationFirstItem = articleNavigation?.querySelector("li");
 
   let observer: IntersectionObserver | null = null;
-
 
   let state: state = {
     active: null,
@@ -130,23 +135,31 @@ const headingsAsTree = prepareHeadings(headings);
   if (articleElement && articleNavigation) {
     articleNavigation.addEventListener("click", (e) => {
       e.preventDefault();
-      
+
       if (e.target) {
-        const href = (e.target as HTMLElement).getAttribute("href")?.substring(1)
+        const href = (e.target as HTMLElement)
+          .getAttribute("href")
+          ?.substring(1);
         document
           .querySelector(`[id='${href}']`)
           ?.scrollIntoView({ behavior: "smooth" });
-        
+
         history.pushState(null, "", `#${href}`);
       }
 
-      articleHeadings.forEach(heading => {observer?.unobserve(heading)});
+      articleHeadings.forEach((heading) => {
+        observer?.unobserve(heading);
+      });
       let targetElement = (e.target as HTMLElement).closest("li");
       if (targetElement) {
         state.update(targetElement);
       }
       // This is really a hotfix. What I actually need is to observe the scroll event
-      setTimeout(() => {articleHeadings.forEach(heading => {observer?.observe(heading)})}, 800)
+      setTimeout(() => {
+        articleHeadings.forEach((heading) => {
+          observer?.observe(heading);
+        });
+      }, 800);
     });
 
     observer = new IntersectionObserver(
@@ -163,12 +176,11 @@ const headingsAsTree = prepareHeadings(headings);
       },
       { rootMargin: "-100px 0% -66%", threshold: 1 }
     );
-    
+
     // To Fix: should observe only while scrolling
-    articleHeadings
-      .forEach((heading) => {
-        observer && observer.observe(heading);
-      });
+    articleHeadings.forEach((heading) => {
+      observer && observer.observe(heading);
+    });
   }
 </script>
 <nav data-is_navigation>
