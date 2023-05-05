@@ -15,7 +15,8 @@ export interface Props {
 }
 
 const url = Astro.url;
-const { title, description, author, dateCreated, categories, keywords } = Astro.props;
+const { title, description, author, dateCreated, categories, keywords } =
+  Astro.props;
 ---
 
 <!DOCTYPE html>
@@ -23,7 +24,6 @@ const { title, description, author, dateCreated, categories, keywords } = Astro.
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <SEO
       title={title}
@@ -32,12 +32,13 @@ const { title, description, author, dateCreated, categories, keywords } = Astro.
         basic: {
           title: title,
           type: "article",
-          image: "https://user-images.githubusercontent.com/5182256/131216951-8f74f425-f775-463d-a11b-0e01ad9fce8d.png",
+          image:
+            "https://user-images.githubusercontent.com/5182256/131216951-8f74f425-f775-463d-a11b-0e01ad9fce8d.png",
           url: url.toString(),
-        }
+        },
       }}
       twitter={{
-        creator: "@SvachaHynek"
+        creator: "@SvachaHynek",
       }}
       extend={{
         meta: [
@@ -48,7 +49,8 @@ const { title, description, author, dateCreated, categories, keywords } = Astro.
           { name: "article:tag", content: categories },
           {
             name: "twitter:image",
-            content: "https://user-images.githubusercontent.com/5182256/131216951-8f74f425-f775-463d-a11b-0e01ad9fce8d.png",
+            content:
+              "https://user-images.githubusercontent.com/5182256/131216951-8f74f425-f775-463d-a11b-0e01ad9fce8d.png",
           },
           { name: "twitter:title", content: title },
           { name: "twitter:description", content: description },
@@ -69,6 +71,14 @@ const { title, description, author, dateCreated, categories, keywords } = Astro.
     />
 
     <link rel="stylesheet" href="/assets/styles/base.css" />
+
+    <link rel="icon" type="image/svg+xml" href="/assets/favicons/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicons/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicons/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicons/favicon-16x16.png" />
+    <link rel="manifest" href="/assets/favicons/site.webmanifest" />
+    <link rel="mask-icon" href="/assets/favicons/safari-pinned-tab.svg" color="#5bbad5" />
+
     <script is:inline>
       const theme = (() => {
         if (
