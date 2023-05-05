@@ -28,6 +28,6 @@ export default defineConfig({
     }),
     compress(),
   ],
-  output: "static",
+  output: "server",
   adapter: vercel(),
 });
