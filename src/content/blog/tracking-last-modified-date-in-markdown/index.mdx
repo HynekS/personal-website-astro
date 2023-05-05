@@ -59,7 +59,7 @@ const { mtime } = fs.statSync(filePath)
 
 Using the edit date from file system can be helpful, but has a quite limited use case.
 
-It can be used _if_ you are directly deploying the static build, like when you build the site using Next.js or Gatsby and then deploy the contents of an `out` or `public` dir using Netlify's (https://Netlify.com) [drag'n'drop feature](https://app.netlify.com/drop) (or good ol' FTP).
+It can be used _if_ you are directly deploying the static build, like when you build the site using Next.js or Gatsby and then deploy the contents of an `out` or `public` dir using Netlify's [drag'n'drop feature](https://app.netlify.com/drop) (or good ol' FTP).
 
 It _won't_ work if you are deploying using continuous integration, like when your site is linked to a Github repo and is being built from scratch on someone's (e.g., Netilfy's) server each time you push a new commit to Github.
 
