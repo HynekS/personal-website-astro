@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <meta name="generator" content="Astro v2.4.2">
+    <title>Tracking the "last modified" date in markdown</title>
+
+
+
+<link rel="canonical" href="http://localhost:3000/blog/tracking-last-modify-date-in-markdown/">
+
+<meta name="description" content="How can we track the &#34;last modified&#34; date when our content (e.g., blog posts) is in markdown files? The traditional CMSs usually handle that themselves. However, we can mimic those features using filesystem metadata or, even better, by leveraging Git to our advantage.">
+
+<meta name="robots" content="index, follow">
+
+<meta property="og:title" content="Tracking the &#34;last modified&#34; date in markdown">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://user-images.githubusercontent.com/5182256/131216951-8f74f425-f775-463d-a11b-0e01ad9fce8d.png">
+<meta property="og:url" content="http://localhost:3000/blog/tracking-last-modify-date-in-markdown/">
+
+
+
+
+
+
+
+
+
+<meta name="twitter:creator" content="@SvachaHynek">
+
+<meta content="javascript,markdown,git" name="keywords"><meta content="Hynek Svacha" name="author"><meta content="Hynek Svacha" name="article:author"><meta content="Jan 6, 2022 17:47" name="article:published_time"><meta content="javascript,markdown,git" name="article:tag"><meta content="https://user-images.githubusercontent.com/5182256/131216951-8f74f425-f775-463d-a11b-0e01ad9fce8d.png" name="twitter:image"><meta content="Tracking the &#34;last modified&#34; date in markdown" name="twitter:title"><meta content="How can we track the &#34;last modified&#34; date when our content (e.g., blog posts) is in markdown files? The traditional CMSs usually handle that themselves. However, we can mimic those features using filesystem metadata or, even better, by leveraging Git to our advantage." name="twitter:description">
+    <link rel="preload" href="/assets/fonts/Nunito[wght]-subset.woff2" as="font" crossorigin="anonymous">
+    <link rel="preload" href="/assets/fonts/Nunito-Italic[wght]-subset.woff2" as="font" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="/assets/styles/base.css">
+
+    <link rel="icon" type="image/svg+xml" href="/assets/favicons/favicon.svg">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicons/favicon-16x16.png">
+    <link rel="manifest" href="/assets/favicons/site.webmanifest">
+    <link rel="mask-icon" href="/assets/favicons/safari-pinned-tab.svg" color="#5bbad5">
+
+    <script>
+      const theme = (() => {
+        if (
+          typeof localStorage !== "undefined" &&
+          localStorage.getItem("theme")
+        ) {
+          return localStorage.getItem("theme");
+        }
+        if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+          return "dark";
+        }
+        return "light";
+      })();
+      if (theme === "light") {
+        document.documentElement.classList.remove("dark");
+      } else {
+        document.documentElement.classList.add("dark");
+      }
+    </script>
+  <link rel="stylesheet" href="/_astro/index.6eb0b711.css" /><script type="module">
+</script><link rel="stylesheet" href="/_astro/RecursiveList.astro_astro_type_style_index_0_lang.341da06d.css" /><script src="/_astro/RecursiveList.astro_astro_type_script_index_0_lang.386d38c4.js" type="module"></script><script src="/_astro/Footer.astro_astro_type_script_index_0_lang.70efab02.js" type="module"></script></head>
+  <body>
+    <header class="top-0 flex justify-between pr-6 pl-4 pt-6 pb-4 w-full mb-8 h-[4.5rem] /* added explicit height and width to fight the layout shift*/ lg:pl-[2.25rem] lg:sticky">
+  <div>
+    <div class="flex items-end gap-4 -mt-1.5">
+      <a href="/" aria-label="Link to homepage" class="mr-4">
+        <div class="flex items-end gap-2">
+  <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 dark:opacity-[0.85]" viewBox="0 0 64 64" xml:space="preserve">
+    <path fill="#865DDE" d="M0 0h64v64H0z"></path>
+    <g fill="#FFF">
+      <path d="M12.69 27.582h6.697v11.286h8.764V27.582h6.697v30.219h-6.697V44.737h-8.764V57.8H12.69V27.582zM43.229 48.789c1.735 2.852 3.431 4.175 5.869 4.175 2.315 0 3.804-1.363 3.804-3.183 0-1.654-1.075-2.894-3.349-3.846-2.976-1.239-5.58-2.107-7.482-3.596-2.108-1.653-3.183-3.969-3.183-6.779 0-5.333 3.762-8.765 9.797-8.765 4.383 0 7.73 1.819 9.88 5.333L53.77 35.56c-1.612-2.274-3.391-3.391-5.457-3.391s-3.349 1.158-3.349 2.771c0 1.529 1.198 2.646 3.639 3.72 3.059 1.323 5.746 2.191 7.565 3.639 2.025 1.611 3.183 4.051 3.183 6.986 0 5.498-4.134 9.301-10.418 9.301-4.753 0-8.392-2.066-10.914-6.118l5.21-3.679z"></path>
+    </g>
+  </svg>
+  <span class="font-bold text-gray-900 dark:text-primary mt-auto leading-none pb-0.5">HynekS</span>
+</div>
+      </a>
+      <div class="flex pt-3 relative top-1 leading-none gap-4 [&>a]:font-medium [&>a]:pb-1 [&>a]:border-b-2 [&>a]:border-transparent [&>a.active]:border-b-2 [&>a.active]:[border-color:var(--color-primary)]">
+        <a href="/" class="active">blog</a>
+        <a href="/projects" class="">projects</a>
+        <a href="/about" class="">about</a>
+      </div>
+    </div>
+  </div>
+  <div>
+    <style>astro-island,astro-slot{display:contents}</style><script>(self.Astro=self.Astro||{}).load=a=>{(async()=>await(await a())())()},window.dispatchEvent(new Event("astro:load"));var l;{const c={0:t=>t,1:t=>JSON.parse(t,o),2:t=>new RegExp(t),3:t=>new Date(t),4:t=>new Map(JSON.parse(t,o)),5:t=>new Set(JSON.parse(t,o)),6:t=>BigInt(t),7:t=>new URL(t),8:t=>new Uint8Array(JSON.parse(t)),9:t=>new Uint16Array(JSON.parse(t)),10:t=>new Uint32Array(JSON.parse(t))},o=(t,s)=>{if(t===""||!Array.isArray(s))return s;const[e,n]=s;return e in c?c[e](n):void 0};customElements.get("astro-island")||customElements.define("astro-island",(l=class extends HTMLElement{constructor(){super(...arguments);this.hydrate=()=>{if(!this.hydrator||this.parentElement&&this.parentElement.closest("astro-island[ssr]"))return;const s=this.querySelectorAll("astro-slot"),e={},n=this.querySelectorAll("template[data-astro-template]");for(const r of n){const i=r.closest(this.tagName);!i||!i.isSameNode(this)||(e[r.getAttribute("data-astro-template")||"default"]=r.innerHTML,r.remove())}for(const r of s){const i=r.closest(this.tagName);!i||!i.isSameNode(this)||(e[r.getAttribute("name")||"default"]=r.innerHTML)}const a=this.hasAttribute("props")?JSON.parse(this.getAttribute("props"),o):{};this.hydrator(this)(this.Component,a,e,{client:this.getAttribute("client")}),this.removeAttribute("ssr"),window.removeEventListener("astro:hydrate",this.hydrate),window.dispatchEvent(new CustomEvent("astro:hydrate"))}}connectedCallback(){!this.hasAttribute("await-children")||this.firstChild?this.childrenConnectedCallback():new MutationObserver((s,e)=>{e.disconnect(),this.childrenConnectedCallback()}).observe(this,{childList:!0})}async childrenConnectedCallback(){window.addEventListener("astro:hydrate",this.hydrate);let s=this.getAttribute("before-hydration-url");s&&await import(s),this.start()}start(){const s=JSON.parse(this.getAttribute("opts")),e=this.getAttribute("client");if(Astro[e]===void 0){window.addEventListener(`astro:${e}`,()=>this.start(),{once:!0});return}Astro[e](async()=>{const n=this.getAttribute("renderer-url"),[a,{default:r}]=await Promise.all([import(this.getAttribute("component-url")),n?import(n):()=>()=>{}]),i=this.getAttribute("component-export")||"default";if(!i.includes("."))this.Component=a[i];else{this.Component=a;for(const d of i.split("."))this.Component=this.Component[d]}return this.hydrator=r,this.hydrate},s,this)}attributeChangedCallback(){this.hydrator&&this.hydrate()}},l.observedAttributes=["props"],l))}</script><astro-island uid="ZonHg9" component-url="/_astro/ThemeToggle.32d5cae3.js" component-export="default" renderer-url="/_astro/client.c257378c.js" props="{}" ssr="" client="load" opts="{&quot;name&quot;:&quot;ThemeToggle&quot;,&quot;value&quot;:true}" await-children=""><button aria-label="Toggle Dark Mode" type="button" class="rounded-full flex items-center justify-center border-2 p-1 focus:outline-none focus:ring-0 dark:border-gray-600"><svg class="w-6 h-6" fill="none" stroke="var(--color-primary)" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg></button></astro-island>
+  </div>
+</header>
+    
+  <aside class="hidden md:block md:w-1/5">
+    
+
+<nav data-is_navigation>
+  <ul>
+        <li>
+  <svg xmlns="http://www.w3.org/2000/svg" class="p-[0.75px]" viewBox="0 0 2 12">
+    <path fill="currentColor" d="M2 11c0 .552-.448 1-1 1s-1-.448-1-1V1c0-.552.448-1 1-1s1 .448 1 1v10z"></path>
+  </svg>
+  <a href="#overview">
+    Overview
+  </a>
+  
+</li><li>
+  <svg xmlns="http://www.w3.org/2000/svg" class="p-[0.75px]" viewBox="0 0 2 12">
+    <path fill="currentColor" d="M2 11c0 .552-.448 1-1 1s-1-.448-1-1V1c0-.552.448-1 1-1s1 .448 1 1v10z"></path>
+  </svg>
+  <a href="#use-a-markdown-cms">
+    Use a Markdown CMS
+  </a>
+  
+</li><li>
+  <svg xmlns="http://www.w3.org/2000/svg" class="p-[0.75px]" viewBox="0 0 2 12">
+    <path fill="currentColor" d="M2 11c0 .552-.448 1-1 1s-1-.448-1-1V1c0-.552.448-1 1-1s1 .448 1 1v10z"></path>
+  </svg>
+  <a href="#use-filesystem-metadata">
+    Use filesystem metadata
+  </a>
+  <ul>
+        <li>
+  <svg xmlns="http://www.w3.org/2000/svg" class="p-[0.75px]" viewBox="0 0 2 12">
+    <path fill="currentColor" d="M2 11c0 .552-.448 1-1 1s-1-.448-1-1V1c0-.552.448-1 1-1s1 .448 1 1v10z"></path>
+  </svg>
+  <a href="#caveats">
+    Caveats
+  </a>
+  
+</li><li>
+  <svg xmlns="http://www.w3.org/2000/svg" class="p-[0.75px]" viewBox="0 0 2 12">
+    <path fill="currentColor" d="M2 11c0 .552-.448 1-1 1s-1-.448-1-1V1c0-.552.448-1 1-1s1 .448 1 1v10z"></path>
+  </svg>
+  <a href="#nextjs-getstaticprops-example-filesystem">
+    Next.js getStaticProps example (filesystem)
+  </a>
+  
+</li>
+      </ul>
+</li><li>
+  <svg xmlns="http://www.w3.org/2000/svg" class="p-[0.75px]" viewBox="0 0 2 12">
+    <path fill="currentColor" d="M2 11c0 .552-.448 1-1 1s-1-.448-1-1V1c0-.552.448-1 1-1s1 .448 1 1v10z"></path>
+  </svg>
+  <a href="#use-git">
+    Use Git
+  </a>
+  <ul>
+        <li>
+  <svg xmlns="http://www.w3.org/2000/svg" class="p-[0.75px]" viewBox="0 0 2 12">
+    <path fill="currentColor" d="M2 11c0 .552-.448 1-1 1s-1-.448-1-1V1c0-.552.448-1 1-1s1 .448 1 1v10z"></path>
+  </svg>
+  <a href="#caveats-1">
+    Caveats(?)
+  </a>
+  
+</li><li>
+  <svg xmlns="http://www.w3.org/2000/svg" class="p-[0.75px]" viewBox="0 0 2 12">
+    <path fill="currentColor" d="M2 11c0 .552-.448 1-1 1s-1-.448-1-1V1c0-.552.448-1 1-1s1 .448 1 1v10z"></path>
+  </svg>
+  <a href="#nextjs-getstaticprops-example-git">
+    Next.js getStaticProps example (Git)
+  </a>
+  
+</li>
+      </ul>
+</li><li>
+  <svg xmlns="http://www.w3.org/2000/svg" class="p-[0.75px]" viewBox="0 0 2 12">
+    <path fill="currentColor" d="M2 11c0 .552-.448 1-1 1s-1-.448-1-1V1c0-.552.448-1 1-1s1 .448 1 1v10z"></path>
+  </svg>
+  <a href="#-update-a-year-later">
+    🔔 Update: A year later
+  </a>
+  
+</li><li>
+  <svg xmlns="http://www.w3.org/2000/svg" class="p-[0.75px]" viewBox="0 0 2 12">
+    <path fill="currentColor" d="M2 11c0 .552-.448 1-1 1s-1-.448-1-1V1c0-.552.448-1 1-1s1 .448 1 1v10z"></path>
+  </svg>
+  <a href="#appendix-what-about-the-date-of-publishing">
+    Appendix: What about the date of publishing?
+  </a>
+  
+</li>
+      </ul>
+</nav>
+  </aside>
+  <main class="flex-auto max-w-full [margin-right:calc((50% - 30ch)/2)]">
+    <article class="prose prose-sm mx-auto pt-8 px-4 md:prose lg:prose-lg lg:px-0 dark:prose-dark pb-16" data-is_article>
+      <h1 id="overview">Tracking the &quot;last modified&quot; date in markdown</h1>
+      <div class="not-prose font-mono text-sm dark:text-gray-400">
+        <ul class="flex gap-1.5 mt-0 mb-1 ml--1 py-2">
+              <li class="font-mono leading-none text-[0.6875rem] rounded-md py-[0.2rem] px-[0.25rem] dark:[filter:brightness(1.25)] flex items-center" style="background-color: rgba(241, 224, 90, 0.25); border: 1px solid rgba(241, 224, 90, 0.3);"><span>javascript</span></li><li class="font-mono leading-none text-[0.6875rem] rounded-md py-[0.2rem] px-[0.25rem] dark:[filter:brightness(1.25)] flex items-center" style="background-color: rgba(39, 116, 253, 0.25); border: 1px solid rgba(39, 116, 253, 0.3);"><span>markdown</span></li><li class="font-mono leading-none text-[0.6875rem] rounded-md py-[0.2rem] px-[0.25rem] dark:[filter:brightness(1.25)] flex items-center" style="background-color: rgba(244, 77, 39, 0.25); border: 1px solid rgba(244, 77, 39, 0.3);"><span>git</span></li>
+            </ul>
+        posted <span>on </span><span>6<sup>th</sup> January 2022</span> ∙ by Hynek Svacha ∙
+        8 min read
+      </div>
+      
+<p>I have migrated my blog completely to Markdown (MDX) after I realized that it’s probably the best match for my workflow. I am quite happy with the decision. However, I was missing a few features that typically come out of the box when using a conventional CMS, like tracking the date of the last edit.</p>
+<p>I will go through a couple of possible solutions to this problem.</p>
+<h2 id="use-a-markdown-cms">Use a Markdown CMS</h2>
+<p>If you are using VSCode, there is the <a href="https://github.com/estruyf/vscode-front-matter">vscode-front-matter</a> plugin that claims to “give you the power and control of a full-blown CMS running straight in the editor.”</p>
+<p>I tested it briefly, and it looks cool. It has some issues, e.g., it doesn’t seem to fully support MDX at the time (although this is probably <a href="https://github.com/estruyf/vscode-front-matter/issues/218">being fixed recently</a>).</p>
+<p>While I would probably recommend this plugin to a friend if asked, it was not the solution I chose. Why?</p>
+<p>Firstly, I like the pristine experience of creating posts solely by editing text files (just like the elders around the campfires remember creating web pages using nothing but HTML and CSS).</p>
+<p>Secondly, I didn’t want to become dependent on another tool (however cool it could be).</p>
+<h2 id="use-filesystem-metadata">Use filesystem metadata</h2>
+<p>My first, rather naïve, attempt was to use metadata that are accessible from the filesystem.</p>
+<p>But there is an issue: while <em>some</em> metadata do live in the file itself (like image EXIF data), the main info (including the last edit) is stored in the filesystem itself. That’s why it is available even when the file is completely empty (its length is exactly <code>0</code> bytes).</p>
+<p>(I don’t want to dive too deep into details, because I am nowhere near an expert on this topic.)</p>
+<p>The <code>fs</code> built-in library of Node.js has multiple methods to access file metadata. For the sake of simplicity, I will only refer to the synchronous api method, <a href="https://nodejs.org/api/fs.html#fsstatsyncpath-options"><code>fs.statSync</code></a>.</p>
+<p>This method takes a path and returns a <code>fs.Stats</code> instance. So, to get the last edit date, you can do something like this:</p>
+<div class="remark-highlight"><astro-island uid="Z14wMcF" component-url="/_astro/Code.f793ae0c.js" component-export="default" renderer-url="/_astro/client.c257378c.js" props="{&quot;className&quot;:[0,&quot;language-js&quot;]}" ssr="" client="load" opts="{&quot;name&quot;:&quot;Code&quot;,&quot;value&quot;:true}" await-children=""><div class="relative group"><pre class="language-js"><astro-slot>
+  <code class="language-js"><span class="token keyword module">import</span> <span class="token imports"><span class="token operator">*</span> <span class="token keyword module">as</span> fs</span> <span class="token keyword module">from</span> <span class="token string">&quot;fs&quot;</span>
+
+<span class="token keyword">const</span> filePath <span class="token operator">=</span> path<span class="token punctuation">.</span><span class="token method function property-access">join</span><span class="token punctuation">(</span>process<span class="token punctuation">.</span><span class="token method function property-access">cwd</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">&lt;PATH&gt;/&lt;TO&gt;/&lt;FILE&gt;.mdx</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span>
+<span class="token keyword">const</span> <span class="token punctuation">{</span> mtime <span class="token punctuation">}</span> <span class="token operator">=</span> fs<span class="token punctuation">.</span><span class="token method function property-access">statSync</span><span class="token punctuation">(</span>filePath<span class="token punctuation">)</span>
+</code>
+</astro-slot></pre><button class="text-sm text-primary border dark:border-gray-800 dark:bg-primary dark:bg-primary rounded absolute top-4 right-4 px-2 opacity-0 group-hover:opacity-100 transition-opacity">Copy</button></div></astro-island></div>
+<h3 id="caveats">Caveats</h3>
+<p>Using the edit date from file system can be helpful, but has a quite limited use case.</p>
+<p>It can be used <em>if</em> you are directly deploying the static build, like when you build the site using Next.js or Gatsby and then deploy the contents of an <code>out</code> or <code>public</code> dir using Netlify’s <a href="https://app.netlify.com/drop">drag’n’drop feature</a> (or good ol’ FTP).</p>
+<p>It <em>won’t</em> work if you are deploying using continuous integration, like when your site is linked to a Github repo and is being built from scratch on someone’s (e.g., Netilfy’s) server each time you push a new commit to Github.</p>
+<p>Why? because the files are created from scratch on every build. So, while it hopefully won’t break anything, the last modify date on <em>all</em> your files will match the date of the last build, which is probably not what you want.</p>
+<h3 id="nextjs-getstaticprops-example-filesystem">Next.js <code>getStaticProps</code> example (filesystem)</h3>
+<div class="remark-highlight"><astro-island uid="2nPcq6" component-url="/_astro/Code.f793ae0c.js" component-export="default" renderer-url="/_astro/client.c257378c.js" props="{&quot;className&quot;:[0,&quot;language-ts&quot;]}" ssr="" client="load" opts="{&quot;name&quot;:&quot;Code&quot;,&quot;value&quot;:true}" await-children=""><div class="relative group"><pre class="language-ts"><astro-slot>
+  <code class="language-ts"><span class="token keyword">export</span> <span class="token keyword">const</span> <span class="token function-variable function">getStaticProps</span> <span class="token operator">=</span> <span class="token keyword">async</span> context <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> slug <span class="token operator">=</span> <span class="token function">String</span><span class="token punctuation">(</span>context<span class="token punctuation">.</span>params<span class="token operator">?.</span>slug<span class="token punctuation">)</span>
+  <span class="token keyword">const</span> filePath <span class="token operator">=</span> path<span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span>process<span class="token punctuation">.</span><span class="token function">cwd</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">_mdx_/</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>slug<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">/index.mdx</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span>
+  <span class="token keyword">const</span> rawContents <span class="token operator">=</span> fs<span class="token punctuation">.</span><span class="token function">readFileSync</span><span class="token punctuation">(</span>filePath<span class="token punctuation">,</span> <span class="token string">&quot;utf8&quot;</span><span class="token punctuation">)</span>
+
+  <span class="token keyword">const</span> <span class="token punctuation">{</span> mtime <span class="token punctuation">}</span> <span class="token operator">=</span> fs<span class="token punctuation">.</span><span class="token function">statSync</span><span class="token punctuation">(</span>filePath<span class="token punctuation">)</span>
+
+  <span class="token keyword">const</span> <span class="token punctuation">{</span> content<span class="token punctuation">,</span> data<span class="token operator">:</span> meta <span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token function">matter</span><span class="token punctuation">(</span>rawContents<span class="token punctuation">)</span>
+
+  <span class="token keyword">const</span> mdxSource <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">serialize</span><span class="token punctuation">(</span>content<span class="token punctuation">,</span> <span class="token punctuation">{</span>
+    scope<span class="token operator">:</span> meta<span class="token punctuation">,</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+  <span class="token keyword">return</span> <span class="token punctuation">{</span>
+    props<span class="token operator">:</span> <span class="token punctuation">{</span>
+      source<span class="token operator">:</span> mdxSource<span class="token punctuation">,</span>
+      slug<span class="token punctuation">,</span>
+      content<span class="token punctuation">,</span>
+      meta<span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token operator">...</span>meta<span class="token punctuation">,</span>
+        <span class="token comment">// Next.js is throwing error unless I serialize the date to JSON</span>
+        dateLastModified<span class="token operator">:</span> <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span>mtime<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+      <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code>
+</astro-slot></pre><button class="text-sm text-primary border dark:border-gray-800 dark:bg-primary dark:bg-primary rounded absolute top-4 right-4 px-2 opacity-0 group-hover:opacity-100 transition-opacity">Copy</button></div></astro-island></div>
+<h2 id="use-git">Use Git</h2>
+<p>There are good news though – if you are deploying using continuous integration, then you most likely track your files with Git. And Git actually stores <strong>a lot</strong> of metadata about the committed files.</p>
+<p>Using <code>git log</code> command, we can obtain two meta properties related to the last modify date: <strong>author date</strong> and <strong>committer date</strong>. The “author date” is the original date of the commit, while the “committer date” is the date of the last commit’s’ edit (e.g., using <code>--amend</code> or <code>rebase</code>). In the examples, I’ll be using the “author date.”</p>
+<p>But how do you obtain it in Node.js? There is a built-in library <code>child_process</code>, which enables us to spawn a separate process that can run any system command. For simplicity’s sake, we will use its synchronous method <code>execSync</code> to capture the return value of the parameterized <code>git log</code> command. The method will return a <code>Buffer</code>, so we’ll need to convert it to a date string using <code>toString()</code> method:</p>
+<div class="remark-highlight"><astro-island uid="Z2byOTW" component-url="/_astro/Code.f793ae0c.js" component-export="default" renderer-url="/_astro/client.c257378c.js" props="{&quot;className&quot;:[0,&quot;language-js&quot;]}" ssr="" client="load" opts="{&quot;name&quot;:&quot;Code&quot;,&quot;value&quot;:true}" await-children=""><div class="relative group"><pre class="language-js"><astro-slot>
+  <code class="language-js"><span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> execSync <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">&quot;child_process&quot;</span>
+
+<span class="token keyword">const</span> lastAuthorDate <span class="token operator">=</span> <span class="token function">execSync</span><span class="token punctuation">(</span>
+  <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">git log -1 --pretty=format:%aI -- &lt;PATH&gt;/&lt;TO&gt;/&lt;FILE&gt;.mdx</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span>
+<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token method function property-access">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code>
+</astro-slot></pre><button class="text-sm text-primary border dark:border-gray-800 dark:bg-primary dark:bg-primary rounded absolute top-4 right-4 px-2 opacity-0 group-hover:opacity-100 transition-opacity">Copy</button></div></astro-island></div>
+<h3 id="caveats-1">Caveats(?)</h3>
+<p>There are just a few minor ones that I know of. We need to keep in mind that Git doesn’t track the moment edits are saved, but rather the moment they are committed. Which is not necessarily bad, just different from the filesystem way to track updates. (Once I was baffled by the funny dates of my post edits, then I realized that I just <em>kinda forget about</em> the need to commit them.)</p>
+<p>The second difference I can think of is in the way Git tracks <em>file path changes</em>. When renaming or moving a file, you’ll have to make a commit, and the commit date will appear as the last modification date, which is not optimal (the present-day filesystems, AFAIK, would ignore such a name and/or path change).</p>
+<p>We can avoid this, but it’ll take some effort. Git, among other things, saves the brief commit status of a file (A for added, M for modified, R for renamed/moved; see the <a href="https://git-scm.com/docs/git-status#_short_format">full docs</a>). Therefore, if we log the status among the other stats, we can easily filter out those starting with <code>R</code>:</p>
+<div class="remark-highlight"><astro-island uid="1LY9I2" component-url="/_astro/Code.f793ae0c.js" component-export="default" renderer-url="/_astro/client.c257378c.js" props="{&quot;className&quot;:[0,&quot;language-js&quot;]}" ssr="" client="load" opts="{&quot;name&quot;:&quot;Code&quot;,&quot;value&quot;:true}" await-children=""><div class="relative group"><pre class="language-js"><astro-slot>
+  <code class="language-js"><span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> execSync <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">&quot;child_process&quot;</span>
+
+<span class="token keyword">const</span> allAuthorDates <span class="token operator">=</span> <span class="token function">execSync</span><span class="token punctuation">(</span>
+  <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">git log --follow --name-status --pretty=format:%aI -- &lt;PATH&gt;/&lt;TO&gt;/&lt;FILE&gt;.mdx</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span>
+<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token method function property-access">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token comment">/*</span>
+<span class="token comment"> *  This command will give us something like the following commit list:</span>
+<span class="token comment"> *  (commits with R100 status are merely renames/moves – no content updates)</span>
+<span class="token comment"> *</span>
+<span class="token comment"> *  2021-12-07T16:18:59+01:00</span>
+<span class="token comment"> *  R100    old.test.md  test.md</span>
+<span class="token comment"> *</span>
+<span class="token comment"> *  2021-12-07T15:37:15+01:00</span>
+<span class="token comment"> *  M       old.test.md</span>
+<span class="token comment"> *</span>
+<span class="token comment"> *  2021-10-07T10:30:11+01:00</span>
+<span class="token comment"> *  A       old.test.md</span>
+<span class="token comment"> */</span>
+
+<span class="token comment">/*</span>
+<span class="token comment"> *  Match the first date that is NOT followed by a line starting with R (for rename/move).</span>
+<span class="token comment"> *  The last commit from example above will be ignored.</span>
+<span class="token comment"> */</span>
+<span class="token keyword">const</span> <span class="token punctuation">[</span>lastEditExceptPathChangeDate<span class="token punctuation">]</span> <span class="token operator">=</span> allAuthorDates<span class="token punctuation">.</span><span class="token method function property-access">match</span><span class="token punctuation">(</span><span class="token regex"><span class="token regex-delimiter">/</span><span class="token regex-source language-regex">20<span class="token char-class"><span class="token char-class-punctuation punctuation">[</span><span class="token range"><span class="token escape">\d</span><span class="token range-punctuation operator">-</span>T</span>:.Z+<span class="token char-class-punctuation punctuation">]</span></span><span class="token quantifier number">+</span><span class="token anchor function">$</span><span class="token group punctuation">(?!</span><span class="token escape">\r</span><span class="token quantifier number">?</span><span class="token escape">\n</span>R<span class="token group punctuation">)</span></span><span class="token regex-delimiter">/</span><span class="token regex-flags">m</span></span><span class="token punctuation">)</span> <span class="token operator">||</span> <span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token comment">// 2021-12-07T15:37:15+01:00</span>
+</code>
+</astro-slot></pre><button class="text-sm text-primary border dark:border-gray-800 dark:bg-primary dark:bg-primary rounded absolute top-4 right-4 px-2 opacity-0 group-hover:opacity-100 transition-opacity">Copy</button></div></astro-island></div>
+<h3 id="nextjs-getstaticprops-example-git">Next.js <code>getStaticProps</code> example (Git)</h3>
+<div class="remark-highlight"><astro-island uid="Z1FnzkY" component-url="/_astro/Code.f793ae0c.js" component-export="default" renderer-url="/_astro/client.c257378c.js" props="{&quot;className&quot;:[0,&quot;language-ts&quot;]}" ssr="" client="load" opts="{&quot;name&quot;:&quot;Code&quot;,&quot;value&quot;:true}" await-children=""><div class="relative group"><pre class="language-ts"><astro-slot>
+  <code class="language-ts"><span class="token keyword">export</span> <span class="token keyword">const</span> <span class="token function-variable function">getStaticProps</span> <span class="token operator">=</span> <span class="token keyword">async</span> context <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> slug <span class="token operator">=</span> <span class="token function">String</span><span class="token punctuation">(</span>context<span class="token punctuation">.</span>params<span class="token operator">?.</span>slug<span class="token punctuation">)</span>
+  <span class="token keyword">const</span> filePath <span class="token operator">=</span> path<span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span>process<span class="token punctuation">.</span><span class="token function">cwd</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">_mdx_/</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>slug<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">/index.mdx</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span>
+  <span class="token keyword">const</span> rawContents <span class="token operator">=</span> fs<span class="token punctuation">.</span><span class="token function">readFileSync</span><span class="token punctuation">(</span>filePath<span class="token punctuation">,</span> <span class="token string">&quot;utf8&quot;</span><span class="token punctuation">)</span>
+
+  <span class="token keyword">const</span> allAuthorDates <span class="token operator">=</span> <span class="token function">execSync</span><span class="token punctuation">(</span>
+    <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">git log --follow --name-status --pretty=format:%aI -- </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>filePath<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span>
+  <span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+  <span class="token comment">// Match the first date that is NOT followed by a line starting with R (for rename/move)</span>
+  <span class="token keyword">const</span> <span class="token punctuation">[</span>lastEditExceptPathChangeDate<span class="token punctuation">]</span> <span class="token operator">=</span> allAuthorDates<span class="token punctuation">.</span><span class="token function">match</span><span class="token punctuation">(</span><span class="token regex"><span class="token regex-delimiter">/</span><span class="token regex-source language-regex">20<span class="token char-class"><span class="token char-class-punctuation punctuation">[</span><span class="token range"><span class="token escape">\d</span><span class="token range-punctuation operator">-</span>T</span>:.Z+<span class="token char-class-punctuation punctuation">]</span></span><span class="token quantifier number">+</span><span class="token anchor function">$</span><span class="token group punctuation">(?!</span><span class="token escape">\r</span><span class="token quantifier number">?</span><span class="token escape">\n</span>R<span class="token group punctuation">)</span></span><span class="token regex-delimiter">/</span><span class="token regex-flags">m</span></span><span class="token punctuation">)</span> <span class="token operator">||</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+
+  <span class="token keyword">const</span> <span class="token punctuation">{</span> content<span class="token punctuation">,</span> data<span class="token operator">:</span> meta <span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token function">matter</span><span class="token punctuation">(</span>rawContents<span class="token punctuation">)</span>
+
+  <span class="token keyword">const</span> mdxSource <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">serialize</span><span class="token punctuation">(</span>content<span class="token punctuation">,</span> <span class="token punctuation">{</span>
+    scope<span class="token operator">:</span> meta<span class="token punctuation">,</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+  <span class="token keyword">return</span> <span class="token punctuation">{</span>
+    props<span class="token operator">:</span> <span class="token punctuation">{</span>
+      source<span class="token operator">:</span> mdxSource<span class="token punctuation">,</span>
+      slug<span class="token punctuation">,</span>
+      content<span class="token punctuation">,</span>
+      meta<span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token operator">...</span>meta<span class="token punctuation">,</span>
+        dateLastModified<span class="token operator">:</span> lastEditExceptPathChangeDate<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+      <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code>
+</astro-slot></pre><button class="text-sm text-primary border dark:border-gray-800 dark:bg-primary dark:bg-primary rounded absolute top-4 right-4 px-2 opacity-0 group-hover:opacity-100 transition-opacity">Copy</button></div></astro-island></div>
+<h2 id="-update-a-year-later">🔔 Update: A year later</h2>
+<p>While the above <em>can</em> work fine, it surely did not withstand the migration of my site from Next.js to Astro. The issue is that there is a fine chance that some non-content-related updates will become necessary, e.g., updating imported libraries. Yeah, it can be fine with pure clear markdown, but I want to be fancy and use MDX. So I have to change some meta-stuff, and I lost track of the <em>content</em> updates.</p>
+<p>So is there some hope?</p>
+<p>There is. But you can’t rely fully on Git; it needs a hint to determine which changes were content-related and which weren’t. Lucky for us, there is a place we can put such a hint: the commit message.</p>
+<p>Let’s say we add the “Edit content” key phrase to every commit that is content related. Then, we can acquire the commit message like this:</p>
+<div class="remark-highlight"><astro-island uid="3BzES" component-url="/_astro/Code.f793ae0c.js" component-export="default" renderer-url="/_astro/client.c257378c.js" props="{&quot;className&quot;:[0,&quot;language-bash&quot;]}" ssr="" client="load" opts="{&quot;name&quot;:&quot;Code&quot;,&quot;value&quot;:true}" await-children=""><div class="relative group"><pre class="language-bash"><astro-slot>
+  <code class="language-bash"><span class="token function">git</span> log <span class="token parameter variable">--follow</span> --name-status <span class="token parameter variable">--pretty</span><span class="token operator">=</span><span class="token punctuation">\</span>&quot;format:%aI<span class="token operator">|</span>%s<span class="token punctuation">\</span>&quot; -- <span class="token operator">&lt;</span>OUR_FILE<span class="token operator">&gt;</span>
+</code>
+</astro-slot></pre><button class="text-sm text-primary border dark:border-gray-800 dark:bg-primary dark:bg-primary rounded absolute top-4 right-4 px-2 opacity-0 group-hover:opacity-100 transition-opacity">Copy</button></div></astro-island></div>
+<p>This will give us the date as before, but with a commit message delimited by the pipe ’|’ character. As before, we can use regular expressions to parse the data. The nasty regex in the snippet below will match everything that’s a date followed by a pipe followed by a string that starts with “Edit content”, followed by a new line that doesn’t start with “R”:</p>
+<div class="remark-highlight"><astro-island uid="1QOPO0" component-url="/_astro/Code.f793ae0c.js" component-export="default" renderer-url="/_astro/client.c257378c.js" props="{&quot;className&quot;:[0,&quot;language-js&quot;]}" ssr="" client="load" opts="{&quot;name&quot;:&quot;Code&quot;,&quot;value&quot;:true}" await-children=""><div class="relative group"><pre class="language-js"><astro-slot>
+  <code class="language-js"><span class="token comment">// Using this, we&#39;ll get our date in the second capture group:</span>
+<span class="token keyword">const</span> <span class="token punctuation">[</span>_<span class="token punctuation">,</span> lastContentEditDate<span class="token punctuation">]</span> <span class="token operator">=</span> allAuthorDates<span class="token punctuation">.</span><span class="token method function property-access">match</span><span class="token punctuation">(</span><span class="token regex"><span class="token regex-delimiter">/</span><span class="token regex-source language-regex"><span class="token group punctuation">(</span>20<span class="token char-class"><span class="token char-class-punctuation punctuation">[</span><span class="token char-set class-name">\d</span><span class="token escape">\-</span>T:.Z+<span class="token char-class-punctuation punctuation">]</span></span><span class="token quantifier number">+</span><span class="token group punctuation">)</span><span class="token special-escape escape">\|</span><span class="token group punctuation">(</span>Edit content<span class="token quantifier number">?</span><span class="token char-set class-name">.</span><span class="token quantifier number">+</span><span class="token group punctuation">)</span><span class="token anchor function">$</span><span class="token group punctuation">(?!</span><span class="token escape">\r</span><span class="token quantifier number">?</span><span class="token escape">\n</span>R<span class="token group punctuation">)</span></span><span class="token regex-delimiter">/</span><span class="token regex-flags">im</span></span><span class="token punctuation">)</span> <span class="token operator">||</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+</code>
+</astro-slot></pre><button class="text-sm text-primary border dark:border-gray-800 dark:bg-primary dark:bg-primary rounded absolute top-4 right-4 px-2 opacity-0 group-hover:opacity-100 transition-opacity">Copy</button></div></astro-island></div>
+<p>Probably not bulletproof, but for a blog? Good enough.</p>
+<h2 id="appendix-what-about-the-date-of-publishing">Appendix: What about the date of publishing?</h2>
+<p>Honestly, I am tracking it manually (when I’m done writing, I’d update the frontmatter). One of the reasons is that I’ve migrated my older blog posts to MDX, so neither the file creation dates nor the commit dates match the genuine birth dates.</p>
+<p>But <em>can</em> it be done programmatically?</p>
+<p>If you are deploying the already-built static site, you can use the filesystem meta: you get it as a <code>ctime</code> using Node.js. But beware: the date when the file was created can vastly differ from the actual date of publishing (e.g., a long post that takes two weeks to finish).</p>
+<p>So how about Git? Well, it <em>can</em> be done, but it is not safe. According to my research, there is no reliable way to determine the date of the first file commit after renaming or moving the original file. See <a href="https://stackoverflow.com/questions/2314652/is-it-possible-to-move-rename-files-in-git-and-maintain-their-history">answers in this SO thread</a>.</p>
+<p>I made some tests. Once, I lost a file history as soon as I renamed a text file <em>and</em> added a question mark to its “Hello World!” content in single commit. My blog’s post history, on the other hand, has sustained through the path updates. Generally, if the content is big enough (how big exactly? ), Git should be able to track the file path updates, but it’s not guaranteed.</p>
+<p>If you’re willing to take a chance, you can get the first commit date as follows:</p>
+<div class="remark-highlight"><astro-island uid="1mYyWg" component-url="/_astro/Code.f793ae0c.js" component-export="default" renderer-url="/_astro/client.c257378c.js" props="{&quot;className&quot;:[0,&quot;language-js&quot;]}" ssr="" client="load" opts="{&quot;name&quot;:&quot;Code&quot;,&quot;value&quot;:true}" await-children=""><div class="relative group"><pre class="language-js"><astro-slot>
+  <code class="language-js"><span class="token comment">// ✋ WARNING: read the above before copy &amp; paste!</span>
+<span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> execSync <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">&quot;child_process&quot;</span>
+
+<span class="token keyword">const</span> firstAutorDate <span class="token operator">=</span> <span class="token function">execSync</span><span class="token punctuation">(</span>
+  git log <span class="token operator">--</span>pretty<span class="token operator">=</span>format<span class="token operator">:</span><span class="token operator">%</span>aI <span class="token operator">--</span>reverse <span class="token operator">--</span> <span class="token operator">&lt;</span><span class="token constant">PATH</span><span class="token operator">&gt;</span><span class="token operator">/</span><span class="token operator">&lt;</span><span class="token constant">TO</span><span class="token operator">&gt;</span><span class="token operator">/</span><span class="token operator">&lt;</span><span class="token constant">FILE</span><span class="token operator">&gt;</span><span class="token punctuation">.</span><span class="token property-access">mdx</span> <span class="token operator">|</span> head <span class="token operator">-</span><span class="token number">1</span>
+<span class="token punctuation">)</span>
+</code>
+</astro-slot></pre><button class="text-sm text-primary border dark:border-gray-800 dark:bg-primary dark:bg-primary rounded absolute top-4 right-4 px-2 opacity-0 group-hover:opacity-100 transition-opacity">Copy</button></div></astro-island></div>
+<p>👍 Enjoy!</p>
+      <p class="text-xs">
+            last modified <span> </span><span>yesterday</span>
+          </p>
+      <hr>
+      <p class="text-sm">
+        If you find anything in this post that should be improved (either
+        factually or linguistically), feel free to 
+        <a href="#" rel="noopener noreferrer" target="_blank">
+          edit it on Github TODO add the actual link!
+        </a>
+        .
+      </p>
+    </article>
+  </main>
+  <astro-island uid="Z1Y60Dj" component-url="/_astro/ScrollToTop.3e47395f.js" component-export="default" renderer-url="/_astro/client.c257378c.js" props="{}" ssr="" client="load" opts="{&quot;name&quot;:&quot;ScrollToTop&quot;,&quot;value&quot;:true}" await-children=""><style>
+  @keyframes bounce-reverse {
+    0%, 100% {
+      transform: translateY(0);
+      animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    }
+    50% {
+      transform: translateY(-25%);
+      animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+    }
+  }
+  </style><button class="fixed bottom-6 right-10 bg-primary origin-center transition-transform shadow-xl rounded-full text-primary flex items-center justify-center border-2 p-3 focus:outline-none focus:ring-0 dark:border-slate-600 scale-0 false" aria-label="Scroll to top"><svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg></button></astro-island>
+  <script>(self.Astro=self.Astro||{}).only=t=>{(async()=>await(await t())())()},window.dispatchEvent(new Event("astro:only"));</script><astro-island uid="5YIQ3" component-url="/_astro/Lightbox.8c55f423.js" component-export="default" renderer-url="/_astro/client.c257378c.js" props="{}" ssr="" client="only" opts="{&quot;name&quot;:&quot;Lightbox&quot;,&quot;value&quot;:&quot;preact&quot;}"></astro-island>
+
+    
+<div class="flex justify-center py-8">
+    <footer class="max-w-prose">
+      <div class="flex gap-4 justify-center mb-4 text-[#a485e6] dark:text-gray-400">
+        <a class="block transition-colors hover:text-[var(--color-primary)]" href="https://github.com/HynekS" rel="noopener noreferrer" target="__blank" aria-label="Link to my Github profile">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+    <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"></path>
+  </svg>
+        </a>
+        <a class="block transition-colors hover:text-[var(--color-primary)]" href="https://www.linkedin.com/in/hynek-%C5%A1v%C3%A1cha-829387103/" rel="noopener noreferrer" target="__blank" aria-label="Link to my LinkedIn profile">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+  <path d="M19 0H5a5 5 0 0 0-5 5v14a5 5 0 0 0 5 5h14a5 5 0 0 0 5-5V5a5 5 0 0 0-5-5zM8 19H5V8h3v11zM6.5 6.732c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zM20 19h-3v-5.604c0-3.368-4-3.113-4 0V19h-3V8h3v1.765c1.396-2.586 7-2.777 7 2.476V19z"></path>
+</svg>
+        </a>
+        <a class="block transition-colors hover:text-[var(--color-primary)]" href="https://stackoverflow.com/users/8252267/hyneks" rel="noopener noreferrer" target="__blank" aria-label="Link to my Stack Overflow profile">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="12 12 90 90" fill="currentColor" class="w-6 h-6">
+  <path class="st0" d="M84.4 93.8V70.6h7.7v30.9H22.6V70.6h7.7v23.2z"></path><path class="st1" d="M38.8 68.4l37.8 7.9 1.6-7.6-37.8-7.9-1.6 7.6zm5-18l35 16.3 3.2-7-35-16.4-3.2 7.1zm9.7-17.2l29.7 24.7 4.9-5.9-29.7-24.7-4.9 5.9zm19.2-18.3l-6.2 4.6 23 31 6.2-4.6-23-31zM38 86h38.6v-7.7H38V86z"></path></svg>
+        </a>
+      </div>
+      <span class="text-sm font-mono px-4">© 2019–<span id="currentYear">present</span> Hynek Svacha</span>
+    </footer>
+  </div>
+  </body></html>

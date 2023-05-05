@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <meta name="generator" content="Astro v2.4.2">
+    <title>Create a custom Sanity.io input for DiceBear avatars</title>
+
+
+
+<link rel="canonical" href="http://localhost:3000/blog/create-a-custom-sanityio-input-for-dicebear-avatars/">
+
+<meta name="description" content="Sanity.io: How to build a custom input widget that will call the DiceBear avatar api to get an avatar image">
+
+<meta name="robots" content="index, follow">
+
+<meta property="og:title" content="Create a custom Sanity.io input for DiceBear avatars">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://user-images.githubusercontent.com/5182256/131216951-8f74f425-f775-463d-a11b-0e01ad9fce8d.png">
+<meta property="og:url" content="http://localhost:3000/blog/create-a-custom-sanityio-input-for-dicebear-avatars/">
+
+
+
+
+
+
+
+
+
+<meta name="twitter:creator" content="@SvachaHynek">
+
+<meta content="Sanity.io,DiceBear avatars,avatars,custom input" name="keywords"><meta content="Hynek Svacha" name="author"><meta content="Hynek Svacha" name="article:author"><meta content="Apr 2, 2021 21:20" name="article:published_time"><meta content="sanity,javascript,react" name="article:tag"><meta content="https://user-images.githubusercontent.com/5182256/131216951-8f74f425-f775-463d-a11b-0e01ad9fce8d.png" name="twitter:image"><meta content="Create a custom Sanity.io input for DiceBear avatars" name="twitter:title"><meta content="Sanity.io: How to build a custom input widget that will call the DiceBear avatar api to get an avatar image" name="twitter:description">
+    <link rel="preload" href="/assets/fonts/Nunito[wght]-subset.woff2" as="font" crossorigin="anonymous">
+    <link rel="preload" href="/assets/fonts/Nunito-Italic[wght]-subset.woff2" as="font" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="/assets/styles/base.css">
+
+    <link rel="icon" type="image/svg+xml" href="/assets/favicons/favicon.svg">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicons/favicon-16x16.png">
+    <link rel="manifest" href="/assets/favicons/site.webmanifest">
+    <link rel="mask-icon" href="/assets/favicons/safari-pinned-tab.svg" color="#5bbad5">
+
+    <script>
+      const theme = (() => {
+        if (
+          typeof localStorage !== "undefined" &&
+          localStorage.getItem("theme")
+        ) {
+          return localStorage.getItem("theme");
+        }
+        if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+          return "dark";
+        }
+        return "light";
+      })();
+      if (theme === "light") {
+        document.documentElement.classList.remove("dark");
+      } else {
+        document.documentElement.classList.add("dark");
+      }
+    </script>
+  <link rel="stylesheet" href="/_astro/index.6eb0b711.css" /><script type="module">
+</script><link rel="stylesheet" href="/_astro/RecursiveList.astro_astro_type_style_index_0_lang.341da06d.css" /><script src="/_astro/RecursiveList.astro_astro_type_script_index_0_lang.386d38c4.js" type="module"></script><script src="/_astro/Footer.astro_astro_type_script_index_0_lang.70efab02.js" type="module"></script></head>
+  <body>
+    <header class="top-0 flex justify-between pr-6 pl-4 pt-6 pb-4 w-full mb-8 h-[4.5rem] /* added explicit height and width to fight the layout shift*/ lg:pl-[2.25rem] lg:sticky">
+  <div>
+    <div class="flex items-end gap-4 -mt-1.5">
+      <a href="/" aria-label="Link to homepage" class="mr-4">
+        <div class="flex items-end gap-2">
+  <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 dark:opacity-[0.85]" viewBox="0 0 64 64" xml:space="preserve">
+    <path fill="#865DDE" d="M0 0h64v64H0z"></path>
+    <g fill="#FFF">
+      <path d="M12.69 27.582h6.697v11.286h8.764V27.582h6.697v30.219h-6.697V44.737h-8.764V57.8H12.69V27.582zM43.229 48.789c1.735 2.852 3.431 4.175 5.869 4.175 2.315 0 3.804-1.363 3.804-3.183 0-1.654-1.075-2.894-3.349-3.846-2.976-1.239-5.58-2.107-7.482-3.596-2.108-1.653-3.183-3.969-3.183-6.779 0-5.333 3.762-8.765 9.797-8.765 4.383 0 7.73 1.819 9.88 5.333L53.77 35.56c-1.612-2.274-3.391-3.391-5.457-3.391s-3.349 1.158-3.349 2.771c0 1.529 1.198 2.646 3.639 3.72 3.059 1.323 5.746 2.191 7.565 3.639 2.025 1.611 3.183 4.051 3.183 6.986 0 5.498-4.134 9.301-10.418 9.301-4.753 0-8.392-2.066-10.914-6.118l5.21-3.679z"></path>
+    </g>
+  </svg>
+  <span class="font-bold text-gray-900 dark:text-primary mt-auto leading-none pb-0.5">HynekS</span>
+</div>
+      </a>
+      <div class="flex pt-3 relative top-1 leading-none gap-4 [&>a]:font-medium [&>a]:pb-1 [&>a]:border-b-2 [&>a]:border-transparent [&>a.active]:border-b-2 [&>a.active]:[border-color:var(--color-primary)]">
+        <a href="/" class="active">blog</a>
+        <a href="/projects" class="">projects</a>
+        <a href="/about" class="">about</a>
+      </div>
+    </div>
+  </div>
+  <div>
+    <style>astro-island,astro-slot{display:contents}</style><script>(self.Astro=self.Astro||{}).load=a=>{(async()=>await(await a())())()},window.dispatchEvent(new Event("astro:load"));var l;{const c={0:t=>t,1:t=>JSON.parse(t,o),2:t=>new RegExp(t),3:t=>new Date(t),4:t=>new Map(JSON.parse(t,o)),5:t=>new Set(JSON.parse(t,o)),6:t=>BigInt(t),7:t=>new URL(t),8:t=>new Uint8Array(JSON.parse(t)),9:t=>new Uint16Array(JSON.parse(t)),10:t=>new Uint32Array(JSON.parse(t))},o=(t,s)=>{if(t===""||!Array.isArray(s))return s;const[e,n]=s;return e in c?c[e](n):void 0};customElements.get("astro-island")||customElements.define("astro-island",(l=class extends HTMLElement{constructor(){super(...arguments);this.hydrate=()=>{if(!this.hydrator||this.parentElement&&this.parentElement.closest("astro-island[ssr]"))return;const s=this.querySelectorAll("astro-slot"),e={},n=this.querySelectorAll("template[data-astro-template]");for(const r of n){const i=r.closest(this.tagName);!i||!i.isSameNode(this)||(e[r.getAttribute("data-astro-template")||"default"]=r.innerHTML,r.remove())}for(const r of s){const i=r.closest(this.tagName);!i||!i.isSameNode(this)||(e[r.getAttribute("name")||"default"]=r.innerHTML)}const a=this.hasAttribute("props")?JSON.parse(this.getAttribute("props"),o):{};this.hydrator(this)(this.Component,a,e,{client:this.getAttribute("client")}),this.removeAttribute("ssr"),window.removeEventListener("astro:hydrate",this.hydrate),window.dispatchEvent(new CustomEvent("astro:hydrate"))}}connectedCallback(){!this.hasAttribute("await-children")||this.firstChild?this.childrenConnectedCallback():new MutationObserver((s,e)=>{e.disconnect(),this.childrenConnectedCallback()}).observe(this,{childList:!0})}async childrenConnectedCallback(){window.addEventListener("astro:hydrate",this.hydrate);let s=this.getAttribute("before-hydration-url");s&&await import(s),this.start()}start(){const s=JSON.parse(this.getAttribute("opts")),e=this.getAttribute("client");if(Astro[e]===void 0){window.addEventListener(`astro:${e}`,()=>this.start(),{once:!0});return}Astro[e](async()=>{const n=this.getAttribute("renderer-url"),[a,{default:r}]=await Promise.all([import(this.getAttribute("component-url")),n?import(n):()=>()=>{}]),i=this.getAttribute("component-export")||"default";if(!i.includes("."))this.Component=a[i];else{this.Component=a;for(const d of i.split("."))this.Component=this.Component[d]}return this.hydrator=r,this.hydrate},s,this)}attributeChangedCallback(){this.hydrator&&this.hydrate()}},l.observedAttributes=["props"],l))}</script><astro-island uid="ZonHg9" component-url="/_astro/ThemeToggle.32d5cae3.js" component-export="default" renderer-url="/_astro/client.c257378c.js" props="{}" ssr="" client="load" opts="{&quot;name&quot;:&quot;ThemeToggle&quot;,&quot;value&quot;:true}" await-children=""><button aria-label="Toggle Dark Mode" type="button" class="rounded-full flex items-center justify-center border-2 p-1 focus:outline-none focus:ring-0 dark:border-gray-600"><svg class="w-6 h-6" fill="none" stroke="var(--color-primary)" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg></button></astro-island>
+  </div>
+</header>
+    
+  <aside class="hidden md:block md:w-1/5">
+    
+
+<nav data-is_navigation>
+  <ul>
+        <li>
+  <svg xmlns="http://www.w3.org/2000/svg" class="p-[0.75px]" viewBox="0 0 2 12">
+    <path fill="currentColor" d="M2 11c0 .552-.448 1-1 1s-1-.448-1-1V1c0-.552.448-1 1-1s1 .448 1 1v10z"></path>
+  </svg>
+  <a href="#overview">
+    Overview
+  </a>
+  
+</li><li>
+  <svg xmlns="http://www.w3.org/2000/svg" class="p-[0.75px]" viewBox="0 0 2 12">
+    <path fill="currentColor" d="M2 11c0 .552-.448 1-1 1s-1-.448-1-1V1c0-.552.448-1 1-1s1 .448 1 1v10z"></path>
+  </svg>
+  <a href="#prerequisites">
+    Prerequisites
+  </a>
+  
+</li><li>
+  <svg xmlns="http://www.w3.org/2000/svg" class="p-[0.75px]" viewBox="0 0 2 12">
+    <path fill="currentColor" d="M2 11c0 .552-.448 1-1 1s-1-.448-1-1V1c0-.552.448-1 1-1s1 .448 1 1v10z"></path>
+  </svg>
+  <a href="#the-schema">
+    The Schema
+  </a>
+  
+</li><li>
+  <svg xmlns="http://www.w3.org/2000/svg" class="p-[0.75px]" viewBox="0 0 2 12">
+    <path fill="currentColor" d="M2 11c0 .552-.448 1-1 1s-1-.448-1-1V1c0-.552.448-1 1-1s1 .448 1 1v10z"></path>
+  </svg>
+  <a href="#the-input">
+    The Input
+  </a>
+  
+</li><li>
+  <svg xmlns="http://www.w3.org/2000/svg" class="p-[0.75px]" viewBox="0 0 2 12">
+    <path fill="currentColor" d="M2 11c0 .552-.448 1-1 1s-1-.448-1-1V1c0-.552.448-1 1-1s1 .448 1 1v10z"></path>
+  </svg>
+  <a href="#conclusion">
+    Conclusion
+  </a>
+  
+</li>
+      </ul>
+</nav>
+  </aside>
+  <main class="flex-auto max-w-full [margin-right:calc((50% - 30ch)/2)]">
+    <article class="prose prose-sm mx-auto pt-8 px-4 md:prose lg:prose-lg lg:px-0 dark:prose-dark pb-16" data-is_article>
+      <h1 id="overview">Create a custom Sanity.io input for DiceBear avatars</h1>
+      <div class="not-prose font-mono text-sm dark:text-gray-400">
+        <ul class="flex gap-1.5 mt-0 mb-1 ml--1 py-2">
+              <li class="font-mono leading-none text-[0.6875rem] rounded-md py-[0.2rem] px-[0.25rem] dark:[filter:brightness(1.25)] flex items-center" style="background-color: rgba(240, 75, 58, 0.25); border: 1px solid rgba(240, 75, 58, 0.3);"><span>sanity</span></li><li class="font-mono leading-none text-[0.6875rem] rounded-md py-[0.2rem] px-[0.25rem] dark:[filter:brightness(1.25)] flex items-center" style="background-color: rgba(241, 224, 90, 0.25); border: 1px solid rgba(241, 224, 90, 0.3);"><span>javascript</span></li><li class="font-mono leading-none text-[0.6875rem] rounded-md py-[0.2rem] px-[0.25rem] dark:[filter:brightness(1.25)] flex items-center" style="background-color: rgba(97, 219, 251, 0.25); border: 1px solid rgba(97, 219, 251, 0.3);"><span>react</span></li>
+            </ul>
+        posted <span>on </span><span>2<sup>nd</sup> April 2021</span> ∙ by Hynek Svacha ∙
+        13 min read
+      </div>
+      
+<p>In this tutorial, we will build a custom input widget fot Sanity studio. The input will be calling an external api to fetch an avatar image. It is inspired by my previous tinkering with a custom input for fetching tweets from the twitter api.</p>
+<div class="not-prose rounded-l-sm rounded-r-lg bg-sky-100 text-sky-700 flex p-4 pb-6 pr-5 relative mb-4 before:absolute before:top-0 before:bottom-0 before:left-0 before:w-1 before:bg-sky-200 before:rounded-l-sm dark:text-sky-200 dark:bg-sky-900 dark:bg-opacity-70 dark:before:bg-sky-300 dark:before:bg-opacity-50"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5 w-5 mt-1.5 ml-1.5 mr-4 flex-shrink-0"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"></path></svg><div>This article is a little outdated. It was written at the time of a transition to the new Sanity UI kit (which explains why some of the code is a little ‘hairy’ here). While the fundamentals of this tutorial are still valid, I would suggest checking the <a style="all:unset;text-decoration:underline;cursor:pointer" href="https://www.sanity.io/docs/custom-input-widgets">new docs</a> first.</div></div>
+<p>The source we’ll be using to get our avatar is <a href="https://avatars.dicebear.com/">DiceBear Avatars</a> api.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<p>Among the general knowledge of React, I highly recommend checking out those two official tutorials for custom widget creation:</p>
+<ul>
+<li>
+<p><a href="https://www.sanity.io/guides/how-to-make-a-custom-input-component">https://www.sanity.io/guides/how-to-make-a-custom-input-component</a></p>
+</li>
+<li>
+<p><a href="https://www.sanity.io/docs/custom-input-widgets">https://www.sanity.io/docs/custom-input-widgets</a></p>
+</li>
+</ul>
+<p><strong>Why should I read this tutorial when I can read the official ones?</strong></p>
+<p>Great question! There are two main topics the official tutorials don’t cover:</p>
+<ul>
+<li>create a custom input as functional component (both official tutorials use class components),</li>
+<li>retrieve a value from an external api by passing user input as an argument to the api call.</li>
+</ul>
+<h2 id="the-schema">The Schema</h2>
+<p>First, we need to create a schema for our data structure. In the schema folder, create a file named avatar.js. It will be a quite simple schema: it needs only two fields, <code>seed</code> and <code>markup</code>. Both will be of type string, and we will store the received avatar string in that serialized format. Because the value of <code>markup</code> field will be derived from the <code>seed</code> value, we don’t want to access it directly—hence the <code>hidden</code> prop.</p>
+<div class="remark-highlight"><astro-island uid="2vc3Xf" component-url="/_astro/Code.f793ae0c.js" component-export="default" renderer-url="/_astro/client.c257378c.js" props="{&quot;className&quot;:[0,&quot;language-javascript&quot;]}" ssr="" client="load" opts="{&quot;name&quot;:&quot;Code&quot;,&quot;value&quot;:true}" await-children=""><div class="relative group"><pre class="language-javascript"><astro-slot>
+  <code class="language-javascript"><span class="token comment">// avatar.js</span>
+<span class="token keyword module">export</span> <span class="token keyword module">default</span> <span class="token punctuation">{</span>
+  <span class="token literal-property property">title</span><span class="token operator">:</span> <span class="token string">&quot;Avatar&quot;</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">&quot;avatar&quot;</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">type</span><span class="token operator">:</span> <span class="token string">&quot;object&quot;</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">fields</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">{</span>
+      <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">&quot;seed&quot;</span><span class="token punctuation">,</span>
+      <span class="token literal-property property">title</span><span class="token operator">:</span> <span class="token string">&quot;Seed&quot;</span><span class="token punctuation">,</span>
+      <span class="token literal-property property">type</span><span class="token operator">:</span> <span class="token string">&quot;string&quot;</span><span class="token punctuation">,</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span>
+      <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">&quot;markup&quot;</span><span class="token punctuation">,</span>
+      <span class="token literal-property property">type</span><span class="token operator">:</span> <span class="token string">&quot;string&quot;</span><span class="token punctuation">,</span>
+      <span class="token literal-property property">hidden</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">]</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code>
+</astro-slot></pre><button class="text-sm text-primary border dark:border-gray-800 dark:bg-primary dark:bg-primary rounded absolute top-4 right-4 px-2 opacity-0 group-hover:opacity-100 transition-opacity">Copy</button></div></astro-island></div>
+<p>Then we will import our schema into the default one (pass it in the <code>createSchema</code> function):</p>
+<div class="remark-highlight"><astro-island uid="Z1QVnFT" component-url="/_astro/Code.f793ae0c.js" component-export="default" renderer-url="/_astro/client.c257378c.js" props="{&quot;className&quot;:[0,&quot;language-javascript&quot;]}" ssr="" client="load" opts="{&quot;name&quot;:&quot;Code&quot;,&quot;value&quot;:true}" await-children=""><div class="relative group"><pre class="language-javascript"><astro-slot>
+  <code class="language-javascript"><span class="token comment">// schema.js</span>
+<span class="token keyword module">import</span> <span class="token imports">createSchema</span> <span class="token keyword module">from</span> <span class="token string">&quot;part:@sanity/base/schema-creator&quot;</span>
+<span class="token keyword module">import</span> <span class="token imports">schemaTypes</span> <span class="token keyword module">from</span> <span class="token string">&quot;all:part:@sanity/base/schema-type&quot;</span>
+
+<span class="token keyword module">import</span> <span class="token imports">blockContent</span> <span class="token keyword module">from</span> <span class="token string">&quot;./blockContent&quot;</span>
+<span class="token keyword module">import</span> <span class="token imports">category</span> <span class="token keyword module">from</span> <span class="token string">&quot;./category&quot;</span>
+<span class="token keyword module">import</span> <span class="token imports">post</span> <span class="token keyword module">from</span> <span class="token string">&quot;./post&quot;</span>
+<span class="token keyword module">import</span> <span class="token imports">author</span> <span class="token keyword module">from</span> <span class="token string">&quot;./author&quot;</span>
+<span class="token keyword module">import</span> <span class="token imports">avatar</span> <span class="token keyword module">from</span> <span class="token string">&quot;./avatar&quot;</span>
+
+<span class="token keyword module">export</span> <span class="token keyword module">default</span> <span class="token function">createSchema</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">&quot;default&quot;</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">types</span><span class="token operator">:</span> schemaTypes<span class="token punctuation">.</span><span class="token method function property-access">concat</span><span class="token punctuation">(</span><span class="token punctuation">[</span>post<span class="token punctuation">,</span> author<span class="token punctuation">,</span> category<span class="token punctuation">,</span> blockContent<span class="token punctuation">,</span> avatar<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code>
+</astro-slot></pre><button class="text-sm text-primary border dark:border-gray-800 dark:bg-primary dark:bg-primary rounded absolute top-4 right-4 px-2 opacity-0 group-hover:opacity-100 transition-opacity">Copy</button></div></astro-island></div>
+<p>We will use the input in the “author” document (you can pick any other that suits your needs):</p>
+<div class="remark-highlight"><astro-island uid="OHL1T" component-url="/_astro/Code.f793ae0c.js" component-export="default" renderer-url="/_astro/client.c257378c.js" props="{&quot;className&quot;:[0,&quot;language-javascript&quot;]}" ssr="" client="load" opts="{&quot;name&quot;:&quot;Code&quot;,&quot;value&quot;:true}" await-children=""><div class="relative group"><pre class="language-javascript"><astro-slot>
+  <code class="language-javascript"><span class="token comment">// author.js</span>
+<span class="token keyword module">export</span> <span class="token keyword module">default</span> <span class="token punctuation">{</span>
+  <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">&quot;author&quot;</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">title</span><span class="token operator">:</span> <span class="token string">&quot;Author&quot;</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">type</span><span class="token operator">:</span> <span class="token string">&quot;document&quot;</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">fields</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">{</span>
+      <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">&quot;name&quot;</span><span class="token punctuation">,</span>
+      <span class="token literal-property property">title</span><span class="token operator">:</span> <span class="token string">&quot;Name&quot;</span><span class="token punctuation">,</span>
+      <span class="token literal-property property">type</span><span class="token operator">:</span> <span class="token string">&quot;string&quot;</span><span class="token punctuation">,</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span>
+      <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">&quot;avatar&quot;</span><span class="token punctuation">,</span>
+      <span class="token literal-property property">title</span><span class="token operator">:</span> <span class="token string">&quot;Avatar&quot;</span><span class="token punctuation">,</span>
+      <span class="token literal-property property">type</span><span class="token operator">:</span> <span class="token string">&quot;avatar&quot;</span><span class="token punctuation">,</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span>
+      <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">&quot;slug&quot;</span><span class="token punctuation">,</span>
+      <span class="token literal-property property">title</span><span class="token operator">:</span> <span class="token string">&quot;Slug&quot;</span><span class="token punctuation">,</span>
+      <span class="token literal-property property">type</span><span class="token operator">:</span> <span class="token string">&quot;slug&quot;</span><span class="token punctuation">,</span>
+      <span class="token literal-property property">options</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token literal-property property">source</span><span class="token operator">:</span> <span class="token string">&quot;name&quot;</span><span class="token punctuation">,</span>
+        <span class="token literal-property property">maxLength</span><span class="token operator">:</span> <span class="token number">96</span><span class="token punctuation">,</span>
+      <span class="token punctuation">}</span><span class="token punctuation">,</span>
+	  <span class="token comment">// other fields…</span>
+  <span class="token punctuation">]</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code>
+</astro-slot></pre><button class="text-sm text-primary border dark:border-gray-800 dark:bg-primary dark:bg-primary rounded absolute top-4 right-4 px-2 opacity-0 group-hover:opacity-100 transition-opacity">Copy</button></div></astro-island></div>
+<h2 id="the-input">The Input</h2>
+<p>Now it is time to create our custom input. Let’s create a folder named <code>inputs</code> and in that folder, create a file named <code>AvatarInput.js</code>.</p>
+<p>The file below will serve as a boilerplate. We will import a bunch of React methods (including a few rather exotic ones), <code>TextInput</code> from the brand new <code>@sanity/ui</code> library, and <code>FormField</code> from <code>@sanity/components</code>. Everything we will be using should be already installed during the initial Sanity init, but if you encounter any issues with missing dependencies, you can install them manually.</p>
+<p>One important quote from the official docs:</p>
+<blockquote>
+<p>Given the props</p>
+<ul>
+<li><code>value</code> - the current value or undefined if no value is present</li>
+<li><code>onChange</code> - a function to call when the value should be updated</li>
+</ul>
+<p>It must:</p>
+<ul>
+<li>Present an interface that allows editing <code>props.value</code>, e.g. through an <code>&lt;input ...&gt;</code> element</li>
+<li>Call <code>props.onChange</code> with a patch describing the operation that should be applied on the value</li>
+<li>Implement a <code>.focus()</code> method, that sets focus on the underlying dom node that represents the input.</li>
+</ul>
+</blockquote>
+<p>Note the quite essential <code>{ onChange, type, value } = props</code>: these are props coming from Sanity. The shape of our partial schema is described by the Type prop. The value prop is an object containing the current values of the fields (if there are any). The <code>onChange</code> prop is a function that is responsible for propagating the change of an input value into our dataset. Note that its name can be a little confusing: There will be two functions of that same name, the first coming from the aforementioned props, and the second being the event handler of the text input (there will be no collision due to different lexical scopes).</p>
+<p>If you’ve taken a look at the official tutorials, you’ve seen them using React class components. Because I don’t like class components very much (sorry), I will use a functional one. Also, showing how to use a functional component as Sanity input might be one of the rationales for this post.</p>
+<p>There is one minor disadvantage to using functional components such as Sanity input widgets. When using a class component, it is sufficient to add a <code>focus()</code> method, but with a functional one, we need to wrap the component in a <code>forwardRef</code> call and invoke <code>useImperativeHandle</code> hook inside of it (with an object containing the focus method as an argument). It might be a little heavy-handed, but I would still go for it.</p>
+<p>The two <code>useState</code> hooks will be used to update our UI as the input value changes (not yet implemented).</p>
+<div class="remark-highlight"><astro-island uid="Z2o4Ymu" component-url="/_astro/Code.f793ae0c.js" component-export="default" renderer-url="/_astro/client.c257378c.js" props="{&quot;className&quot;:[0,&quot;language-javascript&quot;]}" ssr="" client="load" opts="{&quot;name&quot;:&quot;Code&quot;,&quot;value&quot;:true}" await-children=""><div class="relative group"><pre class="language-javascript"><astro-slot>
+  <code class="language-javascript"><span class="token comment">// AvatarInput.js</span>
+<span class="token keyword module">import</span> <span class="token imports"><span class="token maybe-class-name">React</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> useRef<span class="token punctuation">,</span> useState<span class="token punctuation">,</span> forwardRef<span class="token punctuation">,</span> useImperativeHandle <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">&quot;react&quot;</span>
+
+<span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> <span class="token maybe-class-name">TextInput</span> <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">&quot;@sanity/ui&quot;</span>
+<span class="token keyword module">import</span> <span class="token imports"><span class="token maybe-class-name">FormField</span></span> <span class="token keyword module">from</span> <span class="token string">&quot;part:@sanity/components/formfields/default&quot;</span>
+
+<span class="token keyword">const</span> <span class="token maybe-class-name">AvatarInput</span> <span class="token operator">=</span> <span class="token function">forwardRef</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">props<span class="token punctuation">,</span> ref</span><span class="token punctuation">)</span> <span class="token arrow operator">=&gt;</span> <span class="token punctuation">{</span>
+  <span class="token comment">// Props coming from Sanity studio:</span>
+  <span class="token keyword">const</span> <span class="token punctuation">{</span> onChange<span class="token punctuation">,</span> type<span class="token punctuation">,</span> value <span class="token punctuation">}</span> <span class="token operator">=</span> props
+  <span class="token comment">// lets pick the values from props and use them to populate our state.</span>
+  <span class="token comment">// The state will then be used to update the UI.</span>
+  <span class="token keyword">const</span> initialSeed <span class="token operator">=</span> value <span class="token operator">&amp;&amp;</span> value<span class="token punctuation">.</span><span class="token property-access">seed</span> <span class="token operator">?</span> value<span class="token punctuation">.</span><span class="token property-access">seed</span> <span class="token operator">:</span> <span class="token string">&quot;&quot;</span>
+  <span class="token keyword">const</span> initialMarkup <span class="token operator">=</span> value <span class="token operator">&amp;&amp;</span> value<span class="token punctuation">.</span><span class="token property-access">markup</span> <span class="token operator">?</span> value<span class="token punctuation">.</span><span class="token property-access">markup</span> <span class="token operator">:</span> <span class="token string">&quot;&quot;</span>
+
+  <span class="token keyword">const</span> <span class="token punctuation">[</span>seed<span class="token punctuation">,</span> setSeed<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token function">useState</span><span class="token punctuation">(</span>initialSeed<span class="token punctuation">)</span>
+  <span class="token keyword">const</span> <span class="token punctuation">[</span>markup<span class="token punctuation">,</span> setMarkup<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token function">useState</span><span class="token punctuation">(</span>initialMarkup<span class="token punctuation">)</span>
+
+  <span class="token comment">// inputRef and useImperativeHandle are used by Sanity studio.</span>
+  <span class="token keyword">const</span> inputRef <span class="token operator">=</span> <span class="token function">useRef</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+  <span class="token function">useImperativeHandle</span><span class="token punctuation">(</span>ref<span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=&gt;</span> <span class="token punctuation">(</span><span class="token punctuation">{</span>
+    <span class="token function-variable function">focus</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=&gt;</span> inputRef<span class="token punctuation">.</span><span class="token property-access">current</span><span class="token punctuation">.</span><span class="token method function property-access">focus</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+  <span class="token keyword control-flow">return</span> <span class="token punctuation">(</span>
+    <span class="token operator">&lt;</span><span class="token maybe-class-name">FormField</span> label<span class="token operator">=</span><span class="token punctuation">{</span>type<span class="token punctuation">.</span><span class="token property-access">title</span><span class="token punctuation">}</span><span class="token operator">&gt;</span>
+      <span class="token operator">&lt;</span><span class="token maybe-class-name">TextInput</span>
+        ref<span class="token operator">=</span><span class="token punctuation">{</span>inputRef<span class="token punctuation">}</span>
+        onChange<span class="token operator">=</span><span class="token punctuation">{</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=&gt;</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">}</span> <span class="token comment">// left empty for now</span>
+        placeholder<span class="token operator">=</span><span class="token string">&quot;Enter a seed (random if empty)&quot;</span>
+        type<span class="token operator">=</span><span class="token string">&quot;text&quot;</span>
+        value<span class="token operator">=</span><span class="token punctuation">{</span>seed<span class="token punctuation">}</span>
+      <span class="token operator">/</span><span class="token operator">&gt;</span>
+    <span class="token operator">&lt;</span><span class="token operator">/</span><span class="token maybe-class-name">FormField</span><span class="token operator">&gt;</span>
+  <span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+<span class="token keyword module">export</span> <span class="token keyword module">default</span> <span class="token maybe-class-name">AvatarInput</span>
+</code>
+</astro-slot></pre><button class="text-sm text-primary border dark:border-gray-800 dark:bg-primary dark:bg-primary rounded absolute top-4 right-4 px-2 opacity-0 group-hover:opacity-100 transition-opacity">Copy</button></div></astro-island></div>
+<p>We’ll have to import our newly created custom input component (which is not doing anything yet) into our avatar schema:</p>
+<div class="remark-highlight"><astro-island uid="1N00Ie" component-url="/_astro/Code.f793ae0c.js" component-export="default" renderer-url="/_astro/client.c257378c.js" props="{&quot;className&quot;:[0,&quot;language-javascript&quot;]}" ssr="" client="load" opts="{&quot;name&quot;:&quot;Code&quot;,&quot;value&quot;:true}" await-children=""><div class="relative group"><pre class="language-javascript"><astro-slot>
+  <code class="language-javascript"><span class="token comment">// avatar.js</span>
+<span class="token keyword module">import</span> <span class="token imports"><span class="token maybe-class-name">AvatarInput</span></span> <span class="token keyword module">from</span> <span class="token string">&quot;../inputs/AvatarInput&quot;</span> <span class="token comment">//</span>
+
+<span class="token keyword module">export</span> <span class="token keyword module">default</span> <span class="token punctuation">{</span>
+  <span class="token literal-property property">title</span><span class="token operator">:</span> <span class="token string">&quot;Avatar&quot;</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">&quot;avatar&quot;</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">inputComponent</span><span class="token operator">:</span> <span class="token maybe-class-name">AvatarInput</span><span class="token punctuation">,</span> <span class="token comment">//</span>
+  <span class="token literal-property property">type</span><span class="token operator">:</span> <span class="token string">&quot;object&quot;</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">fields</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">{</span>
+      <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">&quot;seed&quot;</span><span class="token punctuation">,</span>
+      <span class="token literal-property property">title</span><span class="token operator">:</span> <span class="token string">&quot;Seed&quot;</span><span class="token punctuation">,</span>
+      <span class="token literal-property property">type</span><span class="token operator">:</span> <span class="token string">&quot;string&quot;</span><span class="token punctuation">,</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span>
+      <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">&quot;markup&quot;</span><span class="token punctuation">,</span>
+      <span class="token literal-property property">type</span><span class="token operator">:</span> <span class="token string">&quot;string&quot;</span><span class="token punctuation">,</span>
+      <span class="token literal-property property">hidden</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">]</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code>
+</astro-slot></pre><button class="text-sm text-primary border dark:border-gray-800 dark:bg-primary dark:bg-primary rounded absolute top-4 right-4 px-2 opacity-0 group-hover:opacity-100 transition-opacity">Copy</button></div></astro-island></div>
+<p>All right! Now let’s make the input work. We’ll implement the functionality to trigger a request to the DiceBear Avatar api whenever the seed changes:</p>
+<div class="remark-highlight"><astro-island uid="Z204XrL" component-url="/_astro/Code.f793ae0c.js" component-export="default" renderer-url="/_astro/client.c257378c.js" props="{&quot;className&quot;:[0,&quot;language-javascript&quot;]}" ssr="" client="load" opts="{&quot;name&quot;:&quot;Code&quot;,&quot;value&quot;:true}" await-children=""><div class="relative group"><pre class="language-javascript"><astro-slot>
+  <code class="language-javascript"><span class="token comment">//AvatarInput.js</span>
+<span class="token keyword module">import</span> <span class="token imports"><span class="token maybe-class-name">React</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> useRef<span class="token punctuation">,</span> useState<span class="token punctuation">,</span> forwardRef<span class="token punctuation">,</span> useImperativeHandle <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">&quot;react&quot;</span>
+
+<span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> <span class="token maybe-class-name">TextInput</span> <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">&quot;@sanity/ui&quot;</span>
+<span class="token keyword module">import</span> <span class="token imports"><span class="token maybe-class-name">FormField</span></span> <span class="token keyword module">from</span> <span class="token string">&quot;part:@sanity/components/formfields/default&quot;</span>
+
+<span class="token keyword">const</span> <span class="token maybe-class-name">AvatarInput</span> <span class="token operator">=</span> <span class="token function">forwardRef</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">props<span class="token punctuation">,</span> ref</span><span class="token punctuation">)</span> <span class="token arrow operator">=&gt;</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> <span class="token punctuation">{</span> onChange<span class="token punctuation">,</span> type<span class="token punctuation">,</span> value <span class="token punctuation">}</span> <span class="token operator">=</span> props
+
+  <span class="token keyword">const</span> initialSeed <span class="token operator">=</span> value <span class="token operator">&amp;&amp;</span> value<span class="token punctuation">.</span><span class="token property-access">seed</span> <span class="token operator">?</span> value<span class="token punctuation">.</span><span class="token property-access">seed</span> <span class="token operator">:</span> <span class="token string">&quot;&quot;</span>
+  <span class="token keyword">const</span> initialMarkup <span class="token operator">=</span> value <span class="token operator">&amp;&amp;</span> value<span class="token punctuation">.</span><span class="token property-access">markup</span> <span class="token operator">?</span> value<span class="token punctuation">.</span><span class="token property-access">markup</span> <span class="token operator">:</span> <span class="token string">&quot;&quot;</span>
+
+  <span class="token keyword">const</span> <span class="token punctuation">[</span>seed<span class="token punctuation">,</span> setSeed<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token function">useState</span><span class="token punctuation">(</span>initialSeed<span class="token punctuation">)</span>
+  <span class="token keyword">const</span> <span class="token punctuation">[</span>markup<span class="token punctuation">,</span> setMarkup<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token function">useState</span><span class="token punctuation">(</span>initialMarkup<span class="token punctuation">)</span>
+
+  <span class="token keyword">const</span> inputRef <span class="token operator">=</span> <span class="token function">useRef</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+  <span class="token function">useImperativeHandle</span><span class="token punctuation">(</span>ref<span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=&gt;</span> <span class="token punctuation">(</span><span class="token punctuation">{</span>
+    <span class="token function-variable function">focus</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=&gt;</span> inputRef<span class="token punctuation">.</span><span class="token property-access">current</span><span class="token punctuation">.</span><span class="token method function property-access">focus</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+  <span class="token comment">// onChange handler is setting a state which is updating our UI and is triggering an api request:</span>
+  <span class="token keyword">const</span> <span class="token function-variable function">handleChange</span> <span class="token operator">=</span> <span class="token parameter">updatedSeed</span> <span class="token arrow operator">=&gt;</span> <span class="token punctuation">{</span>
+    <span class="token function">setSeed</span><span class="token punctuation">(</span>updatedSeed<span class="token punctuation">)</span>
+    <span class="token function">getAvatar</span><span class="token punctuation">(</span>updatedSeed<span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token comment">// The actual request. We are hitting the &quot;https://avatars.dicebear.com&quot; api endpoint which should send a response containing a svg avatar in its body.</span>
+  <span class="token keyword">const</span> <span class="token function-variable function">getAvatar</span> <span class="token operator">=</span> <span class="token keyword">async</span> <span class="token parameter">seed</span> <span class="token arrow operator">=&gt;</span> <span class="token punctuation">{</span>
+    <span class="token keyword control-flow">try</span> <span class="token punctuation">{</span>
+      <span class="token keyword">const</span> response <span class="token operator">=</span> <span class="token keyword control-flow">await</span> <span class="token function">fetch</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">https://avatars.dicebear.com/4.5/api/human/</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>seed<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">.svg</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span>
+      <span class="token comment">// The svg avatar is a string, which is being read as text, not a JSON</span>
+      <span class="token keyword">const</span> avatarString <span class="token operator">=</span> <span class="token keyword control-flow">await</span> response<span class="token punctuation">.</span><span class="token method function property-access">text</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+      <span class="token comment">// using our state with the received avatar string</span>
+      <span class="token function">setMarkup</span><span class="token punctuation">(</span>avatarString<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span><span class="token string">&quot;avatar: &quot;</span><span class="token punctuation">,</span> avatarString<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span> <span class="token keyword control-flow">catch</span> <span class="token punctuation">(</span>error<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span>error<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword control-flow">return</span> <span class="token punctuation">(</span>
+    <span class="token operator">&lt;</span><span class="token maybe-class-name">FormField</span> label<span class="token operator">=</span><span class="token punctuation">{</span>type<span class="token punctuation">.</span><span class="token property-access">title</span><span class="token punctuation">}</span><span class="token operator">&gt;</span>
+      <span class="token operator">&lt;</span><span class="token maybe-class-name">TextInput</span>
+        ref<span class="token operator">=</span><span class="token punctuation">{</span>inputRef<span class="token punctuation">}</span>
+        onChange<span class="token operator">=</span><span class="token punctuation">{</span><span class="token parameter">event</span> <span class="token arrow operator">=&gt;</span> <span class="token punctuation">{</span>
+          <span class="token function">handleChange</span><span class="token punctuation">(</span>event<span class="token punctuation">.</span><span class="token property-access">target</span><span class="token punctuation">.</span><span class="token property-access">value</span><span class="token punctuation">)</span>
+        <span class="token punctuation">}</span><span class="token punctuation">}</span>
+        placeholder<span class="token operator">=</span><span class="token string">&quot;Enter a seed (random if empty)&quot;</span>
+        type<span class="token operator">=</span><span class="token string">&quot;text&quot;</span>
+        value<span class="token operator">=</span><span class="token punctuation">{</span>seed<span class="token punctuation">}</span>
+      <span class="token operator">/</span><span class="token operator">&gt;</span>
+    <span class="token operator">&lt;</span><span class="token operator">/</span><span class="token maybe-class-name">FormField</span><span class="token operator">&gt;</span>
+  <span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+<span class="token keyword module">export</span> <span class="token keyword module">default</span> <span class="token maybe-class-name">AvatarInput</span>
+</code>
+</astro-slot></pre><button class="text-sm text-primary border dark:border-gray-800 dark:bg-primary dark:bg-primary rounded absolute top-4 right-4 px-2 opacity-0 group-hover:opacity-100 transition-opacity">Copy</button></div></astro-island></div>
+<p>If we type something in our text input, we should receive a response that contains a svg avatar string in its body. If we open our console, we should be able to see it:</p>
+<p>But we don’t want just some silly text in the console. We want to see the actual avatar! Let’s update our UI widget to make it possible.</p>
+<p>I am using Styled Components to style the preview (styled-components is a peer dependency of @sanity/ui, so it should be already installed).</p>
+<div class="remark-highlight"><astro-island uid="1VxElt" component-url="/_astro/Code.f793ae0c.js" component-export="default" renderer-url="/_astro/client.c257378c.js" props="{&quot;className&quot;:[0,&quot;language-javascript&quot;]}" ssr="" client="load" opts="{&quot;name&quot;:&quot;Code&quot;,&quot;value&quot;:true}" await-children=""><div class="relative group"><pre class="language-javascript"><astro-slot>
+  <code class="language-javascript"><span class="token comment">//AvatarInput.js</span>
+<span class="token keyword module">import</span> <span class="token imports"><span class="token maybe-class-name">React</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> useRef<span class="token punctuation">,</span> useState<span class="token punctuation">,</span> forwardRef<span class="token punctuation">,</span> useImperativeHandle <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">&quot;react&quot;</span>
+
+<span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> <span class="token maybe-class-name">TextInput</span> <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">&quot;@sanity/ui&quot;</span>
+<span class="token keyword module">import</span> <span class="token imports"><span class="token maybe-class-name">FormField</span></span> <span class="token keyword module">from</span> <span class="token string">&quot;part:@sanity/components/formfields/default&quot;</span>
+<span class="token keyword module">import</span> <span class="token imports">styled</span> <span class="token keyword module">from</span> <span class="token string">&quot;styled-components&quot;</span>
+
+<span class="token comment">// These styles will make our widget really neat:</span>
+<span class="token keyword">const</span> <span class="token maybe-class-name">AvatarPreview</span> <span class="token operator">=</span> styled<span class="token punctuation">.</span><span class="token property-access">div</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token css language-css">
+  <span class="token selector">padding: 2rem
+  display: flex
+  align-items: center
+  justify-content: center
+  &amp; <span class="token combinator">&gt;</span> img</span> <span class="token punctuation">{</span>
+    <span class="token property">width</span><span class="token punctuation">:</span> <span class="token number">6</span><span class="token unit">rem</span>
+    <span class="token property">border-radius</span><span class="token punctuation">:</span> <span class="token number">6</span><span class="token unit">px</span>
+    <span class="token property">box-shadow</span><span class="token punctuation">:</span> <span class="token number">0</span> <span class="token number">0</span> <span class="token number">0</span> <span class="token number">1</span><span class="token unit">px</span> <span class="token function">hsl</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token unit">deg</span> <span class="token number">0</span><span class="token unit">%</span> <span class="token number">85</span><span class="token unit">%</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">0</span> <span class="token number">0</span> <span class="token number">0</span> <span class="token number">4</span><span class="token unit">px</span> <span class="token function">hsl</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token unit">deg</span> <span class="token number">0</span><span class="token unit">%</span> <span class="token number">90</span><span class="token unit">%</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+      <span class="token number">0</span> <span class="token number">0</span> <span class="token number">0</span> <span class="token number">5</span><span class="token unit">px</span> <span class="token function">hsl</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token unit">deg</span> <span class="token number">0</span><span class="token unit">%</span> <span class="token number">80</span><span class="token unit">%</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token unit">px</span> <span class="token number">5</span><span class="token unit">px</span> <span class="token number">10</span><span class="token unit">px</span> <span class="token function">hsl</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token unit">deg</span> <span class="token number">0</span><span class="token unit">%</span> <span class="token number">40</span><span class="token unit">%</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+</span><span class="token template-punctuation string">`</span></span>
+
+<span class="token keyword">const</span> <span class="token maybe-class-name">AvatarInput</span> <span class="token operator">=</span> <span class="token function">forwardRef</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">props<span class="token punctuation">,</span> ref</span><span class="token punctuation">)</span> <span class="token arrow operator">=&gt;</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> <span class="token punctuation">{</span> onChange<span class="token punctuation">,</span> type<span class="token punctuation">,</span> value <span class="token punctuation">}</span> <span class="token operator">=</span> props
+
+  <span class="token keyword">const</span> initialSeed <span class="token operator">=</span> value <span class="token operator">&amp;&amp;</span> value<span class="token punctuation">.</span><span class="token property-access">seed</span> <span class="token operator">?</span> value<span class="token punctuation">.</span><span class="token property-access">seed</span> <span class="token operator">:</span> <span class="token string">&quot;&quot;</span>
+  <span class="token keyword">const</span> initialMarkup <span class="token operator">=</span> value <span class="token operator">&amp;&amp;</span> value<span class="token punctuation">.</span><span class="token property-access">markup</span> <span class="token operator">?</span> value<span class="token punctuation">.</span><span class="token property-access">markup</span> <span class="token operator">:</span> <span class="token string">&quot;&quot;</span>
+
+  <span class="token keyword">const</span> <span class="token punctuation">[</span>seed<span class="token punctuation">,</span> setSeed<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token function">useState</span><span class="token punctuation">(</span>initialSeed<span class="token punctuation">)</span>
+  <span class="token keyword">const</span> <span class="token punctuation">[</span>markup<span class="token punctuation">,</span> setMarkup<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token function">useState</span><span class="token punctuation">(</span>initialMarkup<span class="token punctuation">)</span>
+
+  <span class="token keyword">const</span> inputRef <span class="token operator">=</span> <span class="token function">useRef</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+  <span class="token function">useImperativeHandle</span><span class="token punctuation">(</span>ref<span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=&gt;</span> <span class="token punctuation">(</span><span class="token punctuation">{</span>
+    <span class="token function-variable function">focus</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=&gt;</span> inputRef<span class="token punctuation">.</span><span class="token property-access">current</span><span class="token punctuation">.</span><span class="token method function property-access">focus</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+  <span class="token keyword">const</span> <span class="token function-variable function">handleChange</span> <span class="token operator">=</span> <span class="token parameter">updatedSeed</span> <span class="token arrow operator">=&gt;</span> <span class="token punctuation">{</span>
+    <span class="token function">setSeed</span><span class="token punctuation">(</span>updatedSeed<span class="token punctuation">)</span>
+    <span class="token function">getAvatar</span><span class="token punctuation">(</span>updatedSeed<span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">const</span> <span class="token function-variable function">getAvatar</span> <span class="token operator">=</span> <span class="token keyword">async</span> <span class="token parameter">seed</span> <span class="token arrow operator">=&gt;</span> <span class="token punctuation">{</span>
+    <span class="token keyword control-flow">try</span> <span class="token punctuation">{</span>
+      <span class="token keyword">const</span> response <span class="token operator">=</span> <span class="token keyword control-flow">await</span> <span class="token function">fetch</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">https://avatars.dicebear.com/4.5/api/human/</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>seed<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">.svg</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span>
+      <span class="token keyword">const</span> avatarString <span class="token operator">=</span> <span class="token keyword control-flow">await</span> response<span class="token punctuation">.</span><span class="token method function property-access">text</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+      <span class="token function">setMarkup</span><span class="token punctuation">(</span>avatarString<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span><span class="token string">&quot;avatar: &quot;</span><span class="token punctuation">,</span> avatarString<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span> <span class="token keyword control-flow">catch</span> <span class="token punctuation">(</span>error<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span>error<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword control-flow">return</span> <span class="token punctuation">(</span>
+    <span class="token operator">&lt;</span><span class="token maybe-class-name">FormField</span> label<span class="token operator">=</span><span class="token punctuation">{</span>type<span class="token punctuation">.</span><span class="token property-access">title</span><span class="token punctuation">}</span><span class="token operator">&gt;</span>
+      <span class="token operator">&lt;</span><span class="token maybe-class-name">TextInput</span>
+        ref<span class="token operator">=</span><span class="token punctuation">{</span>inputRef<span class="token punctuation">}</span>
+        onChange<span class="token operator">=</span><span class="token punctuation">{</span><span class="token parameter">event</span> <span class="token arrow operator">=&gt;</span> <span class="token punctuation">{</span>
+          <span class="token function">handleChange</span><span class="token punctuation">(</span>event<span class="token punctuation">.</span><span class="token property-access">target</span><span class="token punctuation">.</span><span class="token property-access">value</span><span class="token punctuation">)</span>
+        <span class="token punctuation">}</span><span class="token punctuation">}</span>
+        placeholder<span class="token operator">=</span><span class="token string">&quot;Enter a seed (random if empty)&quot;</span>
+        type<span class="token operator">=</span><span class="token string">&quot;text&quot;</span>
+        value<span class="token operator">=</span><span class="token punctuation">{</span>seed<span class="token punctuation">}</span>
+      <span class="token operator">/</span><span class="token operator">&gt;</span>
+      <span class="token punctuation">{</span>markup <span class="token operator">&amp;&amp;</span> <span class="token punctuation">(</span>
+        <span class="token operator">&lt;</span><span class="token maybe-class-name">AvatarPreview</span><span class="token operator">&gt;</span>
+          <span class="token operator">&lt;</span>img src<span class="token operator">=</span><span class="token punctuation">{</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">data:image/svg+xmlutf8,</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token function">encodeURIComponent</span><span class="token punctuation">(</span>markup<span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">}</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+        <span class="token operator">&lt;</span><span class="token operator">/</span><span class="token maybe-class-name">AvatarPreview</span><span class="token operator">&gt;</span>
+      <span class="token punctuation">)</span><span class="token punctuation">}</span>
+    <span class="token operator">&lt;</span><span class="token operator">/</span><span class="token maybe-class-name">FormField</span><span class="token operator">&gt;</span>
+  <span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+<span class="token keyword module">export</span> <span class="token keyword module">default</span> <span class="token maybe-class-name">AvatarInput</span>
+</code>
+</astro-slot></pre><button class="text-sm text-primary border dark:border-gray-800 dark:bg-primary dark:bg-primary rounded absolute top-4 right-4 px-2 opacity-0 group-hover:opacity-100 transition-opacity">Copy</button></div></astro-island></div>
+<p>Note: While it is always a good idea to regard security and sanitize user input (including from public apis), svgs included in an <code>&lt;img&gt;</code> tag are not allowed to reach external sources, or execute scripts.</p>
+<p>Splendid! So right now, we can fetch an avatar and see it in our UI widget. But… we are not actually saving it to our dataset. Let’s implement that!</p>
+<div class="remark-highlight"><astro-island uid="Z1X0GuV" component-url="/_astro/Code.f793ae0c.js" component-export="default" renderer-url="/_astro/client.c257378c.js" props="{&quot;className&quot;:[0,&quot;language-javascript&quot;]}" ssr="" client="load" opts="{&quot;name&quot;:&quot;Code&quot;,&quot;value&quot;:true}" await-children=""><div class="relative group"><pre class="language-javascript"><astro-slot>
+  <code class="language-javascript"><span class="token comment">//AvatarInput.js</span>
+<span class="token keyword module">import</span> <span class="token imports"><span class="token maybe-class-name">React</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> useRef<span class="token punctuation">,</span> useState<span class="token punctuation">,</span> forwardRef<span class="token punctuation">,</span> useImperativeHandle <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">&quot;react&quot;</span>
+<span class="token keyword module">import</span> <span class="token imports"><span class="token maybe-class-name">PatchEvent</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> set<span class="token punctuation">,</span> setIfMissing <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">&quot;part:@sanity/form-builder/patch-event&quot;</span>
+<span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> <span class="token maybe-class-name">TextInput</span> <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">&quot;@sanity/ui&quot;</span>
+<span class="token keyword module">import</span> <span class="token imports"><span class="token maybe-class-name">FormField</span></span> <span class="token keyword module">from</span> <span class="token string">&quot;part:@sanity/components/formfields/default&quot;</span>
+<span class="token keyword module">import</span> <span class="token imports">styled</span> <span class="token keyword module">from</span> <span class="token string">&quot;styled-components&quot;</span>
+
+<span class="token keyword">const</span> <span class="token maybe-class-name">AvatarPreview</span> <span class="token operator">=</span> styled<span class="token punctuation">.</span><span class="token property-access">div</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token css language-css">
+  <span class="token selector">padding: 2rem
+  display: flex
+  align-items: center
+  justify-content: center
+  &amp; <span class="token combinator">&gt;</span> img</span> <span class="token punctuation">{</span>
+    <span class="token property">width</span><span class="token punctuation">:</span> <span class="token number">6</span><span class="token unit">rem</span>
+    <span class="token property">border-radius</span><span class="token punctuation">:</span> <span class="token number">6</span><span class="token unit">px</span>
+    <span class="token property">box-shadow</span><span class="token punctuation">:</span> <span class="token number">0</span> <span class="token number">0</span> <span class="token number">0</span> <span class="token number">1</span><span class="token unit">px</span> <span class="token function">hsl</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token unit">deg</span> <span class="token number">0</span><span class="token unit">%</span> <span class="token number">85</span><span class="token unit">%</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">0</span> <span class="token number">0</span> <span class="token number">0</span> <span class="token number">4</span><span class="token unit">px</span> <span class="token function">hsl</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token unit">deg</span> <span class="token number">0</span><span class="token unit">%</span> <span class="token number">90</span><span class="token unit">%</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+      <span class="token number">0</span> <span class="token number">0</span> <span class="token number">0</span> <span class="token number">5</span><span class="token unit">px</span> <span class="token function">hsl</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token unit">deg</span> <span class="token number">0</span><span class="token unit">%</span> <span class="token number">80</span><span class="token unit">%</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token unit">px</span> <span class="token number">5</span><span class="token unit">px</span> <span class="token number">10</span><span class="token unit">px</span> <span class="token function">hsl</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token unit">deg</span> <span class="token number">0</span><span class="token unit">%</span> <span class="token number">40</span><span class="token unit">%</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+</span><span class="token template-punctuation string">`</span></span>
+
+<span class="token keyword">const</span> <span class="token maybe-class-name">AvatarInput</span> <span class="token operator">=</span> <span class="token function">forwardRef</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">props<span class="token punctuation">,</span> ref</span><span class="token punctuation">)</span> <span class="token arrow operator">=&gt;</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> <span class="token punctuation">{</span> onChange<span class="token punctuation">,</span> type<span class="token punctuation">,</span> value <span class="token punctuation">}</span> <span class="token operator">=</span> props
+
+  <span class="token keyword">const</span> initialSeed <span class="token operator">=</span> value <span class="token operator">&amp;&amp;</span> value<span class="token punctuation">.</span><span class="token property-access">seed</span> <span class="token operator">?</span> value<span class="token punctuation">.</span><span class="token property-access">seed</span> <span class="token operator">:</span> <span class="token string">&quot;&quot;</span>
+  <span class="token keyword">const</span> initialMarkup <span class="token operator">=</span> value <span class="token operator">&amp;&amp;</span> value<span class="token punctuation">.</span><span class="token property-access">markup</span> <span class="token operator">?</span> value<span class="token punctuation">.</span><span class="token property-access">markup</span> <span class="token operator">:</span> <span class="token string">&quot;&quot;</span>
+
+  <span class="token keyword">const</span> <span class="token punctuation">[</span>seed<span class="token punctuation">,</span> setSeed<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token function">useState</span><span class="token punctuation">(</span>initialSeed<span class="token punctuation">)</span>
+  <span class="token keyword">const</span> <span class="token punctuation">[</span>markup<span class="token punctuation">,</span> setMarkup<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token function">useState</span><span class="token punctuation">(</span>initialMarkup<span class="token punctuation">)</span>
+
+  <span class="token keyword">const</span> inputRef <span class="token operator">=</span> <span class="token function">useRef</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+  <span class="token function">useImperativeHandle</span><span class="token punctuation">(</span>ref<span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=&gt;</span> <span class="token punctuation">(</span><span class="token punctuation">{</span>
+    <span class="token function-variable function">focus</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=&gt;</span> inputRef<span class="token punctuation">.</span><span class="token property-access">current</span><span class="token punctuation">.</span><span class="token method function property-access">focus</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+  <span class="token keyword">const</span> <span class="token function-variable function">handleChange</span> <span class="token operator">=</span> <span class="token parameter">updatedSeed</span> <span class="token arrow operator">=&gt;</span> <span class="token punctuation">{</span>
+    <span class="token function">setSeed</span><span class="token punctuation">(</span>updatedSeed<span class="token punctuation">)</span>
+    <span class="token function">getAvatar</span><span class="token punctuation">(</span>updatedSeed<span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">const</span> <span class="token function-variable function">getAvatar</span> <span class="token operator">=</span> <span class="token keyword">async</span> <span class="token parameter">seed</span> <span class="token arrow operator">=&gt;</span> <span class="token punctuation">{</span>
+    <span class="token keyword control-flow">try</span> <span class="token punctuation">{</span>
+      <span class="token keyword">const</span> response <span class="token operator">=</span> <span class="token keyword control-flow">await</span> <span class="token function">fetch</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">https://avatars.dicebear.com/4.5/api/human/</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>seed<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">.svg</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span>
+      <span class="token keyword">const</span> avatarString <span class="token operator">=</span> <span class="token keyword control-flow">await</span> response<span class="token punctuation">.</span><span class="token method function property-access">text</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+      <span class="token function">setMarkup</span><span class="token punctuation">(</span>avatarString<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span><span class="token string">&quot;avatar: &quot;</span><span class="token punctuation">,</span> avatarString<span class="token punctuation">)</span>
+
+      <span class="token comment">// saving the avatar to our dataset</span>
+      <span class="token function">onChange</span><span class="token punctuation">(</span>
+        <span class="token maybe-class-name">PatchEvent</span><span class="token punctuation">.</span><span class="token keyword module">from</span><span class="token punctuation">(</span><span class="token punctuation">[</span>
+          <span class="token function">setIfMissing</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token literal-property property">_type</span><span class="token operator">:</span> type<span class="token punctuation">.</span><span class="token property-access">name</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+          <span class="token function">set</span><span class="token punctuation">(</span>avatarString<span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token string">&quot;markup&quot;</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+          <span class="token function">set</span><span class="token punctuation">(</span>seed<span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token string">&quot;seed&quot;</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        <span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+      <span class="token punctuation">)</span>
+    <span class="token punctuation">}</span> <span class="token keyword control-flow">catch</span> <span class="token punctuation">(</span>error<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span>error<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword control-flow">return</span> <span class="token punctuation">(</span>
+    <span class="token operator">&lt;</span><span class="token maybe-class-name">FormField</span> label<span class="token operator">=</span><span class="token punctuation">{</span>type<span class="token punctuation">.</span><span class="token property-access">title</span><span class="token punctuation">}</span><span class="token operator">&gt;</span>
+      <span class="token operator">&lt;</span><span class="token maybe-class-name">TextInput</span>
+        ref<span class="token operator">=</span><span class="token punctuation">{</span>inputRef<span class="token punctuation">}</span>
+        onChange<span class="token operator">=</span><span class="token punctuation">{</span><span class="token parameter">event</span> <span class="token arrow operator">=&gt;</span> <span class="token punctuation">{</span>
+          <span class="token function">handleChange</span><span class="token punctuation">(</span>event<span class="token punctuation">.</span><span class="token property-access">target</span><span class="token punctuation">.</span><span class="token property-access">value</span><span class="token punctuation">)</span>
+        <span class="token punctuation">}</span><span class="token punctuation">}</span>
+        placeholder<span class="token operator">=</span><span class="token string">&quot;Enter a seed (random if empty)&quot;</span>
+        type<span class="token operator">=</span><span class="token string">&quot;text&quot;</span>
+        value<span class="token operator">=</span><span class="token punctuation">{</span>seed<span class="token punctuation">}</span>
+      <span class="token operator">/</span><span class="token operator">&gt;</span>
+      <span class="token punctuation">{</span>avatar <span class="token operator">&amp;&amp;</span> <span class="token punctuation">(</span>
+        <span class="token operator">&lt;</span><span class="token maybe-class-name">AvatarPreview</span><span class="token operator">&gt;</span>
+          <span class="token operator">&lt;</span>img src<span class="token operator">=</span><span class="token punctuation">{</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">data:image/svg+xmlutf8,</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token function">encodeURIComponent</span><span class="token punctuation">(</span>avatar<span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">}</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+        <span class="token operator">&lt;</span><span class="token operator">/</span><span class="token maybe-class-name">AvatarPreview</span><span class="token operator">&gt;</span>
+      <span class="token punctuation">)</span><span class="token punctuation">}</span>
+    <span class="token operator">&lt;</span><span class="token operator">/</span><span class="token maybe-class-name">FormField</span><span class="token operator">&gt;</span>
+  <span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+<span class="token keyword module">export</span> <span class="token keyword module">default</span> <span class="token maybe-class-name">AvatarInput</span>
+</code>
+</astro-slot></pre><button class="text-sm text-primary border dark:border-gray-800 dark:bg-primary dark:bg-primary rounded absolute top-4 right-4 px-2 opacity-0 group-hover:opacity-100 transition-opacity">Copy</button></div></astro-island></div>
+<p>Good job! Our avatar should now be saved when the request succeeds (you can check it by leaving the document and coming back again). So… is it ready now? Unfortunately, not. We are saving our desired avatar, which is great – but currently there is no way to get rid of it. The usual way to tell Sanity that we want to delete some value is to clear its input, that doesn’t work here. The avatar value is being derived from the seeds input value. The seeds input value is being used as the “seed” parameter for the query to the DiceBear Avatar api, and it is considered “random” when it’s empty. Thus, when we clear the input, instead of deleting the avatar, we’ll receive a random one.</p>
+<p>O.K., but what can we do about it?</p>
+<p>Well, it would probably be the best idea to implement the default Sanity handling of empty inputs (deleting the value) and make ourselves responsible for creating random seeds. While it would probably be a better idea to install a library for random seed generation (like uuid), I will implement a simple custom one (which means a one-liner copied from github, to be honest).</p>
+<p>We will need to change our component a little, because we will add a button. The button, when clicked, will generate a new seed (and therefore trigger a request for a new avatar):</p>
+<div class="remark-highlight"><astro-island uid="DcaqF" component-url="/_astro/Code.f793ae0c.js" component-export="default" renderer-url="/_astro/client.c257378c.js" props="{&quot;className&quot;:[0,&quot;language-javascript&quot;]}" ssr="" client="load" opts="{&quot;name&quot;:&quot;Code&quot;,&quot;value&quot;:true}" await-children=""><div class="relative group"><pre class="language-javascript"><astro-slot>
+  <code class="language-javascript"><span class="token keyword module">import</span> <span class="token imports"><span class="token maybe-class-name">React</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> useRef<span class="token punctuation">,</span> useState<span class="token punctuation">,</span> forwardRef<span class="token punctuation">,</span> useImperativeHandle <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">&quot;react&quot;</span>
+<span class="token keyword module">import</span> <span class="token imports"><span class="token maybe-class-name">PatchEvent</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> set<span class="token punctuation">,</span> unset<span class="token punctuation">,</span> setIfMissing <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">&quot;part:@sanity/form-builder/patch-event&quot;</span>
+<span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> <span class="token maybe-class-name">TextInput</span><span class="token punctuation">,</span> <span class="token maybe-class-name">Button</span><span class="token punctuation">,</span> <span class="token maybe-class-name">Flex</span><span class="token punctuation">,</span> <span class="token maybe-class-name">Box</span> <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">&quot;@sanity/ui&quot;</span>
+<span class="token keyword module">import</span> <span class="token imports"><span class="token maybe-class-name">FormField</span></span> <span class="token keyword module">from</span> <span class="token string">&quot;part:@sanity/components/formfields/default&quot;</span>
+<span class="token keyword module">import</span> <span class="token imports">styled</span> <span class="token keyword module">from</span> <span class="token string">&quot;styled-components&quot;</span>
+
+<span class="token keyword">const</span> <span class="token maybe-class-name">AvatarPreview</span> <span class="token operator">=</span> styled<span class="token punctuation">.</span><span class="token property-access">div</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token css language-css">
+  <span class="token selector">padding: 2rem
+  display: flex
+  align-items: center
+  justify-content: center
+  &amp; <span class="token combinator">&gt;</span> img</span> <span class="token punctuation">{</span>
+    <span class="token property">width</span><span class="token punctuation">:</span> <span class="token number">6</span><span class="token unit">rem</span>
+    <span class="token property">border-radius</span><span class="token punctuation">:</span> <span class="token number">6</span><span class="token unit">px</span>
+    <span class="token property">box-shadow</span><span class="token punctuation">:</span> <span class="token number">0</span> <span class="token number">0</span> <span class="token number">0</span> <span class="token number">1</span><span class="token unit">px</span> <span class="token function">hsl</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token unit">deg</span> <span class="token number">0</span><span class="token unit">%</span> <span class="token number">85</span><span class="token unit">%</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">0</span> <span class="token number">0</span> <span class="token number">0</span> <span class="token number">4</span><span class="token unit">px</span> <span class="token function">hsl</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token unit">deg</span> <span class="token number">0</span><span class="token unit">%</span> <span class="token number">90</span><span class="token unit">%</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+      <span class="token number">0</span> <span class="token number">0</span> <span class="token number">0</span> <span class="token number">5</span><span class="token unit">px</span> <span class="token function">hsl</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token unit">deg</span> <span class="token number">0</span><span class="token unit">%</span> <span class="token number">80</span><span class="token unit">%</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token unit">px</span> <span class="token number">5</span><span class="token unit">px</span> <span class="token number">10</span><span class="token unit">px</span> <span class="token function">hsl</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token unit">deg</span> <span class="token number">0</span><span class="token unit">%</span> <span class="token number">40</span><span class="token unit">%</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+</span><span class="token template-punctuation string">`</span></span>
+
+<span class="token keyword">const</span> <span class="token maybe-class-name">AvatarInput</span> <span class="token operator">=</span> <span class="token function">forwardRef</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">props<span class="token punctuation">,</span> ref</span><span class="token punctuation">)</span> <span class="token arrow operator">=&gt;</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> <span class="token punctuation">{</span> onChange<span class="token punctuation">,</span> type<span class="token punctuation">,</span> value <span class="token punctuation">}</span> <span class="token operator">=</span> props
+
+  <span class="token keyword">const</span> initialSeed <span class="token operator">=</span> value <span class="token operator">&amp;&amp;</span> value<span class="token punctuation">.</span><span class="token property-access">seed</span> <span class="token operator">?</span> value<span class="token punctuation">.</span><span class="token property-access">seed</span> <span class="token operator">:</span> <span class="token string">&quot;&quot;</span>
+  <span class="token keyword">const</span> initialMarkup <span class="token operator">=</span> value <span class="token operator">&amp;&amp;</span> value<span class="token punctuation">.</span><span class="token property-access">markup</span> <span class="token operator">?</span> value<span class="token punctuation">.</span><span class="token property-access">markup</span> <span class="token operator">:</span> <span class="token string">&quot;&quot;</span>
+
+  <span class="token keyword">const</span> <span class="token punctuation">[</span>seed<span class="token punctuation">,</span> setSeed<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token function">useState</span><span class="token punctuation">(</span>initialSeed<span class="token punctuation">)</span>
+  <span class="token keyword">const</span> <span class="token punctuation">[</span>markup<span class="token punctuation">,</span> setMarkup<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token function">useState</span><span class="token punctuation">(</span>initialMarkup<span class="token punctuation">)</span>
+
+  <span class="token keyword">const</span> inputRef <span class="token operator">=</span> <span class="token function">useRef</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+  <span class="token function">useImperativeHandle</span><span class="token punctuation">(</span>ref<span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=&gt;</span> <span class="token punctuation">(</span><span class="token punctuation">{</span>
+    <span class="token function-variable function">focus</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=&gt;</span> inputRef<span class="token punctuation">.</span><span class="token property-access">current</span><span class="token punctuation">.</span><span class="token method function property-access">focus</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+  <span class="token comment">// our custom uuid function</span>
+  <span class="token keyword">const</span> <span class="token function-variable function">generateRandomString</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=&gt;</span>
+    <span class="token known-class-name class-name">Math</span><span class="token punctuation">.</span><span class="token method function property-access">random</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token method function property-access">toString</span><span class="token punctuation">(</span><span class="token number">36</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token method function property-access">substring</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">15</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token known-class-name class-name">Math</span><span class="token punctuation">.</span><span class="token method function property-access">random</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token method function property-access">toString</span><span class="token punctuation">(</span><span class="token number">36</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token method function property-access">substring</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">15</span><span class="token punctuation">)</span>
+
+  <span class="token keyword">const</span> <span class="token function-variable function">handleChange</span> <span class="token operator">=</span> <span class="token parameter">updatedSeed</span> <span class="token arrow operator">=&gt;</span> <span class="token punctuation">{</span>
+    <span class="token function">setSeed</span><span class="token punctuation">(</span>updatedSeed<span class="token punctuation">)</span>
+    <span class="token comment">// When the input was cleared, remove the avatar</span>
+    <span class="token keyword control-flow">if</span> <span class="token punctuation">(</span>updatedSeed <span class="token operator">===</span> <span class="token string">&quot;&quot;</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token function">removeAvatar</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span> <span class="token keyword control-flow">else</span> <span class="token punctuation">{</span>
+      <span class="token function">getAvatar</span><span class="token punctuation">(</span>updatedSeed<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">const</span> <span class="token function-variable function">getAvatar</span> <span class="token operator">=</span> <span class="token keyword">async</span> <span class="token parameter">seed</span> <span class="token arrow operator">=&gt;</span> <span class="token punctuation">{</span>
+    <span class="token keyword control-flow">try</span> <span class="token punctuation">{</span>
+      <span class="token keyword">const</span> response <span class="token operator">=</span> <span class="token keyword control-flow">await</span> <span class="token function">fetch</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">https://avatars.dicebear.com/4.5/api/human/</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>seed<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">.svg</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span>
+
+      <span class="token keyword">const</span> avatarString <span class="token operator">=</span> <span class="token keyword control-flow">await</span> response<span class="token punctuation">.</span><span class="token method function property-access">text</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+      <span class="token function">setMarkup</span><span class="token punctuation">(</span>avatarString<span class="token punctuation">)</span>
+
+      <span class="token function">onChange</span><span class="token punctuation">(</span>
+        <span class="token maybe-class-name">PatchEvent</span><span class="token punctuation">.</span><span class="token keyword module">from</span><span class="token punctuation">(</span><span class="token punctuation">[</span>
+          <span class="token function">setIfMissing</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token literal-property property">_type</span><span class="token operator">:</span> type<span class="token punctuation">.</span><span class="token property-access">name</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+          <span class="token function">set</span><span class="token punctuation">(</span>avatarString<span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token string">&quot;markup&quot;</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+          <span class="token function">set</span><span class="token punctuation">(</span>seed<span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token string">&quot;seed&quot;</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        <span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+      <span class="token punctuation">)</span>
+    <span class="token punctuation">}</span> <span class="token keyword control-flow">catch</span> <span class="token punctuation">(</span>error<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span>error<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token comment">// This function will unset our current avatar</span>
+  <span class="token keyword">const</span> <span class="token function-variable function">removeAvatar</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=&gt;</span> <span class="token punctuation">{</span>
+    <span class="token function">setMarkup</span><span class="token punctuation">(</span><span class="token string">&quot;&quot;</span><span class="token punctuation">)</span>
+    <span class="token function">onChange</span><span class="token punctuation">(</span><span class="token maybe-class-name">PatchEvent</span><span class="token punctuation">.</span><span class="token keyword module">from</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token function">unset</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">&quot;markup&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;seed&quot;</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token comment">// Let&#39;s change our returned markup a bit</span>
+  <span class="token keyword control-flow">return</span> <span class="token punctuation">(</span>
+    <span class="token operator">&lt;</span><span class="token maybe-class-name">FormField</span> label<span class="token operator">=</span><span class="token punctuation">{</span>type<span class="token punctuation">.</span><span class="token property-access">title</span><span class="token punctuation">}</span><span class="token operator">&gt;</span>
+      <span class="token operator">&lt;</span><span class="token maybe-class-name">Flex</span><span class="token operator">&gt;</span>
+        <span class="token operator">&lt;</span><span class="token maybe-class-name">Box</span> flex<span class="token operator">=</span><span class="token punctuation">{</span><span class="token number">1</span><span class="token punctuation">}</span><span class="token operator">&gt;</span>
+          <span class="token operator">&lt;</span><span class="token maybe-class-name">TextInput</span>
+            ref<span class="token operator">=</span><span class="token punctuation">{</span>inputRef<span class="token punctuation">}</span>
+            onChange<span class="token operator">=</span><span class="token punctuation">{</span><span class="token parameter">event</span> <span class="token arrow operator">=&gt;</span> <span class="token punctuation">{</span>
+              <span class="token function">handleChange</span><span class="token punctuation">(</span>event<span class="token punctuation">.</span><span class="token property-access">target</span><span class="token punctuation">.</span><span class="token property-access">value</span><span class="token punctuation">)</span>
+            <span class="token punctuation">}</span><span class="token punctuation">}</span>
+            placeholder<span class="token operator">=</span><span class="token string">&quot;Enter a seed (random if empty)&quot;</span>
+            type<span class="token operator">=</span><span class="token string">&quot;text&quot;</span>
+            value<span class="token operator">=</span><span class="token punctuation">{</span>seed<span class="token punctuation">}</span>
+          <span class="token operator">/</span><span class="token operator">&gt;</span>
+        <span class="token operator">&lt;</span><span class="token operator">/</span><span class="token maybe-class-name">Box</span><span class="token operator">&gt;</span>
+        <span class="token operator">&lt;</span><span class="token maybe-class-name">Box</span> marginLeft<span class="token operator">=</span><span class="token punctuation">{</span><span class="token number">1</span><span class="token punctuation">}</span><span class="token operator">&gt;</span>
+          <span class="token operator">&lt;</span><span class="token maybe-class-name">Button</span>
+            text<span class="token operator">=</span><span class="token string">&quot;Generate&quot;</span>
+            mode<span class="token operator">=</span><span class="token string">&quot;ghost&quot;</span>
+            onClick<span class="token operator">=</span><span class="token punctuation">{</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=&gt;</span> <span class="token function">handleChange</span><span class="token punctuation">(</span><span class="token function">generateRandomString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">}</span>
+          <span class="token operator">/</span><span class="token operator">&gt;</span>
+        <span class="token operator">&lt;</span><span class="token operator">/</span><span class="token maybe-class-name">Box</span><span class="token operator">&gt;</span>
+      <span class="token operator">&lt;</span><span class="token operator">/</span><span class="token maybe-class-name">Flex</span><span class="token operator">&gt;</span>
+      <span class="token punctuation">{</span>markup <span class="token operator">&amp;&amp;</span> <span class="token punctuation">(</span>
+        <span class="token operator">&lt;</span><span class="token maybe-class-name">AvatarPreview</span><span class="token operator">&gt;</span>
+          <span class="token operator">&lt;</span>img src<span class="token operator">=</span><span class="token punctuation">{</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">data:image/svg+xmlutf8,</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token function">encodeURIComponent</span><span class="token punctuation">(</span>markup<span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">}</span> <span class="token operator">/</span><span class="token operator">&gt;</span>
+        <span class="token operator">&lt;</span><span class="token operator">/</span><span class="token maybe-class-name">AvatarPreview</span><span class="token operator">&gt;</span>
+      <span class="token punctuation">)</span><span class="token punctuation">}</span>
+    <span class="token operator">&lt;</span><span class="token operator">/</span><span class="token maybe-class-name">FormField</span><span class="token operator">&gt;</span>
+  <span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+<span class="token keyword module">export</span> <span class="token keyword module">default</span> <span class="token maybe-class-name">AvatarInput</span>
+</code>
+</astro-slot></pre><button class="text-sm text-primary border dark:border-gray-800 dark:bg-primary dark:bg-primary rounded absolute top-4 right-4 px-2 opacity-0 group-hover:opacity-100 transition-opacity">Copy</button></div></astro-island></div>
+<p>Now, it should be working fine, as shown in the animation beneath:</p>
+<img alt="Animated gif of finished avatar input" width="710" height="441" src="/_astro/avatar-input-animation.c609bfbc_Z1tRsXh.gif" loading="lazy" decoding="async">
+<h2 id="conclusion">Conclusion</h2>
+<p>There are still things that should probably be added, e. g.:</p>
+<ul>
+<li><code>propTypes</code> definitions,</li>
+<li>actual error handling of the fetch request (currently, errors are only logged to the console);</li>
+<li>debounce the <code>onChange</code> handler of the inputs to avoid unnecessary fetch requests.</li>
+</ul>
+<p>But I sense that the resulting code has a rather scary length already, so I’ll just leave it that way. Feel free to go further if you’d like.</p>
+<p>I hope this post helps you get a firmer grasp on the vast array of possibilities for customization that Sanity.io offers.</p>
+<p>👍 Enjoy!</p>
+      <p class="text-xs">
+            last modified <span> </span><span>yesterday</span>
+          </p>
+      <hr>
+      <p class="text-sm">
+        If you find anything in this post that should be improved (either
+        factually or linguistically), feel free to 
+        <a href="#" rel="noopener noreferrer" target="_blank">
+          edit it on Github TODO add the actual link!
+        </a>
+        .
+      </p>
+    </article>
+  </main>
+  <astro-island uid="Z1Y60Dj" component-url="/_astro/ScrollToTop.3e47395f.js" component-export="default" renderer-url="/_astro/client.c257378c.js" props="{}" ssr="" client="load" opts="{&quot;name&quot;:&quot;ScrollToTop&quot;,&quot;value&quot;:true}" await-children=""><style>
+  @keyframes bounce-reverse {
+    0%, 100% {
+      transform: translateY(0);
+      animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    }
+    50% {
+      transform: translateY(-25%);
+      animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+    }
+  }
+  </style><button class="fixed bottom-6 right-10 bg-primary origin-center transition-transform shadow-xl rounded-full text-primary flex items-center justify-center border-2 p-3 focus:outline-none focus:ring-0 dark:border-slate-600 scale-0 false" aria-label="Scroll to top"><svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg></button></astro-island>
+  <script>(self.Astro=self.Astro||{}).only=t=>{(async()=>await(await t())())()},window.dispatchEvent(new Event("astro:only"));</script><astro-island uid="5YIQ3" component-url="/_astro/Lightbox.8c55f423.js" component-export="default" renderer-url="/_astro/client.c257378c.js" props="{}" ssr="" client="only" opts="{&quot;name&quot;:&quot;Lightbox&quot;,&quot;value&quot;:&quot;preact&quot;}"></astro-island>
+
+    
+<div class="flex justify-center py-8">
+    <footer class="max-w-prose">
+      <div class="flex gap-4 justify-center mb-4 text-[#a485e6] dark:text-gray-400">
+        <a class="block transition-colors hover:text-[var(--color-primary)]" href="https://github.com/HynekS" rel="noopener noreferrer" target="__blank" aria-label="Link to my Github profile">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+    <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"></path>
+  </svg>
+        </a>
+        <a class="block transition-colors hover:text-[var(--color-primary)]" href="https://www.linkedin.com/in/hynek-%C5%A1v%C3%A1cha-829387103/" rel="noopener noreferrer" target="__blank" aria-label="Link to my LinkedIn profile">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+  <path d="M19 0H5a5 5 0 0 0-5 5v14a5 5 0 0 0 5 5h14a5 5 0 0 0 5-5V5a5 5 0 0 0-5-5zM8 19H5V8h3v11zM6.5 6.732c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zM20 19h-3v-5.604c0-3.368-4-3.113-4 0V19h-3V8h3v1.765c1.396-2.586 7-2.777 7 2.476V19z"></path>
+</svg>
+        </a>
+        <a class="block transition-colors hover:text-[var(--color-primary)]" href="https://stackoverflow.com/users/8252267/hyneks" rel="noopener noreferrer" target="__blank" aria-label="Link to my Stack Overflow profile">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="12 12 90 90" fill="currentColor" class="w-6 h-6">
+  <path class="st0" d="M84.4 93.8V70.6h7.7v30.9H22.6V70.6h7.7v23.2z"></path><path class="st1" d="M38.8 68.4l37.8 7.9 1.6-7.6-37.8-7.9-1.6 7.6zm5-18l35 16.3 3.2-7-35-16.4-3.2 7.1zm9.7-17.2l29.7 24.7 4.9-5.9-29.7-24.7-4.9 5.9zm19.2-18.3l-6.2 4.6 23 31 6.2-4.6-23-31zM38 86h38.6v-7.7H38V86z"></path></svg>
+        </a>
+      </div>
+      <span class="text-sm font-mono px-4">© 2019–<span id="currentYear">present</span> Hynek Svacha</span>
+    </footer>
+  </div>
+  </body></html>

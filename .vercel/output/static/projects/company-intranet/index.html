@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <meta name="generator" content="Astro v2.4.2">
+    <title>Project management app for a small company</title>
+
+
+
+<link rel="canonical" href="http://localhost:3000/projects/company-intranet/">
+
+
+
+<meta name="robots" content="index, follow">
+
+<meta property="og:title" content="Project management app for a small company">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://user-images.githubusercontent.com/5182256/131216951-8f74f425-f775-463d-a11b-0e01ad9fce8d.png">
+<meta property="og:url" content="http://localhost:3000/projects/company-intranet/">
+
+
+
+
+
+
+
+
+
+<meta name="twitter:creator" content="@SvachaHynek">
+
+<meta name="keywords"><meta name="author"><meta name="article:author"><meta name="article:published_time"><meta name="article:tag"><meta content="https://user-images.githubusercontent.com/5182256/131216951-8f74f425-f775-463d-a11b-0e01ad9fce8d.png" name="twitter:image"><meta content="Project management app for a small company" name="twitter:title"><meta name="twitter:description">
+    <link rel="preload" href="/assets/fonts/Nunito[wght]-subset.woff2" as="font" crossorigin="anonymous">
+    <link rel="preload" href="/assets/fonts/Nunito-Italic[wght]-subset.woff2" as="font" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="/assets/styles/base.css">
+
+    <link rel="icon" type="image/svg+xml" href="/assets/favicons/favicon.svg">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicons/favicon-16x16.png">
+    <link rel="manifest" href="/assets/favicons/site.webmanifest">
+    <link rel="mask-icon" href="/assets/favicons/safari-pinned-tab.svg" color="#5bbad5">
+
+    <script>
+      const theme = (() => {
+        if (
+          typeof localStorage !== "undefined" &&
+          localStorage.getItem("theme")
+        ) {
+          return localStorage.getItem("theme");
+        }
+        if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+          return "dark";
+        }
+        return "light";
+      })();
+      if (theme === "light") {
+        document.documentElement.classList.remove("dark");
+      } else {
+        document.documentElement.classList.add("dark");
+      }
+    </script>
+  <link rel="stylesheet" href="/_astro/index.6eb0b711.css" /><script type="module">
+</script><link rel="stylesheet" href="/_astro/MacBookMockup.astro_astro_type_style_index_0_lang.0b68b980.css" /><script src="/_astro/Footer.astro_astro_type_script_index_0_lang.70efab02.js" type="module"></script></head>
+  <body>
+    <header class="top-0 flex justify-between pr-6 pl-4 pt-6 pb-4 w-full mb-8 h-[4.5rem] /* added explicit height and width to fight the layout shift*/ lg:pl-[2.25rem] lg:sticky">
+  <div>
+    <div class="flex items-end gap-4 -mt-1.5">
+      <a href="/" aria-label="Link to homepage" class="mr-4">
+        <div class="flex items-end gap-2">
+  <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 dark:opacity-[0.85]" viewBox="0 0 64 64" xml:space="preserve">
+    <path fill="#865DDE" d="M0 0h64v64H0z"></path>
+    <g fill="#FFF">
+      <path d="M12.69 27.582h6.697v11.286h8.764V27.582h6.697v30.219h-6.697V44.737h-8.764V57.8H12.69V27.582zM43.229 48.789c1.735 2.852 3.431 4.175 5.869 4.175 2.315 0 3.804-1.363 3.804-3.183 0-1.654-1.075-2.894-3.349-3.846-2.976-1.239-5.58-2.107-7.482-3.596-2.108-1.653-3.183-3.969-3.183-6.779 0-5.333 3.762-8.765 9.797-8.765 4.383 0 7.73 1.819 9.88 5.333L53.77 35.56c-1.612-2.274-3.391-3.391-5.457-3.391s-3.349 1.158-3.349 2.771c0 1.529 1.198 2.646 3.639 3.72 3.059 1.323 5.746 2.191 7.565 3.639 2.025 1.611 3.183 4.051 3.183 6.986 0 5.498-4.134 9.301-10.418 9.301-4.753 0-8.392-2.066-10.914-6.118l5.21-3.679z"></path>
+    </g>
+  </svg>
+  <span class="font-bold text-gray-900 dark:text-primary mt-auto leading-none pb-0.5">HynekS</span>
+</div>
+      </a>
+      <div class="flex pt-3 relative top-1 leading-none gap-4 [&>a]:font-medium [&>a]:pb-1 [&>a]:border-b-2 [&>a]:border-transparent [&>a.active]:border-b-2 [&>a.active]:[border-color:var(--color-primary)]">
+        <a href="/" class="">blog</a>
+        <a href="/projects" class="active">projects</a>
+        <a href="/about" class="">about</a>
+      </div>
+    </div>
+  </div>
+  <div>
+    <style>astro-island,astro-slot{display:contents}</style><script>(self.Astro=self.Astro||{}).load=a=>{(async()=>await(await a())())()},window.dispatchEvent(new Event("astro:load"));var l;{const c={0:t=>t,1:t=>JSON.parse(t,o),2:t=>new RegExp(t),3:t=>new Date(t),4:t=>new Map(JSON.parse(t,o)),5:t=>new Set(JSON.parse(t,o)),6:t=>BigInt(t),7:t=>new URL(t),8:t=>new Uint8Array(JSON.parse(t)),9:t=>new Uint16Array(JSON.parse(t)),10:t=>new Uint32Array(JSON.parse(t))},o=(t,s)=>{if(t===""||!Array.isArray(s))return s;const[e,n]=s;return e in c?c[e](n):void 0};customElements.get("astro-island")||customElements.define("astro-island",(l=class extends HTMLElement{constructor(){super(...arguments);this.hydrate=()=>{if(!this.hydrator||this.parentElement&&this.parentElement.closest("astro-island[ssr]"))return;const s=this.querySelectorAll("astro-slot"),e={},n=this.querySelectorAll("template[data-astro-template]");for(const r of n){const i=r.closest(this.tagName);!i||!i.isSameNode(this)||(e[r.getAttribute("data-astro-template")||"default"]=r.innerHTML,r.remove())}for(const r of s){const i=r.closest(this.tagName);!i||!i.isSameNode(this)||(e[r.getAttribute("name")||"default"]=r.innerHTML)}const a=this.hasAttribute("props")?JSON.parse(this.getAttribute("props"),o):{};this.hydrator(this)(this.Component,a,e,{client:this.getAttribute("client")}),this.removeAttribute("ssr"),window.removeEventListener("astro:hydrate",this.hydrate),window.dispatchEvent(new CustomEvent("astro:hydrate"))}}connectedCallback(){!this.hasAttribute("await-children")||this.firstChild?this.childrenConnectedCallback():new MutationObserver((s,e)=>{e.disconnect(),this.childrenConnectedCallback()}).observe(this,{childList:!0})}async childrenConnectedCallback(){window.addEventListener("astro:hydrate",this.hydrate);let s=this.getAttribute("before-hydration-url");s&&await import(s),this.start()}start(){const s=JSON.parse(this.getAttribute("opts")),e=this.getAttribute("client");if(Astro[e]===void 0){window.addEventListener(`astro:${e}`,()=>this.start(),{once:!0});return}Astro[e](async()=>{const n=this.getAttribute("renderer-url"),[a,{default:r}]=await Promise.all([import(this.getAttribute("component-url")),n?import(n):()=>()=>{}]),i=this.getAttribute("component-export")||"default";if(!i.includes("."))this.Component=a[i];else{this.Component=a;for(const d of i.split("."))this.Component=this.Component[d]}return this.hydrator=r,this.hydrate},s,this)}attributeChangedCallback(){this.hydrator&&this.hydrate()}},l.observedAttributes=["props"],l))}</script><astro-island uid="ZonHg9" component-url="/_astro/ThemeToggle.32d5cae3.js" component-export="default" renderer-url="/_astro/client.c257378c.js" props="{}" ssr="" client="load" opts="{&quot;name&quot;:&quot;ThemeToggle&quot;,&quot;value&quot;:true}" await-children=""><button aria-label="Toggle Dark Mode" type="button" class="rounded-full flex items-center justify-center border-2 p-1 focus:outline-none focus:ring-0 dark:border-gray-600"><svg class="w-6 h-6" fill="none" stroke="var(--color-primary)" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg></button></astro-island>
+  </div>
+</header>
+    
+  <main class="grid max-w-full [margin-right:calc((50% - 30ch)/2)]">
+    <article class="prose prose-md mx-auto pt-8 px-4 md:prose md:prose-thin lg:prose-lg lg:px-0 lg:prose-thin dark:prose-dark pb-16 dark:prose-thin">
+      
+<div class="relative mb-12 not-prose astro-67BXMUEE">
+  <img alt="" class="[filter:drop-shadow(12px_12px_25px_rgba(0,0,0,0.35))] astro-67BXMUEE" width="800" height="509" src="/_astro/macbookair-mockup-cropped_8dzkc.png" loading="lazy" decoding="async">
+  <div class="absolute [transform:scale(0.78633)] origin-top top-[5%] w-full overflow-hidden astro-67BXMUEE">
+    <div class="relative pt-[63.66%] astro-67BXMUEE">
+      <div class="container absolute inset-0 astro-67BXMUEE">
+        <img src="/_astro/intranet.5ea6c93d.png" alt="" class="astro-67BXMUEE">
+      </div>
+    </div>
+  </div>
+</div>
+<h1 id="project-management-app-for-a-small-company">Project management app for a small company</h1>
+<div class="not-prose border rounded-lg px-3 py-1.5 inline-flex mr-3 mb-4 items-center dark:border-gray-600/50 dark:[background-color:#2a3340]">
+  <img class="h-6 w-6 m-0" src="/assets/devicons/react/plain/icon.svg" alt="">
+  <span class="font-medium ml-3 mr-2">React</span>
+</div>
+<div class="not-prose border rounded-lg px-3 py-1.5 inline-flex mr-3 mb-4 items-center dark:border-gray-600/50 dark:[background-color:#2a3340]">
+  <img class="h-6 w-6 m-0" src="/assets/devicons/redux/plain/icon.svg" alt="">
+  <span class="font-medium ml-3 mr-2">Redux</span>
+</div>
+<div class="not-prose border rounded-lg px-3 py-1.5 inline-flex mr-3 mb-4 items-center dark:border-gray-600/50 dark:[background-color:#2a3340]">
+  <img class="h-6 w-6 m-0" src="/assets/devicons/tailwindcss/plain/icon.svg" alt="">
+  <span class="font-medium ml-3 mr-2">Tailwind</span>
+</div>
+<div class="not-prose border rounded-lg px-3 py-1.5 inline-flex mr-3 mb-4 items-center dark:border-gray-600/50 dark:[background-color:#2a3340]">
+  <img class="h-6 w-6 m-0" src="/assets/devicons/laravel/plain/icon.svg" alt="">
+  <span class="font-medium ml-3 mr-2">Laravel</span>
+</div>
+<div class="not-prose border rounded-lg px-3 py-1.5 inline-flex mr-3 mb-4 items-center dark:border-gray-600/50 dark:[background-color:#2a3340]">
+  <img class="h-6 w-6 m-0" src="/assets/devicons/mysql/plain/icon.svg" alt="">
+  <span class="font-medium ml-3 mr-2">MySQL</span>
+</div>
+<div class="not-prose border rounded-lg px-3 py-1.5 inline-flex mr-3 mb-4 items-center dark:border-gray-600/50 dark:[background-color:#2a3340]">
+  <img class="h-6 w-6 m-0" src="/assets/devicons/aws/plain/icon.svg" alt="">
+  <span class="font-medium ml-3 mr-2">AWS Lightsail</span>
+</div>
+<h2 id="demo">Demo</h2>
+<p>A demo of this project is available on <a href="http://my-demo-app.site">http://my-demo-app.site</a></p>
+<h2 id="repo">Repo</h2>
+<h2 id="-the-problem"><span class="text-lg [filter:opacity(0.8)]">⚠</span> The problem</h2>
+<p>One of my clients was using internal applications to manage his company’s projects. I had to use this app very often due to our close cooperation.</p>
+<p>The app was written years ago in bare PHP 5. While it mostly served its purpose, the technical debt began to show. It was often <em>very slow</em>. Rendering some pages would take almost a minute! It was also tedious to navigate, search, or filter the data.</p>
+<h2 id="-the-solution"><span class="text-lg [filter:opacity(0.8)]">💡</span> The solution</h2>
+<p>I created a new version of the application with an emphasis on speed and ease of use.</p>
+<h2 id="techs-i-used">Techs I used</h2>
+<p>The front-end is a single-page app built with React. Since it’s for logged-in users only, i didn’t care much about SSR. The codebase was initially written in JavaScript, but I’ve since migrated it to TypeScript. State management is done by the Redux toolkit.</p>
+<p>Because of the focus on speed, the code is being pretty aggressively code-splitted and preloaded. For a production build, React is being aliased to Preact, which results in a much smaller bundle size.</p>
+<p>Styling is being done using twin.macro.</p>
+<p>The backend is built on Laravel, which provides a robust, future-proof solution.</p>
+<p>Because of the stack, the application is very easy to deploy. I use AWS Lightsail’s VPS for hosting.</p>
+    </article>
+  </main>
+  <astro-island uid="Z1Y60Dj" component-url="/_astro/ScrollToTop.3e47395f.js" component-export="default" renderer-url="/_astro/client.c257378c.js" props="{}" ssr="" client="load" opts="{&quot;name&quot;:&quot;ScrollToTop&quot;,&quot;value&quot;:true}" await-children=""><style>
+  @keyframes bounce-reverse {
+    0%, 100% {
+      transform: translateY(0);
+      animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    }
+    50% {
+      transform: translateY(-25%);
+      animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+    }
+  }
+  </style><button class="fixed bottom-6 right-10 bg-primary origin-center transition-transform shadow-xl rounded-full text-primary flex items-center justify-center border-2 p-3 focus:outline-none focus:ring-0 dark:border-slate-600 scale-0 false" aria-label="Scroll to top"><svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg></button></astro-island>
+  <script>(self.Astro=self.Astro||{}).only=t=>{(async()=>await(await t())())()},window.dispatchEvent(new Event("astro:only"));</script><astro-island uid="5YIQ3" component-url="/_astro/Lightbox.8c55f423.js" component-export="default" renderer-url="/_astro/client.c257378c.js" props="{}" ssr="" client="only" opts="{&quot;name&quot;:&quot;Lightbox&quot;,&quot;value&quot;:&quot;preact&quot;}"></astro-island>
+
+    
+<div class="flex justify-center py-8">
+    <footer class="max-w-prose">
+      <div class="flex gap-4 justify-center mb-4 text-[#a485e6] dark:text-gray-400">
+        <a class="block transition-colors hover:text-[var(--color-primary)]" href="https://github.com/HynekS" rel="noopener noreferrer" target="__blank" aria-label="Link to my Github profile">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+    <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"></path>
+  </svg>
+        </a>
+        <a class="block transition-colors hover:text-[var(--color-primary)]" href="https://www.linkedin.com/in/hynek-%C5%A1v%C3%A1cha-829387103/" rel="noopener noreferrer" target="__blank" aria-label="Link to my LinkedIn profile">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+  <path d="M19 0H5a5 5 0 0 0-5 5v14a5 5 0 0 0 5 5h14a5 5 0 0 0 5-5V5a5 5 0 0 0-5-5zM8 19H5V8h3v11zM6.5 6.732c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zM20 19h-3v-5.604c0-3.368-4-3.113-4 0V19h-3V8h3v1.765c1.396-2.586 7-2.777 7 2.476V19z"></path>
+</svg>
+        </a>
+        <a class="block transition-colors hover:text-[var(--color-primary)]" href="https://stackoverflow.com/users/8252267/hyneks" rel="noopener noreferrer" target="__blank" aria-label="Link to my Stack Overflow profile">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="12 12 90 90" fill="currentColor" class="w-6 h-6">
+  <path class="st0" d="M84.4 93.8V70.6h7.7v30.9H22.6V70.6h7.7v23.2z"></path><path class="st1" d="M38.8 68.4l37.8 7.9 1.6-7.6-37.8-7.9-1.6 7.6zm5-18l35 16.3 3.2-7-35-16.4-3.2 7.1zm9.7-17.2l29.7 24.7 4.9-5.9-29.7-24.7-4.9 5.9zm19.2-18.3l-6.2 4.6 23 31 6.2-4.6-23-31zM38 86h38.6v-7.7H38V86z"></path></svg>
+        </a>
+      </div>
+      <span class="text-sm font-mono px-4">© 2019–<span id="currentYear">present</span> Hynek Svacha</span>
+    </footer>
+  </div>
+  </body></html>
