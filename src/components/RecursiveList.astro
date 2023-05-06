@@ -55,7 +55,7 @@ const headingsAsTree = prepareHeadings(headings);
 
 <style is:global>
   [data-is_navigation] {
-    @apply transition-all text-[#622cd5] p-4 pl-6 hidden lg:block lg:fixed lg:left-0 lg:top-28;
+    @apply transition-all text-primary p-4 pl-6 hidden lg:block lg:fixed lg:left-0 lg:top-28;
     transition-duration: 60ms;
 
     & ul li {
@@ -88,7 +88,7 @@ const headingsAsTree = prepareHeadings(headings);
 
       &.active > a,
       &.active > svg {
-        @ apply text-[#622cd5];
+        @apply text-[#622cd5];
       }
       &.active > svg {
         @apply opacity-100 dark:opacity-75;
