@@ -6,6 +6,8 @@ import Layout from "@layouts/Layout.astro";
 const posts = await getCollection("projects");
 
 posts.sort((a, b) => +b.data.dateCreated - +a.data.dateCreated);
+
+
 ---
 
 <Layout title="My Projects">
