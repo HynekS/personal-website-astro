@@ -24,7 +24,7 @@ const Code = ({ children, ...props }: { children: ComponentChildren }) => {
   };
 
   return (
-    <div className="relative group">
+    <div className="relative group -mx-4 md:mx-[inherit] [&_pre]:px-8 [&_code]:max-w-full md:[&_pre]:px-6">
       {/* prettier-ignore */}
       <pre {...props} ref={snippetRef}>{children}</pre>
       <button

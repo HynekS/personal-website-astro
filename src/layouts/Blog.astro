@@ -46,16 +46,30 @@ const currentPath = Astro.url.pathname;
   dateCreated={dateCreated}
   author={author}
 >
-  <aside class="hidden md:block md:w-1/5">
-    <RecursiveList headings={headings} />
-  </aside>
-  <main class="flex-auto max-w-full [margin-right:calc((50% - 30ch)/2)]">
-    <article
-      class="prose prose-sm mx-auto pt-8 px-4 md:prose lg:prose-lg lg:px-0 dark:prose-dark pb-16"
-      data-is_article
-    >
-      <h1 id="overview">{title}</h1>
-      <div class="not-prose font-mono text-sm dark:text-gray-400">
+  <div class="flex">
+    <aside class="hidden md:block md:w-1/5">
+      <RecursiveList headings={headings} />
+    </aside>
+    <main class="flex-auto max-w-full [margin-right:calc((50%-30ch)/2)]">
+      <article
+        class="prose mx-auto pt-8 px-4 lg:prose-lg lg:px-0 dark:prose-dark pb-16 prose-code:before:content-none prose-code:after:content-none"
+        data-is_article
+      >
+        <h1 id="overview">{title}</h1>
+        <div class="not-prose font-mono text-sm dark:text-gray-400">
+          {
+            categories.length ? (
+              <ul class="flex gap-1.5 mt-0 mb-1 ml--1 py-2">
+                {categories.map((category) => (
+                  <ListItem category={category} />
+                ))}
+              </ul>
+            ) : null
+          }
+          posted <PrettyDate date={new Date(dateCreated)} /> ∙ by {author} ∙
+          {timeToRead}
+        </div>
+        <slot />
         {
           lastContentEditDate ? (
             <p class="text-xs">

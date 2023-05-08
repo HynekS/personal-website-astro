@@ -113,10 +113,6 @@ module.exports = {
               marginLeft: "-1rem",
               marginRight: "-1rem",
             },
-            "code::before, code::after": {
-              content: '""',
-              display: "none",
-            },
             "h1 ~ p:first-of-type": {
               fontSize: "calc(22/18 * 1em)",
               lineHeight: "calc(32/22)",

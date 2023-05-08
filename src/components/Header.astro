@@ -6,10 +6,10 @@ const currentPath = Astro.url.pathname;
 ---
 
 <header
-  class="top-0 flex justify-between pr-6 pl-4 pt-6 pb-4 w-full mb-8 h-[4.5rem] /* added explicit height and width to fight the layout shift*/ lg:pl-[2.25rem] lg:sticky"
+  id="main-header" class="top-0 flex justify-between pr-6 pl-4 py-4 w-full mb-8 h-[4.5rem] bg-gray-50 bg-opacity-80 backdrop-blur-sm relative z-10 /* added explicit height and width to fight the layout shift*/ lg:pl-[2.25rem] lg:sticky"
 >
   <div>
-    <div class="flex items-end gap-4 -mt-1.5">
+    <div class="flex items-end gap-4 pt-0.5">
       <a href="/" aria-label="Link to homepage" class="mr-4">
         <Logo />
       </a>
@@ -34,7 +34,7 @@ const currentPath = Astro.url.pathname;
       </div>
     </div>
   </div>
-  <div>
+  <div class="pt-1.5">
     <ThemeToggle client:load />
   </div>
 </header>

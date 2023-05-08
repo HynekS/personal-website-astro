@@ -25,7 +25,7 @@ export default function ThemeToggle() {
       onClick={handleClick}
       aria-label="Toggle Dark Mode"
       type="button"
-      className="rounded-full flex items-center justify-center border-2 p-1 focus:outline-none focus:ring-0 dark:border-gray-600"
+      className="rounded-full border-2 p-1 focus:outline-none focus:ring-0 dark:border-gray-600"
     >
       {theme.value === "light" ? <MoonIcon /> : <SunIcon />}
     </button>

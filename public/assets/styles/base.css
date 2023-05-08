@@ -90,6 +90,16 @@ html.dark {
   background-attachment: fixed;
 }
 
+.dark #main-header {
+  background: radial-gradient(
+    circle,
+    rgba(28, 35, 46, 0.75) 0%,
+    rgba(28, 35, 46, 0.75) 30%,
+    rgba(17, 24, 35, 0.75) 110%
+  );
+  background-attachment: fixed;
+}
+
 @-moz-document url-prefix() {
   html.dark {
     background: var(--bg-primary);
@@ -131,11 +141,10 @@ h6 {
 code[class*="language-"],
 pre[class*="language-"] {
   text-align: left;
-  white-space: pre !important;
+  white-space: pre-wrap;
   word-spacing: normal;
-  word-break: normal;
+  word-break: break-word;
   word-wrap: normal;
-  line-height: 1.5;
 
   -moz-tab-size: 4;
   -o-tab-size: 4;
@@ -148,10 +157,6 @@ pre[class*="language-"] {
 
   box-shadow: rgb(0 2 4 / 20%) 0px 5px 20px -10px;
   filter: contrast(1.05);
-
-  /* Probably should be done via Typography? */
-  font-size: 1rem;
-  line-height: 1.75;
 }
 
 code[class*="language-"]::-webkit-scrollbar-track,
