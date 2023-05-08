@@ -907,6 +907,11 @@
   resolved "https://registry.yarnpkg.com/@types/scheduler/-/scheduler-0.16.2.tgz#1a62f89525723dde24ba1b01b092bf5df8ad4d39"
   integrity sha512-hppQEBDmlwhFAXKJX2KnWLYu5yMfi91yazPb2l+lbJiwW+wdo1gNeRA+3RgNSO39WYX2euey41KEwnqesU2Jew==
 
+"@types/scroll-lock@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@types/scroll-lock/-/scroll-lock-2.1.0.tgz#fe6d8f295f92fc8793e221eec1c0d8d881832524"
+  integrity sha512-KG4pu+bD/s7Tlzv3274suczLNKrATi+9pB1G+kWSgzs55s5Lz9SZSvj2m56XGbFq9HxRV1gdxqZ0wnlq82uj2w==
+
 "@types/sharp@0.31.1":
   version "0.31.1"
   resolved "https://registry.yarnpkg.com/@types/sharp/-/sharp-0.31.1.tgz#db768461455dbcf9ff11d69277fd70564483c4df"
@@ -4519,6 +4524,11 @@ saxes@^5.0.1:
   integrity sha512-5LBh1Tls8c9xgGjw3QrMwETmTMVk0oFgvrFSvWx62llR2hcEInrKNZ2GZCCuuy2lvWrdl5jhbpeqc5hRYKFOcw==
   dependencies:
     xmlchars "^2.2.0"
+
+scroll-lock@^2.1.5:
+  version "2.1.5"
+  resolved "https://registry.yarnpkg.com/scroll-lock/-/scroll-lock-2.1.5.tgz#18bb7697f02176cbfd093726c3c972b7cbc9975f"
+  integrity sha512-GN8Lp0AzXbkrPFUUNkMUruiiv019UvarNKE/SnXi+AxZRjMnDc2R22VB9RcUtL4P/uub04cKibmpHKIKTyWwYQ==
 
 section-matter@^1.0.0:
   version "1.0.0"

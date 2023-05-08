@@ -1,12 +1,13 @@
 ---
 import Logo from "./Logo.astro";
 import ThemeToggle from "./ThemeToggle";
+import CollapsibleMenu from "./CollapsibleMenu.astro"
 
 const currentPath = Astro.url.pathname;
 ---
 
 <header
-  id="main-header" class="top-0 flex justify-between pr-6 pl-4 py-4 w-full mb-8 h-[4.5rem] bg-gray-50 bg-opacity-80 backdrop-blur-sm relative z-10 /* added explicit height and width to fight the layout shift*/ lg:pl-[2.25rem] lg:sticky"
+  id="main-header" class="top-0 flex justify-between pr-6 pl-4 py-4 w-full mb-8 h-[4.5rem] /*added explicit height and width to fight the layout shift*/ bg-gray-50 bg-opacity-80 backdrop-blur-sm relative z-10  lg:pl-[2.25rem] lg:sticky"
 >
   <div>
     <div class="flex items-end gap-4 pt-0.5">
@@ -14,7 +15,7 @@ const currentPath = Astro.url.pathname;
         <Logo />
       </a>
       <div
-        class="flex pt-3 relative top-1 leading-none gap-4 [&>a]:font-medium [&>a]:pb-1 [&>a]:border-b-2 [&>a]:border-transparent [&>a.active]:border-b-2 [&>a.active]:[border-color:var(--color-primary)]"
+        class="hidden md:flex pt-3 relative top-1 leading-none gap-4 [&>a]:font-medium [&>a]:pb-1 [&>a]:border-b-2 [&>a]:border-transparent [&>a.active]:border-b-2 [&>a.active]:[border-color:var(--color-primary)]"
       >
         <a
           href="/"
@@ -35,6 +36,7 @@ const currentPath = Astro.url.pathname;
     </div>
   </div>
   <div class="pt-1.5">
-    <ThemeToggle client:load />
+    <CollapsibleMenu />
+    <ThemeToggle client:load class="hidden md:block"/>
   </div>
 </header>

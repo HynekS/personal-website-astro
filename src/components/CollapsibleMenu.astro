@@ -1,0 +1,179 @@
+---
+const currentPath = Astro.url.pathname;
+import ThemeToggle from "@components/ThemeToggle";
+---
+
+<style>
+  .hamburger {
+    cursor: pointer;
+    transition-property: opacity, filter;
+    transition-duration: 0.15s;
+    transition-timing-function: linear;
+    text-transform: none;
+    border: 0;
+    margin: 0;
+    overflow: visible;
+
+    &:focus {
+      outline: var(--color-primary) auto 3px;
+    }
+
+    &:hover {
+      opacity: 0.7;
+    }
+
+    &.is-active:hover {
+      opacity: 0.7;
+    }
+    &.is-active .hamburger-inner,
+    &.hamburger.is-active .hamburger-inner::before,
+    &.hamburger.is-active .hamburger-inner::after {
+      background-color: var(--text-primary);
+    }
+  }
+
+  .hamburger-box {
+    width: 30px;
+    height: 12px;
+    display: inline-block;
+    position: relative;
+  }
+
+  .hamburger-inner {
+    display: block;
+    top: 50%;
+  }
+  .hamburger-inner,
+  .hamburger-inner::before,
+  .hamburger-inner::after {
+    width: 30px;
+    height: 2px;
+    background-color: var(--text-primary);
+    border-radius: 4px;
+    position: absolute;
+    transition-property: transform;
+    transition-duration: 0.15s;
+    transition-timing-function: ease;
+  }
+
+  .hamburger-inner::before,
+  .hamburger-inner::after {
+    content: "";
+    display: block;
+  }
+
+  .hamburger-inner::before {
+    top: -8px;
+  }
+
+  .hamburger-inner::after {
+    bottom: -8px;
+  }
+
+  .hamburger--squeeze {
+    & .hamburger-inner {
+      transition-duration: 0.075s;
+      transition-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+    }
+
+    & .hamburger-inner::before {
+      transition: top 0.075s 0.12s ease, opacity 0.075s ease;
+    }
+
+    & .hamburger-inner::after {
+      transition: bottom 0.075s 0.12s ease,
+        transform 0.075s cubic-bezier(0.55, 0.055, 0.675, 0.19);
+    }
+
+    &.is-active {
+      & .hamburger-inner {
+        transform: rotate(45deg);
+        transition-delay: 0.12s;
+        transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+      }
+
+      & .hamburger-inner::before {
+        top: 0;
+        opacity: 0;
+        transition: top 0.075s ease, opacity 0.075s 0.12s ease;
+      }
+
+      & .hamburger-inner::after {
+        bottom: 0;
+        transform: rotate(-90deg);
+        transition: bottom 0.075s ease,
+          transform 0.075s 0.12s cubic-bezier(0.215, 0.61, 0.355, 1);
+      }
+    }
+  }
+
+  #expansible-menu {
+    &.is-active {
+      transform: translateX(0);
+    }
+  }
+  /* This is ugly, but the gradient causes a visible edge when only bg-primary is used (dtto Header)*/
+  html.dark #expansible-menu {
+    background: radial-gradient(
+      circle,
+      rgba(28, 35, 46, 1) 0%,
+      rgba(28, 35, 46, 1) 30%,
+      rgba(17, 24, 35, 1) 110%
+    );
+    background-attachment: fixed;
+    packground-position: top 4.5rem;
+  }
+</style>
+
+<div
+  id="expansible-menu"
+  class="block md:hidden fixed right-0 left-0 bottom-0 top-[4.5rem] bg-primary max-w-screen bg-opacity-50 h-screen text-xl p-20 [transform:translateX(-100%)] transition-transform"
+>
+  <div
+    class="[&>a]:font-medium [&>a]:block [&>a]:pt-6 [&>a]:border-b-2 [&>a]:border-transparent [&>a.active]:border-b-2 [&>a.active]:[border-color:var(--color-primary)] mb-10"
+  >
+    <a
+      href="/"
+      class={currentPath.startsWith("/blog") || currentPath === "/"
+        ? "active"
+        : ""}>blog</a
+    >
+    <a
+      href="/projects"
+      class={currentPath.startsWith("/projects") ? "active" : ""}>projects</a
+    >
+    <a href="/about" class={currentPath.startsWith("/about") ? "active" : ""}
+      >about</a
+    >
+  </div>
+  <ThemeToggle client:load />
+</div>
+
+<button
+  id="primary-navigation"
+  class="inline-block md:hidden hamburger hamburger--squeeze"
+>
+  <div class="hamburger-box">
+    <div class="hamburger-inner"></div>
+  </div>
+</button>
+
+<script>
+  import { disablePageScroll, enablePageScroll } from "scroll-lock";
+  let isNavMenuOpen: boolean;
+
+  const button = document.querySelector("#primary-navigation");
+  if (button instanceof HTMLElement) {
+    button.addEventListener("click", () => {
+      isNavMenuOpen = !isNavMenuOpen;
+      isNavMenuOpen ? disablePageScroll() : enablePageScroll();
+      button.setAttribute("aria-expanded", String(isNavMenuOpen));
+      button.setAttribute(
+        "aria-label",
+        isNavMenuOpen ? `Hide navigation menu` : `Show navigation menu`
+      );
+      button.classList.toggle("is-active");
+      document.getElementById("expansible-menu")?.classList.toggle("is-active");
+    });
+  }
+</script>

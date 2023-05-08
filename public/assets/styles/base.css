@@ -90,6 +90,7 @@ html.dark {
   background-attachment: fixed;
 }
 
+  /* This is ugly, but the gradient causes a visible edge when only bg-primary is used (dtto CollapsibleMenu)*/
 .dark #main-header {
   background: radial-gradient(
     circle,
