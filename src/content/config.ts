@@ -1,23 +1,4 @@
 import { z, defineCollection } from "astro:content";
-/*
-const publishedBlogpostSchema = z.object({
-  title: z.string(),
-  author: z.enum(["Hynek Svacha"]),
-  // TODO: consider removing
-  type: z.literal("blog post"),
-  dateCreated: z.string().transform((str) => new Date(str)),
-  dateLastModified: z
-    .string()
-    .transform((str) => new Date(str))
-    .nullable(),
-
-  featuredImage: z.string().nullable(),
-  categories: z.array(z.string()).nullable(),
-  keywords: z.array(z.string()).nullable(),
-  description: z.string(),
-  draft: z.literal(null),
-});
-*/
 
 const publishedBlogpostBaseSchema = z.object({
   title: z.string(),
@@ -34,7 +15,6 @@ const publishedBlogpostBaseSchema = z.object({
   categories: z.array(z.string()).nullable(),
   keywords: z.array(z.string()).nullable(),
   description: z.string(),
-  //draft: z.literal(null),
 });
 
 const publishedBlogpostBaseSchemaNullDraft = publishedBlogpostBaseSchema.extend(
@@ -98,6 +78,7 @@ const projectCollection = defineCollection({
     keywords: z.array(z.string()).nullable(),
     description: z.string().nullable(),
     draft: z.boolean().optional(),
+    order: z.number(),
   }),
 });
 
