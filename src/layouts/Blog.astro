@@ -6,27 +6,17 @@ import ScrollToTop from "@components/ScrollToTop";
 import Lightbox from "@components/Lightbox";
 import { execSync } from "child_process";
 
-import Config from '../../astro.config.mjs'
 import ListItem from "@components/ListItem";
-
-const allAuthorDates = execSync(
-  `git log --follow --name-status --pretty=format:%aI -- ${Astro.props.file}`
-).toString();
 
 const allAuthorDatesWithExplicitContentEdit = execSync(
   `git log --follow --name-status --pretty=\"format:%aI|%s\" -- ${Astro.props.file}`
 ).toString();
-
-const [lastEditExceptPathChangeDate] =
-  allAuthorDates.match(/20[\d-T:.Z+]+$(?!\r?\nR)/m) || [];
 
 const [_, lastContentEditDate] =
   allAuthorDatesWithExplicitContentEdit.match(
     /(20[\d\-T:.Z+]+)\|(Edit content?.+)$(?!\r?\nR)/im
   ) || [];
 
-const resolvedDateOfLastEdit =
-  lastContentEditDate || lastEditExceptPathChangeDate || undefined;
 
 export interface Props {
   title: string;
@@ -67,36 +57,29 @@ const currentPath = Astro.url.pathname;
       <h1 id="overview">{title}</h1>
       <div class="not-prose font-mono text-sm dark:text-gray-400">
         {
-          categories.length ? (
-            <ul class="flex gap-1.5 mt-0 mb-1 ml--1 py-2">
-              {categories.map((category) => (
-                <ListItem category={category} />
-              ))}
-            </ul>
+          lastContentEditDate ? (
+            <p class="text-xs">
+              last modified{" "}
+              <PrettyDate date={new Date(lastContentEditDate)} />
+            </p>
           ) : null
         }
-        posted <PrettyDate date={new Date(dateCreated)} /> ∙ by {author} ∙
-        {timeToRead}
-      </div>
-      <slot />
-      {
-        resolvedDateOfLastEdit ? (
-          <p class="text-xs">
-            last modified <PrettyDate date={new Date(resolvedDateOfLastEdit)} />
-          </p>
-        ) : null
-      }
-      <hr />
-      <p class="text-sm">
-        If you find anything in this post that should be improved (either
-        factually or linguistically), feel free to{" "}
-        <a href= `https://github.com/HynekS/personal-website-astro/tree/main/src/content${currentPath}index.mdx` rel="noopener noreferrer" target="_blank">
-          edit it on Github  
-        </a>
-        .
-      </p>
-    </article>
-  </main>
+        <hr />
+        <p class="text-sm">
+          If you find anything in this post that should be improved (either
+          factually or linguistically), feel free to{" "}
+          <a
+            href=`https://github.com/HynekS/personal-website-astro/tree/main/src/content${currentPath}index.mdx`
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            edit it on Github
+          </a>
+          .
+        </p>
+      </article>
+    </main>
+  </div>
   <ScrollToTop client:load />
   <Lightbox client:only="preact" />
 </Layout>
