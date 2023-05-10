@@ -1,6 +1,6 @@
 ---
 import Logo from "./Logo.astro";
-import ThemeToggle from "./ThemeToggle";
+import ThemeToggle from "./ThemeToggle.astro";
 import CollapsibleMenu from "./CollapsibleMenu.astro"
 
 const currentPath = Astro.url.pathname;
@@ -37,6 +37,6 @@ const currentPath = Astro.url.pathname;
   </div>
   <div class="pt-1.5">
     <CollapsibleMenu />
-    <ThemeToggle client:load class="hidden md:block"/>
+    <ThemeToggle class="hidden md:block"/>
   </div>
 </header>

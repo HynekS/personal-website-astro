@@ -1,6 +1,6 @@
 ---
 const currentPath = Astro.url.pathname;
-import ThemeToggle from "@components/ThemeToggle";
+import ThemeToggle from "@components/ThemeToggle.astro";
 ---
 
 <style>
@@ -146,7 +146,7 @@ import ThemeToggle from "@components/ThemeToggle";
       >about</a
     >
   </div>
-  <ThemeToggle client:load />
+  <ThemeToggle />
 </div>
 
 <button
