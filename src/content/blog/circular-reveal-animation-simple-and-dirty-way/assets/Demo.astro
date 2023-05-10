@@ -16,7 +16,7 @@ import { Image } from "@astrojs/image/components";
   .container {
     position: relative;
     height: var(--dimensions);
-    width: var(--dimensions);
+    width: var(--dimensions) !important /* There is some class clash with tailwind, consider renaming */;
   }
   .container::after {
     content: "";
