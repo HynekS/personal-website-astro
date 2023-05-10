@@ -100,11 +100,7 @@ module.exports = {
               },
             },
             code: {
-              color: "#323278",
-              backgroundColor: "#e7e7f5bf",
-              borderRadius: 4,
-              padding: "0.25em 0.4em",
-              fontWeight: 400,
+              fontWeight: 600,
             },
             "a > code": {
               backgroundColor: "inherit",
@@ -158,8 +154,7 @@ module.exports = {
               },
             },
             code: {
-              color: "#d1d5db",
-              backgroundColor: "var(--bg-secondary)",
+              color: "#fff,",
             },
             "a > code": {
               color: "var(--color-links)",
