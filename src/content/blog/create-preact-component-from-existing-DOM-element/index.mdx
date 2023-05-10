@@ -45,7 +45,7 @@ The `type` parameter is rather simple—it's the name of the HTML element (e.g.,
 
 For the purpose of cloning DOM elements, the `props` parameter can be thought of as an object containing the DOM element's attributes (e.g., `id`, `class`, `width`).
 
-How can we get those attributes? Unfortunately, there is currently no simple, self explanatory DOM api. There are `Element.attributes`, `Element.getAttributeNames()` and `Element.getAttribute(), but none of them will give us an object with all DOM Element attributes right off the bat. But we can leverage those apis in a utility function:
+How can we get those attributes? Unfortunately, there is currently no simple, self explanatory DOM api. There are `Element.attributes`, `Element.getAttributeNames()` and `Element.getAttribute()`, but none of them will give us an object with all DOM Element attributes right off the bat. But we can leverage those apis in a utility function:
 
 ```js
 const getAttributes = (element) => {
