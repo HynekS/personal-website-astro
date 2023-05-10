@@ -17,7 +17,6 @@ const [_, lastContentEditDate] =
     /(20[\d\-T:.Z+]+)\|(Edit content?.+)$(?!\r?\nR)/im
   ) || [];
 
-
 export interface Props {
   title: string;
   children: Node | Node[];
@@ -39,7 +38,7 @@ const currentPath = Astro.url.pathname;
 ---
 
 <Layout
-  title={title}
+  title={`${title} | HynekS`}
   description={description}
   categories={categories}
   keywords={keywords}
@@ -73,8 +72,7 @@ const currentPath = Astro.url.pathname;
         {
           lastContentEditDate ? (
             <p class="text-xs">
-              last modified{" "}
-              <PrettyDate date={new Date(lastContentEditDate)} />
+              last modified <PrettyDate date={new Date(lastContentEditDate)} />
             </p>
           ) : null
         }

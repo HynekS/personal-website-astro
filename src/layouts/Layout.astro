@@ -2,7 +2,6 @@
 import { SEO } from "astro-seo";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
-
 // TODO: check by zod (lots of lies probably here):
 export interface Props {
   title: string;
@@ -14,6 +13,8 @@ export interface Props {
   children: Node | Node[];
 }
 
+
+const defaultDescription = "Tutorials and tips for developers. Focused on TypeScript, React, Astro and more."
 const url = Astro.url;
 const { title, description, author, dateCreated, categories, keywords } =
   Astro.props;
@@ -27,7 +28,7 @@ const { title, description, author, dateCreated, categories, keywords } =
     <meta name="generator" content={Astro.generator} />
     <SEO
       title={title}
-      description={description}
+      description={description ?? defaultDescription}
       openGraph={{
         basic: {
           title: title,
