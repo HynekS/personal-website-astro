@@ -100,6 +100,7 @@ module.exports = {
               },
             },
             code: {
+              color: "var(--text-primary)",
               fontWeight: 600,
             },
             "a > code": {
