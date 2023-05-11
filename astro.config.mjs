@@ -7,7 +7,6 @@ import compress from "astro-compress";
 import remarkPrism from "remark-prism";
 import defaultLayoutPlugin from "./defaultLayout.mjs";
 import { remarkReadingTime } from "./remark-reading-time.mjs";
-import netlify from "@astrojs/netlify/functions";
 
 // https://astro.build/config
 export default defineConfig({
@@ -28,5 +27,4 @@ export default defineConfig({
     }),
     compress(),
   ],
-  adapter: netlify(),
 });
