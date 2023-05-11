@@ -80,7 +80,7 @@ body {
   font-synthesis: none;
 }
 
-html.dark {
+html.dark, html.dark #expansible-menu, html.dark #main-header{
   background: radial-gradient(
     circle,
     rgba(28, 35, 46, 1) 0%,
@@ -90,19 +90,12 @@ html.dark {
   background-attachment: fixed;
 }
 
-  /* This is ugly, but the gradient causes a visible edge when only bg-primary is used (dtto CollapsibleMenu)*/
-.dark #main-header {
-  background: radial-gradient(
-    circle,
-    rgba(28, 35, 46, 0.75) 0%,
-    rgba(28, 35, 46, 0.75) 30%,
-    rgba(17, 24, 35, 0.75) 110%
-  );
-  background-attachment: fixed;
+html.dark #expansible-menu {
+  background-position: top -4.5rem;
 }
 
 @-moz-document url-prefix() {
-  html.dark {
+  html.dark, html.dark #expansible-menu, html.dark #expansible-menu, html.dark #main-header {
     background: var(--bg-primary);
   }
 }
