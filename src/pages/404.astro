@@ -1,0 +1,17 @@
+---
+import Layout from "@layouts/Layout.astro";
+
+export const title = "404";
+---
+
+<Layout title={`${title} | HynekS`}>
+  <main class="h-full max-w-full mx-auto flex items-center justify-center pb-10">
+    <article
+      class="prose prose-sm mx-auto pt-8 px-4 md:prose lg:prose-lg lg:px-0 dark:prose-dark pb-16"
+    >
+      <h1>\<span class="text-[var(--color-primary)]">(</span>4<sub>0</sub>4<span class="text-[var(--color-primary)]">)</span>/</h1>
+      <p>Ouch! Something went wrong…</p>
+      <p>The page you are requesting does not exist. Most likely, it was removed or its URL has changed.</p>
+    </article>
+  </main>
+</Layout>
