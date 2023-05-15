@@ -118,6 +118,18 @@ const currentPath = Astro.url.pathname;
         document.documentElement.classList.add("dark");
       }
     </script>
+    <script
+      type="text/partytown"
+      src="https://www.googletagmanager.com/gtag/js?id=G-TMPZ8N48MH"
+    ></script>
+    <script type="text/partytown">
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-TMPZ8N48MH");
+    </script>
   </head>
   <body>
     <Header />

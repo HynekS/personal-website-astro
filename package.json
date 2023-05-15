@@ -34,6 +34,7 @@
     "tailwindcss": "^3.0.24"
   },
   "devDependencies": {
+    "@astrojs/partytown": "^1.2.1",
     "@tailwindcss/typography": "^0.5.8",
     "@types/react": "^18.0.26",
     "@types/react-dom": "^18.0.9",
