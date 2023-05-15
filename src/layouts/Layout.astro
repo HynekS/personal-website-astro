@@ -13,11 +13,12 @@ export interface Props {
   children: Node | Node[];
 }
 
-
-const defaultDescription = "Tutorials and tips for developers. Focused on TypeScript, React, Astro and more."
+const defaultDescription =
+  "Tutorials and tips for developers. Focused on TypeScript, React, Astro and more.";
 const url = Astro.url;
 const { title, description, author, dateCreated, categories, keywords } =
   Astro.props;
+const currentPath = Astro.url.pathname;
 ---
 
 <!DOCTYPE html>
@@ -29,12 +30,13 @@ const { title, description, author, dateCreated, categories, keywords } =
     <SEO
       title={title}
       description={description ?? defaultDescription}
+      canonical={`https://hyneks.cz${currentPath}`}
       openGraph={{
         basic: {
           title: title,
           type: "article",
           image: "/assets/opengraph/og-image-default.jpg",
-          url: url.toString(),
+          url: `https://hyneks.cz${currentPath}`,
         },
       }}
       twitter={{
