@@ -108,18 +108,6 @@ import ThemeToggle from "@components/ThemeToggle.astro";
       transform: translateX(0);
     }
   }
-  /* This is ugly, but the gradient causes a visible edge when only bg-primary is used (dtto Header)*/
-  /*
-  html.dark #expansible-menu {
-    background: radial-gradient(
-      circle,
-      rgba(28, 35, 46, 1) 0%,
-      rgba(28, 35, 46, 1) 30%,
-      rgba(17, 24, 35, 1) 110%
-    );
-    background-attachment: fixed;
-    packground-position: top -4.5rem;
-  }*/
 </style>
 
 <div
@@ -141,6 +129,10 @@ import ThemeToggle from "@components/ThemeToggle.astro";
     >
     <a href="/about" class={currentPath.startsWith("/about") ? "active" : ""}
       >about</a
+    >
+    <a
+      href="/contact"
+      class={currentPath.startsWith("/contact") ? "active" : ""}>contact</a
     >
   </div>
   <ThemeToggle />
