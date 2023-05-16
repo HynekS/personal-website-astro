@@ -11,7 +11,7 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/image": "0.14.1",
+    "@astrojs/image": "^0.16.8",
     "@astrojs/mdx": "^0.15.2",
     "@astrojs/netlify": "^2.2.2",
     "@astrojs/preact": "^2.0.1",
@@ -20,7 +20,7 @@
     "@preact/signals": "^1.1.2",
     "@types/body-scroll-lock": "^3.1.0",
     "@types/scroll-lock": "^2.1.0",
-    "astro": "^2.3.4",
+    "astro": "^2.4.5",
     "astro-seo": "^0.7.0",
     "body-scroll-lock": "vercel/body-scroll-lock",
     "hex-to-rgba": "^2.0.1",
