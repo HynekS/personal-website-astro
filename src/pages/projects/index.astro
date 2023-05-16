@@ -1,24 +1,29 @@
 ---
-import { CollectionEntry, getCollection } from "astro:content";
+import { getCollection } from "astro:content";
 import Layout from "@layouts/Layout.astro";
-import { Image } from "@astrojs/image/components";
+// import { Image } from "@astrojs/image/components";
 
 const posts = await getCollection("projects");
 
-const assets = await Astro.glob("/src/content/projects/*/assets/*").then(
-  (files) => {
+//const assets = await Astro.glob("/src/content/projects/*/assets/*").then(
+  /*(files) => {
     return files.map((file) => file.default);
   }
 );
 
-posts.sort((a, b) => a.data.order - b.data.order);
-
-const getThumbnail = (post: CollectionEntry<"projects">) => {
-  return assets.find(
+const postsWithThumbnails = posts.map(post => {
+  const resolvedThumbnail = assets.find(
     (asset) =>
       asset?.src?.includes(post.slug) && asset?.src?.includes("thumbnail")
   );
-};
+  
+  return {
+    ...post,
+    resolvedThumbnail
+  }
+})*/
+
+posts.sort((a, b) => a.data.order - b.data.order);
 ---
 
 <Layout title="Projects | HynekS">
@@ -30,15 +35,13 @@ const getThumbnail = (post: CollectionEntry<"projects">) => {
           return (
             <li class="my-8 relative md:flex-row mt-8 pl-4 pr-6 pt-5 pb-8 rounded-md dark:[background-color:#2a3340] dark:shadow-sm after:block after:absolute after:w-full after:left-[1rem] after:right-[1.25rem] after:-bottom-4 after:h-px after:[background:linear-gradient(90deg,_rgba(0,0,0,0.6)_0%,_rgba(0,0,0,0.4)_33%,_rgba(166,166,166,0.3)_100%)] dark:after:invisible last:after:invisible">
               <div class="flex gap-6 lg:gap-7">
-                {getThumbnail(post) && (
-                  <Image
-                    src={getThumbnail(post)}
+                <img
+                    src={post.data.thumbnail}
                     height={96}
                     width={96}
                     class="rounded shadow w-20 h-20 md:w-24 md:h-24"
                     alt="thumbnail"
                   />
-                )}
                 <div>
                 <h2 class="text-3xl font-semibold">
                   <a href={"/projects/" + post.slug}>{post.data.title}</a>

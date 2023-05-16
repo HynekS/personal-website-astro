@@ -74,6 +74,7 @@ const projectCollection = defineCollection({
       .transform((str) => new Date(str))
       .nullable(),
     featuredImage: z.string().nullable(),
+    thumbnail: z.string().nullable(),
     categories: z.array(z.string()).nullable(),
     keywords: z.array(z.string()).nullable(),
     description: z.string().nullable(),

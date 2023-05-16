@@ -5,18 +5,26 @@ type: project
 dateCreated: September 28, 2022 12:21
 dateLastModified:
 featuredImage:
+thumbnail: assets/thumbnails/czech-republic-regions-districts-municipalities-cadastral-territories-thumbnail.png
 categories:
   - JavaScript
   - Node.js
+  - PHP
 keywords:
   - javascript
   - node
+  - php
 description: A project based on public data provided by the State Administration of Land Surveying and Cadastre. The aim of the project is to convert the untidy source files to a clean hierarchy, Region > District > Municipality > Cadastral territory.
 order: 5
 ---
+import DevstackItem from "@components/DevstackItem.astro"
 
 # Czech Republic regions, districts, municipalities, and cadastral territories
 
+<DevstackItem item="javascript" label="JavaScript" />
+<DevstackItem item="nodejs" label="Node.js" />
+<DevstackItem item="php" label="PHP" />
+
 A project based on [public data](https://www.cuzk.cz/Katastr-nemovitosti/Poskytovani-udaju-z-KN/Ciselniky-ISKN/Ciselniky-katastralnich-uzemi-a-pracovist-resortu.aspx) provided by the [State Administration of Land Surveying and Cadastre](https://www.cuzk.cz/Uvod.aspx). The aim of the project is to get orderly source data for the administrative division of the Czech Republic.
 
-The converted data are further used as a foundation for my custom PHP Faker plugin to generate a random location hierarchy in the shape of **Region > District > Municipality > Cadastral Territory**.
+The converted data are further used as a foundation for my custom [PHP Faker plugin](https://github.com/HynekS/faker-czech-rep-admin-units) to generate a random location hierarchy in the shape of **Region > District > Municipality > Cadastral Territory**.
