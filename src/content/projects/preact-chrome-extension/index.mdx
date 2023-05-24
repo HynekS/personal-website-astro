@@ -49,11 +49,11 @@ Sadly, one of the quite popular pages in my home country, https://www.csfd.cz/, 
 
 I created this little extension for Google Chrome. It injects the pages DOM and hide all the elements containing content from users you find obnoxious. You can also very easily manage the current blocklist.
 
-🚫 **Now, you can avoid any user with just one click!**
+Now, you can avoid any user with just one click.
 
 ## The tech
 
-The injected script adds a little Preact component to each element that is considered "blockable" (review, comment, etc.). The component consists of a simple collapsible menu (inspired by Twitter) that allows users to add or remove users from a blocklist, show or hide blocked posts, etc. Blocking can also be done using the extension popup.
+The injected script adds a little Preact component to each element that is considered "blockable" (review, comment, etc.). The component consists of a simple collapsible menu (inspired by the Twitter approach) that allows users to add or remove people from a blocklist, show or hide blocked posts, etc. Blocking can also be done using the extension popup.
 
 All the business logic is contained in the extension's background script (service worker). The shared state is managed with a super simple[react-hooks-global-state](https://github.com/dai-shi/react-hooks-global-state) library from  [Daishi](https://twitter.com/dai_shi), the creator of [Jotai](https://jotai.org/), which also guarantees reactivity.
 
