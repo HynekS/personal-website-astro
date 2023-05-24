@@ -38,14 +38,14 @@ const props = Astro.props;
 </button>
 
 <script>
-  const toggleTheme = (evt) => {
+  const toggleTheme = (evt: MouseEvent) => {
     if (
-      evt.target.closest("button")?.getAttribute("data-role") !== "theme-toggle"
+     (evt.target as HTMLElement).closest("button")?.getAttribute("data-role") !== "theme-toggle"
     )
       return false;
 
     const currentTheme = localStorage.getItem("theme") ?? "light";
-    console.log("clicked");
+
     if (currentTheme === "light") {
       localStorage.setItem("theme", "dark");
       document.documentElement.classList.add("dark");
