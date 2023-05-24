@@ -23,7 +23,7 @@ const featuredImageSrc = post.data.featuredImage ? images.find(obj => obj.src?.i
   class="relative flex flex-col md:flex-row mt-8 px-6 pt-5 pb-8 rounded-md after:block after:absolute after:w-full after:left-[1rem] after:right-[1.25rem] after:-bottom-4 after:h-px after:[background:linear-gradient(90deg,_rgba(0,0,0,0.6)_0%,_rgba(0,0,0,0.4)_33%,_rgba(166,166,166,0.3)_100%)] dark:after:[background:linear-gradient(90deg,_rgba(200,200,200,0.6)_0%,_rgba(200,200,200,0.4)_33%,_rgba(166,166,166,0.3)_100%)] last:after:invisible"
 >
   <div>
-    <h2 class="text-3xl font-semibold">
+    <h2 class="inline text-3xl font-semibold transition-colors hover:text-[var(--color-primary)] hover:dark:text-[#b497f9]">
       <a href={"blog/" + post.slug}>{post.data.title}</a>
     </h2>
     {

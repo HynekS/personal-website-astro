@@ -43,7 +43,7 @@ posts.sort((a, b) => a.data.order - b.data.order);
                     alt="thumbnail"
                   />
                 <div>
-                <h2 class="text-3xl font-semibold">
+                <h2 class="text-3xl font-semibold transition-colors hover:text-[var(--color-primary)] hover:dark:text-[#b497f9]">
                   <a href={"/projects/" + post.slug}>{post.data.title}</a>
                 </h2>
                 {post.data?.categories ? (
