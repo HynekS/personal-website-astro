@@ -2,6 +2,7 @@ import { z, defineCollection } from "astro:content";
 
 const publishedBlogpostBaseSchema = z.object({
   title: z.string(),
+  subtitle: z.string().optional(),
   author: z.enum(["Hynek Svacha"]),
   // TODO: consider removing
   type: z.literal("blog post"),
