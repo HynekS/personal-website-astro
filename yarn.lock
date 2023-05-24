@@ -1300,9 +1300,9 @@ bl@^5.0.0:
     inherits "^2.0.4"
     readable-stream "^3.4.0"
 
-body-scroll-lock@vercel/body-scroll-lock:
+"body-scroll-lock@https://github.com/vercel/body-scroll-lock":
   version "4.0.0-beta.0"
-  resolved "https://codeload.github.com/vercel/body-scroll-lock/tar.gz/557beeed474e86a33534b72c895098935ee3615d"
+  resolved "https://github.com/vercel/body-scroll-lock#557beeed474e86a33534b72c895098935ee3615d"
 
 boolbase@^1.0.0:
   version "1.0.0"
@@ -4304,10 +4304,14 @@ pretty-format@^3.8.0:
   resolved "https://registry.yarnpkg.com/pretty-format/-/pretty-format-3.8.0.tgz#bfbed56d5e9a776645f4b1ff7aa1a3ac4fa3c385"
   integrity sha512-WuxUnVtlWL1OfZFQFuqvnvs6MiAGk9UNsBostyBOB0Is9wb5uRESevA6rnl/rkksXaGX3GzZhPup5d6Vp1nFew==
 
-prismjs@^1.23.0, prismjs@^1.28.0:
+prismjs@^1.28.0:
   version "1.29.0"
   resolved "https://registry.yarnpkg.com/prismjs/-/prismjs-1.29.0.tgz#f113555a8fa9b57c35e637bba27509dcf802dd12"
   integrity sha512-Kx/1w86q/epKcmte75LNrEoT+lX8pBpavuAbvJWRXar7Hz8jrtF+e3vY751p0R8H9HdArwaCTNDDzHg/ScJK1Q==
+
+"prismjs@github:HynekS/prism-astro":
+  version "1.29.0"
+  resolved "https://codeload.github.com/HynekS/prism-astro/tar.gz/d4f0e6817301a3c8caaa50dd665fb313b96b2078"
 
 prompts@^2.4.2:
   version "2.4.2"
@@ -4489,10 +4493,9 @@ remark-parse@^10.0.0, remark-parse@^10.0.1:
     mdast-util-from-markdown "^1.0.0"
     unified "^10.0.0"
 
-remark-prism@^1.3.6:
+"remark-prism@github:HynekS/remark-prism-fork":
   version "1.3.6"
-  resolved "https://registry.yarnpkg.com/remark-prism/-/remark-prism-1.3.6.tgz#f733aaec1b9f37975ea730fca86c014dc9775cda"
-  integrity sha512-yYSXJ2MEK2DeD9UKDKFkQPcVqRx6aX2FYD1kE27ScogpZ/BBO8MoOO6gf/AKqfXvKGnP51wqvDEBmPseypgaug==
+  resolved "https://codeload.github.com/HynekS/remark-prism-fork/tar.gz/795fe595128536e6e9ab0d998f89ff66c89b008c"
   dependencies:
     classnames "^2.3.1"
     css-selector-parser "^1.4.1"
@@ -4501,7 +4504,7 @@ remark-prism@^1.3.6:
     parse-numeric-range "^1.2.0"
     parse5 "^6.0.1"
     parse5-htmlparser2-tree-adapter "^6.0.1"
-    prismjs "^1.23.0"
+    prismjs "github:HynekS/prism-astro"
     unist-util-map "^2.0.1"
 
 remark-rehype@^10.0.0, remark-rehype@^10.1.0:

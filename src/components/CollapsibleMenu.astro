@@ -149,14 +149,19 @@ import ThemeToggle from "@components/ThemeToggle.astro";
 </button>
 
 <script>
-  import { disablePageScroll, enablePageScroll } from "scroll-lock";
-  let isNavMenuOpen: boolean;
+  import {
+    disableBodyScroll,
+    enableBodyScroll,
+  } from "body-scroll-lock";
 
+  let isNavMenuOpen: boolean;
+  const element = document.getElementById("expansible-menu") as Element;
   const button = document.querySelector("#primary-navigation");
+
   if (button instanceof HTMLElement) {
     button.addEventListener("click", () => {
       isNavMenuOpen = !isNavMenuOpen;
-      isNavMenuOpen ? disablePageScroll() : enablePageScroll();
+      isNavMenuOpen ? disableBodyScroll(element) : enableBodyScroll(element);
       button.setAttribute("aria-expanded", String(isNavMenuOpen));
       button.setAttribute(
         "aria-label",
