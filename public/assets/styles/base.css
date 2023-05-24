@@ -5,8 +5,7 @@
   --font-display: Nunito, Nunito-fallback, system-ui, -apple-system, "Segoe UI",
     "Open Sans", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji",
     "Segoe UI Emoji";
-  --font-mono: Consolas, ui-monospace, SFMono-Regular, Menlo, Monaco,
-    "Liberation Mono", "Courier New", monospace;
+  --font-mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
 
   --bg-primary: #fafafa; /* gray-50 */
   --bg-secondary: #e4e4e7; /* gray-200 */
