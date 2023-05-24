@@ -6,7 +6,7 @@ import CollapsibleMenu from "./CollapsibleMenu.astro"
 const currentPath = Astro.url.pathname;
 ---
 <header
-  id="main-header" class="top-0 flex justify-between pr-6 pl-4 py-4 w-full mb-8 h-[4.5rem] /*added explicit height and width to fight the layout shift*/ bg-gray-50 bg-opacity-80 backdrop-blur-sm relative z-10 lg:pl-[2.25rem] lg:sticky"
+  id="main-header" class="top-0 flex justify-between pr-6 pl-4 py-4 w-full mb-8 h-[4.5rem] bg-gray-50 bg-opacity-80 backdrop-blur-sm relative z-10 lg:pl-[2.25rem] lg:sticky"
 >
   <div>
     <div class="flex items-end gap-4 pt-0.5">
@@ -14,26 +14,26 @@ const currentPath = Astro.url.pathname;
         <Logo />
       </a>
       <div
-        class="hidden md:flex pt-3 relative top-1 leading-none gap-4 [&>a]:font-medium [&>a]:pb-1 [&>a]:border-b-2 [&>a]:border-transparent [&>a.active]:border-b-2 [&>a.active]:[border-color:var(--color-primary)]"
+        class="hidden md:flex pt-3 relative top-1 leading-none gap-4 [&>a]:font-medium [&>a]:pb-1.5 [&>a]:overflow-hidden [&>a]:relative [&>a]:after:block [&>a]:after:absolute [&>a]:after:w-full [&>a]:after:h-[2px] [&>a]:after:bottom-0 [&>a]:after:bg-[var(--color-primary)] [&>a]:after:transition-transform [&>a]:after:duration-300"
       >
         <a
           href="/"
-          class={currentPath.startsWith("/blog") || currentPath === "/"
+          class={`[&:not(.active)]:after:-translate-x-full [&:not(.active)]:hover:after:translate-x-0 ${currentPath.startsWith("/blog") || currentPath === "/"
             ? "active"
-            : ""}>blog</a
+            : ""}`}>blog</a
         >
         <a
           href="/projects"
-          class={currentPath.startsWith("/projects") ? "active" : ""}
+          class={`[&:not(.active)]:after:-translate-x-full [&:not(.active)]:hover:after:translate-x-0 ${currentPath.startsWith("/projects") ? "active" : ""}`}
           >projects</a
         >
         <a
           href="/about"
-          class={currentPath.startsWith("/about") ? "active" : ""}>about</a
+          class={`[&:not(.active)]:after:-translate-x-full [&:not(.active)]:hover:after:translate-x-0 ${currentPath.startsWith("/about") ? "active" : ""}`}>about</a
         >
         <a
           href="/contact"
-          class={currentPath.startsWith("/contact") ? "active" : ""}>contact</a
+          class={`[&:not(.active)]:after:-translate-x-full [&:not(.active)]:hover:after:translate-x-0 ${currentPath.startsWith("/contact") ? "active" : ""}`}>contact</a
         >
       </div>
     </div>
