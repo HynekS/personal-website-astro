@@ -4,15 +4,14 @@ const props = Astro.props;
 
 <button
   data-role="theme-toggle"
-  aria-label="Toggle Dark Mode"
-  class={`rounded-full border-2 w-9 h-9 relative overflow-hidden focus:outline-none focus:ring-0 dark:border-gray-600 ${
+  aria-label="toggle light/dark theme"
+  class={`rounded-full w-9 h-9 relative overflow-hidden focus:outline-none focus:ring-0 origin-center ${
     props.class ? props.class : ""
   }`}
 >
   <svg
     class="w-6 h-6 absolute inset-0 mx-auto my-auto invisible dark:visible stroke-gray-400"
     fill="none"
-    stroke="var(--color-primary)"
     viewBox="0 0 24 24"
     xmlns="http://www.w3.org/2000/svg"
   >
@@ -26,7 +25,6 @@ const props = Astro.props;
   <svg
     class="w-6 h-6 absolute inset-0 mx-auto my-auto dark:invisible stroke-gray-600"
     fill="none"
-    stroke="#dddddd"
     viewBox="0 0 24 24"
     xmlns="http://www.w3.org/2000/svg"
   >
