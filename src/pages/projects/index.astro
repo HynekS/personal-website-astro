@@ -33,7 +33,7 @@ posts.sort((a, b) => a.data.order - b.data.order);
       {
         posts.map((post) => {
           return (
-            <li class="my-8 relative md:flex-row mt-8 pl-4 pr-6 pt-5 pb-8 rounded-md dark:[background-color:#2a3340] dark:shadow-sm after:block after:absolute after:w-full after:left-[1rem] after:right-[1.25rem] after:-bottom-4 after:h-px after:[background:linear-gradient(90deg,_rgba(0,0,0,0.6)_0%,_rgba(0,0,0,0.4)_33%,_rgba(166,166,166,0.3)_100%)] dark:after:invisible last:after:invisible">
+            <li class="my-8 relative md:flex-row mt-8 pl-4 pr-6 pt-5 pb-8 rounded-md dark:shadow-sm after:block after:absolute after:w-full after:left-[1rem] after:right-[1.25rem] after:-bottom-4 after:h-px after:[background:linear-gradient(90deg,_rgba(0,0,0,0.6)_0%,_rgba(0,0,0,0.4)_33%,_rgba(166,166,166,0.3)_100%)] dark:after:[background:linear-gradient(90deg,_rgba(200,200,200,0.6)_0%,_rgba(200,200,200,0.4)_33%,_rgba(166,166,166,0.3)_100%)] last:after:invisible">
               <div class="flex gap-6 lg:gap-7">
                 <img
                     src={post.data.thumbnail}
