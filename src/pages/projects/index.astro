@@ -1,27 +1,8 @@
 ---
 import { getCollection } from "astro:content";
 import Layout from "@layouts/Layout.astro";
-// import { Image } from "@astrojs/image/components";
 
 const posts = await getCollection("projects");
-
-//const assets = await Astro.glob("/src/content/projects/*/assets/*").then(
-  /*(files) => {
-    return files.map((file) => file.default);
-  }
-);
-
-const postsWithThumbnails = posts.map(post => {
-  const resolvedThumbnail = assets.find(
-    (asset) =>
-      asset?.src?.includes(post.slug) && asset?.src?.includes("thumbnail")
-  );
-  
-  return {
-    ...post,
-    resolvedThumbnail
-  }
-})*/
 
 posts.sort((a, b) => a.data.order - b.data.order);
 ---
