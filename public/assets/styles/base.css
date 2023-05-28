@@ -1,18 +1,24 @@
 :root {
-  --font-base: Nunito, Nunito-fallback, system-ui, -apple-system, "Segoe UI",
-    "Open Sans", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji",
-    "Segoe UI Emoji";
-  --font-display: Nunito, Nunito-fallback, system-ui, -apple-system, "Segoe UI",
-    "Open Sans", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji",
-    "Segoe UI Emoji";
-  --font-mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
-
+  --font-base: Inter, Roboto, "Helvetica Neue", "Arial Nova", "Nimbus Sans",
+    Arial, sans-serif;
+  --font-display: Inter, Roboto, "Helvetica Neue", "Arial Nova", "Nimbus Sans",
+    Arial, sans-serif;
+  --font-mono: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas,
+    "DejaVu Sans Mono", monospace;
   --bg-primary: #fafafa; /* gray-50 */
   --bg-secondary: #e4e4e7; /* gray-200 */
   --text-primary: #475569;
   --text-secondary: #1e293b;
-  --color-primary:#855cdd;
+  --color-primary: #855cdd;
   --color-links: #01778b;
+}
+@supports (font-variation-settings: normal) {
+  :root {
+    --font-base: "Inter var", Roboto, "Helvetica Neue", "Arial Nova",
+      "Nimbus Sans", Arial, sans-serif;
+    --font-display: "Inter var", Roboto, "Helvetica Neue", "Arial Nova",
+      "Nimbus Sans", Arial, sans-serif;
+  }
 }
 
 .dark {
@@ -20,35 +26,25 @@
   --bg-secondary: #111827; /* coolGray-900 */
   --text-primary: #d4cece;
   --text-secondary: #e9e1e1;
-  --color-primary:#855cdd;
+  --color-primary: #855cdd;
   --color-links: #7ecbd7;
 }
 
 @font-face {
-  font-family: "Nunito-fallback";
-  ascent-override: 110%;
-  descent-override: 20%;
-  line-gap-override: normal;
-  advance-override: 10;
-  src: local(Arial);
-}
-
-@font-face {
-  font-family: "Nunito";
-  src: url("/assets/fonts/Nunito[wght]-subset.woff2") format("woff2");
-  font-weight: 125 950;
-  font-stretch: 75% 125%;
+  font-family: 'Inter var';
+  font-weight: 100 900;
+  font-display: swap;
   font-style: normal;
-  font-display: optional;
+  font-named-instance: 'Regular';
+  src: url("Inter-roman.var.woff2?v=3.19") format("woff2");
 }
-
 @font-face {
-  font-family: "Nunito";
-  src: url("/assets/fonts/Nunito-Italic[wght]-subset.woff2") format("woff2");
-  font-weight: 125 950;
-  font-stretch: 75% 125%;
+  font-family: 'Inter var';
+  font-weight: 100 900;
+  font-display: swap;
   font-style: italic;
-  font-display: optional;
+  font-named-instance: 'Italic';
+  src: url("Inter-italic.var.woff2?v=3.19") format("woff2");
 }
 
 @media (prefers-reduced-motion) {
@@ -79,7 +75,9 @@ body {
   font-synthesis: none;
 }
 
-html.dark, html.dark #expansible-menu, html.dark #main-header{
+html.dark,
+html.dark #expansible-menu,
+html.dark #main-header {
   background: radial-gradient(
     circle,
     rgba(28, 35, 46, 1) 0%,
@@ -94,7 +92,10 @@ html.dark #expansible-menu {
 }
 
 @-moz-document url-prefix() {
-  html.dark, html.dark #expansible-menu, html.dark #expansible-menu, html.dark #main-header {
+  html.dark,
+  html.dark #expansible-menu,
+  html.dark #expansible-menu,
+  html.dark #main-header {
     background: var(--bg-primary);
   }
 }
