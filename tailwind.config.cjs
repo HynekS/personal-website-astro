@@ -100,7 +100,7 @@ module.exports = {
               },
             },
             code: {
-              color: "var(--text-primary)",
+              color: "var(--text-secondary)",
               fontWeight: 600,
             },
             "a > code": {
@@ -155,7 +155,7 @@ module.exports = {
               },
             },
             code: {
-              color: "#fff,",
+              color: "#fff",
             },
             "a > code": {
               color: "var(--color-links)",
