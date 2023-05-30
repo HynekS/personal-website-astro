@@ -44,7 +44,7 @@
   font-display: optional;
   font-style: italic;
   font-named-instance: 'Italic';
-  src: url("/assets/fonts/Inter-italic-subset.var.woff2") format("woff2");
+  src: url("/assets/fonts/Inter-italic.var-subset.woff2") format("woff2");
 } 
 
 @font-face {
