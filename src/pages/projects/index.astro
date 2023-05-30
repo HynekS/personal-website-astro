@@ -28,9 +28,9 @@ posts.sort((a, b) => a.data.order - b.data.order);
                   <a href={"/projects/" + post.slug}>{post.data.title}</a>
                 </h2>
                 {post.data?.categories ? (
-                  <ul class="flex gap-1.5 mt-1 flex-wrap">
+                  <ul class="flex gap-1.5 mt-3 flex-wrap">
                     {post.data.categories.map((category) => (
-                      <li class="font-mono text-xs rounded-md py-0.5 px-1.5 bg-gray-100 dark:bg-gray-800">
+                      <li class="font-mono text-xs rounded-md py-0.5 px-1.5 border dark:border-gray-600/50 dark:[background-color:#2a3340]">
                         {category}
                       </li>
                     ))}
