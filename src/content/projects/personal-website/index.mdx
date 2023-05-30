@@ -1,0 +1,39 @@
+---
+title: My personal website
+author: Hynek Svacha
+type: project
+dateCreated: May 30, 2023 14:09
+dateLastModified:
+featuredImage:
+thumbnail: /assets/thumbnails/personal-website-light-thumbnail.png
+categories:
+  - Astro.js
+  - Tailwind
+keywords:
+  - astro.js
+  - tailwindcss
+description: My personal portfolio/blog site, built with Astro.js.
+order: 7
+---
+import { Image } from '@astrojs/image/components';
+import DevstackItem from "@components/DevstackItem.astro"
+import MacBookMockup from "@components/MacBookMockup.astro"
+import mock from "./assets/personal-website-light.png"
+
+<MacBookMockup image={mock}/>
+
+# {frontmatter.title}
+
+<DevstackItem item="astro" label="Astro.js" />
+<DevstackItem item="tailwindcss" label="Tailwind" />
+
+## <span class="text-lg [filter:opacity(0.8)]">⚠</span> The problem
+
+
+## <span class="text-lg [filter:opacity(0.8)]">💡</span> The solution
+
+
+## Techs I used
+
+
+
