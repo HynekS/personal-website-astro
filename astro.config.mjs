@@ -6,6 +6,7 @@ import preact from "@astrojs/preact";
 import image from "@astrojs/image";
 import compress from "astro-compress";
 import remarkPrism from "remark-prism";
+import subfont from "@ernxst/subfont/astro";
 import defaultLayoutPlugin from "./defaultLayout.mjs";
 import { remarkReadingTime } from "./remark-reading-time.mjs";
 
@@ -32,6 +33,7 @@ export default defineConfig({
     image({
       serviceEntryPoint: "@astrojs/image/sharp",
     }),
+    subfont(),
     compress(),
   ],
 });
