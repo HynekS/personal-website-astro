@@ -1,7 +1,7 @@
 :root {
-  --font-base: Inter, Roboto, "Helvetica Neue", "Arial Nova", "Nimbus Sans",
+  --font-base: Inter, Inter-fallback, Roboto, "Helvetica Neue", "Arial Nova", "Nimbus Sans",
     Arial, sans-serif;
-  --font-display: Inter, Roboto, "Helvetica Neue", "Arial Nova", "Nimbus Sans",
+  --font-display: Inter, Inter-fallback, Roboto, "Helvetica Neue", "Arial Nova", "Nimbus Sans",
     Arial, sans-serif;
   --font-mono: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas,
     "DejaVu Sans Mono", monospace;
@@ -14,11 +14,46 @@
 }
 @supports (font-variation-settings: normal) {
   :root {
-    --font-base: "Inter var", Roboto, "Helvetica Neue", "Arial Nova",
+    --font-base: "Inter var", Inter-fallback, Roboto, "Helvetica Neue", "Arial Nova",
       "Nimbus Sans", Arial, sans-serif;
-    --font-display: "Inter var", Roboto, "Helvetica Neue", "Arial Nova",
+    --font-display: "Inter var", Inter-fallback, Roboto, "Helvetica Neue", "Arial Nova",
       "Nimbus Sans", Arial, sans-serif;
   }
+}
+
+@font-face {
+  font-family: Inter-fallback;
+  ascent-override: 100%;
+  descent-override: 20%;
+  line-gap-override: 0%;
+  advance-override: 0;
+  src: local(Arial);
+}
+
+@font-face {
+  font-family: 'Inter var';
+  font-weight: 100 900;
+  font-display: swap;
+  font-style: normal;
+  font-named-instance: 'Regular';
+  src: url("/assets/fonts/Inter.var.woff2") format("woff2");
+}
+@font-face {
+  font-family: 'Inter var';
+  font-weight: 100 900;
+  font-display: swap;
+  font-style: italic;
+  font-named-instance: 'Italic';
+  src: url("/assets/fonts/Inter-italic.var.woff2") format("woff2");
+} 
+
+@font-face {
+  font-family: Inter-fallback;
+  ascent-override: 100%;
+  descent-override: 20%;
+  line-gap-override: 0%;
+  advance-override: 0;
+  src: local(Arial);
 }
 
 .dark {
