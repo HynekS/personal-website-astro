@@ -23,7 +23,11 @@ const images = await Astro.glob("/src/content/blog/*/assets/*").then(files => {
     <h2 class="inline text-3xl font-semibold transition-colors hover:text-[var(--color-primary)] hover:dark:text-[#b497f9]">
       <a href={"blog/" + post.slug}>{post.data.title}</a>
     </h2>
-    {post.data.subtitle ? <p class="mt-1.5 mb-3.5 text-lg">{post.data.subtitle}</p> : null}
+    {
+      post.data.subtitle ? (
+        <p class="mt-1.5 mb-3.5 text-lg font-light">{post.data.subtitle}</p>
+      ) : null
+    }
     {
       post.data.categories ? (
         <ul class="flex gap-1.5 mt-3 mb-1">
