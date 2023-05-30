@@ -41,7 +41,7 @@ const images = await Astro.glob("/src/content/blog/*/assets/*").then(files => {
       {
         post.data.dateCreated ? (
           <span class="font-mono text-sm dark:text-gray-400">
-            <span>posted</span>
+            posted{" "}
             <PrettyDate
               date={post.data.dateCreated}
               dateStyles="text-sm dark:text-gray-400"
@@ -50,6 +50,6 @@ const images = await Astro.glob("/src/content/blog/*/assets/*").then(files => {
           </span>
         ) : null
       }
-    </span>
+    </div>
   </div>
 </li>
