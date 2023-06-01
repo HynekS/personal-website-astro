@@ -1,5 +1,5 @@
 ---
-title: Matrix builder
+title: Matrix builder app
 author: Hynek Svacha
 type: project
 dateCreated: May 30, 2023 14:09
@@ -31,11 +31,26 @@ import mock from "./assets/matrix-builder-diagram.png"
 <DevstackItem item="prisma" label="Prisma" />
 <DevstackItem item="tailwindcss" label="Tailwind" />
 
-## <span class="text-lg [filter:opacity(0.8)]">⚠</span> The problem
+## Why?
+
+Because there is just one tool available for building relational matrices of archeological sites, [Stratify](http://www.stratify.org/), and it was last updated _thirteen years_ ago.
+
+So I've decided to craft an online app to provide an alternative. It's a project with "niche SAAS" ambition—more an opportunity to learn new things than to raise money.
 
 ## Main Challenges
 
-## <span class="text-lg [filter:opacity(0.8)]">💡</span> My solution
+I've never dealt with graph data structures extensively before, so I've learned a lot of things while developing this app (e.g., what is "topological sort", "transitive reduction," and why and how to do such dark rituals).
+
+Even after learning how to construct a graph, check for cycles, and reduce it, there is still the graphical matrix itself that needs to be built. I am currently using [Reaflow](https://reaflow.dev/), a react layer on top of [Elk.js](https://github.com/kieler/elkjs). It is a solid starter, but I'd probably need to create a fork and do some updates to compete with the features of 13-year-old Stratify. Also, the bundle size of these libs is huge (Elk has ca. 1.2M itself!).
+
+It was also my first encounter with tRPC, which definitely has a learning curve, but once overcome, the DX is hardly comparable to whatever I've used since.
+
+
+Also, I've never used Prisma extensively before. Sometimes, I've struggled quite a bit while building some queries, but the typescript definitions often helped a lot.
+
+## My solution
+
+My solution is still work in progress. Please, Wait for updates.
 
 
 
