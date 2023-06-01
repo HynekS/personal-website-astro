@@ -2,7 +2,9 @@
 import { getCollection } from "astro:content";
 import Layout from "@layouts/Layout.astro";
 
-const posts = await getCollection("projects");
+const allPosts = await getCollection("projects");
+
+const posts = allPosts.filter((post) => post.data.draft !== true)
 
 posts.sort((a, b) => a.data.order - b.data.order);
 ---
