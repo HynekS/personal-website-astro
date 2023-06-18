@@ -1,0 +1,248 @@
+---
+title: "DeepKeys and DeepValues utility types"
+subtitle: With smart utility types, we can pluck keys and values from deeply nested objects with ease
+author: Hynek Svacha
+type: blog post
+dateCreated: June 17, 2023 12:33
+dateLastModified:
+featuredImage:
+categories:
+  - typescript
+keywords:
+  - TypeScript
+  - Object
+  - "Deep nesting"
+  - "Recursive types"
+description: With smart utility types, we can pluck keys and values from deeply nested objects with ease. This article guides through the proccess of gradually building complex recursive DeepKeys and DeepValues utility types.
+draft:
+---
+
+# {frontmatter.title}
+
+I like TypeScript the most when I don't have to care much about it. It's not just a question of laziness—the compiler is (in _most_ cases) actually better at reasoning about the type flow than I am. Yes, in _most_ cases. Sometimes the type inference reaches it's limits, and the compiler needs a hand. This is the time for utility types.
+
+A good example might be getting the right types of keys or values for an object. I put a simple example (all branches have the same depth so far) below. It's a slice of an object of default colors from the first version of Tailwind CSS.
+
+Is there a simple way to pluck a first, second, etc. level of keys or values so we can use them as TypeScript types?
+
+```ts
+const tailwind_colors_v1 = {
+  gray: {
+    100: "#f7fafc",
+    200: "#edf2f7",
+    300: "#e2e8f0",
+    // ...
+  },
+  red: {
+    100: "#fff5f5",
+    200: "#fed7d7",
+    300: "#feb2b2",
+    // ...
+  },
+  orange: {
+    100: "#fffaf0",
+    200: "#feebc8",
+    300: "#fbd38d",
+    // ...
+  },
+  // ...
+} as const;
+```
+
+Let's assume the object is constant (therefore the `as const`); it's not necessary, but it's often more useful to get the literal type, e.g., `#f7fafc`, than just plain `string`.
+
+## The warmup: `keyof` keyword and bracket notation
+
+For starters, we can try the `keyof` keyword and bracket notation combo to access the keys and values:
+
+```ts
+// first level of nesting
+type KeysOfColors = keyof typeof tailwind_colors_v1;
+
+type ValuesOfColors =
+  (typeof tailwind_colors_v1)[keyof typeof tailwind_colors_v1];
+```
+
+This actually works fine (or does it?) on one level of an object, but it gets very ugly quickly if we need to pluck nested keys or values:
+
+```ts
+// second level of nesting
+type ShadesOfColors =
+  keyof (typeof tailwind_colors_v1)[keyof typeof tailwind_colors_v1];
+
+type HexValuesOfColors =
+  (typeof tailwind_colors_v1)[keyof typeof tailwind_colors_v1][keyof (typeof tailwind_colors_v1)[keyof typeof tailwind_colors_v1]];
+```
+
+That's… not very elegant. But that's not the greatest issue. I spent literally 15 minutes just trying to put together all the brackets in the right order, which indicates there is a much more important problem than aesthetics: it's utterly unmaintainable.
+
+Does it work? Let's assume it does. Here's the [Playground link](https://www.typescriptlang.org/play?#code/MYewdgzgLgBFCGBLANgd0WAJgfVMkAThNgG4CMMAvDAN4BQMMA5gfAJ4BctDjMZADPy4AiAMQAzAOzj444MIA0PRgCZBI0QFNM4lVMXKYAZnUwxmlZoAc4-gd4wA9I5gA6dzwC+SxgW1d6BwEhMwlxcQBWSPteNRCxcW1JTEkYxhN4iU0AIxVctKcXd1cvHxhCeDAmTQDDYI1wmVsCuIbNHOArAoyG7MwjK0wC5zcPRm8eEeK6Txh4CBhQSCgAbjo6EfFEIlhkTRJNZHLxGDBNaAwmdag2AAdNGABpTTYIAHlxAGEQfCIqGAA1i8QCcbvcQXAkGgMDg8IRiOQANpAtgQsGaNFQ9BYXA-eGkMgAXTWdHRMAAavBkABXc4fb6-BbUdGYlDY2F4ogE5HA0F3DGgrEw3GMgnE9YbFwQTRLTAwPYHI4Qs4XKrXfkwADKAAt4Jg6V9OUzAby4PzWdCcXCuUiUWjzYK2cLrQiiSSyQAJTQAD0pNINDPh-xZjstHNFttNIchTqtRrFPNRfPBofZIvxkaTZpTMbD6ZtROJQA).
+
+## First (naïve) utility types
+
+Is it possible to make it better? We'll see! Let's throw in some simple utility types with generics:
+
+```ts
+type ObjectKeys<T extends object> = keyof T;
+
+type ObjectValues<T extends object> = T[keyof T];
+
+// first level of nesting
+type KeysOfColors = ObjectKeys<typeof tailwind_colors_v1>;
+
+type ValuesOfColors = ObjectValues<typeof tailwind_colors_v1>;
+
+// second level of nesting
+type ShadesOfColors = ObjectKeys<ObjectValues<typeof tailwind_colors_v1>>;
+
+type HexValuesOfColors = ObjectValues<ObjectValues<typeof tailwind_colors_v1>>;
+```
+
+Does it look better? Maybe. Does it work? Well, not exactly, although it may look fine on [the Playground](https://www.typescriptlang.org/play?#code/MYewdgzgLgBFCGBLANgd0WAJgfVMkAThNgG4CMMAvDAN4BQMMA5gfAJ4BctDjMZADPy4AiAMQAzAOzj444MIA0PRgCZBI0QFNM4lVMXKYAZnUwxmlZoAc4-gd4wA9I5gA6dzwC+SxgW1d6BwEhMwlxcQBWSPteNRCxcW1JTEkYxhN4iU0AIxVctKcXd1cvHxhCeDAmTQDDYI1wmVsCuIbNHOArAoyG7MwjK0wC5zcPRm8eEeK6Txh4CBhQSCgAbjo6KDYAB00YAHlsgCtNYCgAaU02CAAeABUYTQAPKE0sBZAjk6gAPioYAGtLiBxDBbmsNttdgdjqcAGrwZAAV00N3uTxeb3Kn1Ov2otwA2oC2MDQQBdcEjcSIIiwZCaEiaZDlEFgFFQDBMCE7GAXK57cQAYRA+CIf2hX15N02OxJCBQ6CwuGFhGI5G+4Olu3hSJR-KFIoW1HFcIRyKlkNlSDQGBweBVpDI6vWIwgJ3AmBgdIZTJJrOgHK5uwAygALeCYXWC5Wio3Y86XG7GqDas3XTWW+U2pUGh3fJ2BmAACSeKcj+pVYrjpcTVdNKLTFpBcutirtRFzTqAA).
+
+Why did I say it did not work? It has a severe limitation: It will break as soon as we modify the source object to have a different branch depth (as it actually _has_ in real life):
+
+```ts
+const tailwind_colors_v1 = {
+  transparent: "transparent",
+  current: "currentColor",
+  black: "#000",
+  white: "#fff",
+  gray: {
+    "100": "#f7fafc",
+    "200": "#edf2f7",
+    "300": "#e2e8f0",
+    // ...
+  },
+  red: {
+    "100": "#fff5f5",
+    "200": "#fed7d7",
+    "300": "#feb2b2",
+    // ...
+  },
+  orange: {
+    "100": "#fffaf0",
+    "200": "#feebc8",
+    "300": "#fbd38d",
+    // ...
+  },
+  // ...
+} as const;
+```
+
+If we take a look at [the Playground](https://www.typescriptlang.org/play?#code/MYewdgzgLgBFCGBLANgd0WAJgfVMkAThNgG4CMMAvDAN4BQMcB8kADvAQKZhQBcMAIijM2HblAEAaBjGABXAlx78B8xeIDCIfASkyARsnjAA1ioDEABmt7GqABaIonCwDN3tmAHNmAT370jIwCZDZuAOyu8K7AnsEATGGC5pyYrvGu4XGCAMxJAinxnAAcrpbZAPQVMAB0dTIAvtKMXJgBMsGh5W7uAKyuvdkCid3JrqnhmFnNQQJ5owXj+vHLldV1NY0zhCxeLrQdgl0CPVFlQyMnY5yc+sDFQ-NXi-qYOcWYa7X1jE0yVd9Ng0YPAILJwNAANx0OgA1yIIiwZCcEicZAwECuGBgTjQDBeGAACjAIBgcigKCcvgAlHQoL5WJwYABpTi+CAAeVcWh0YOoJjZmLgDM4QoQKHQWFw2kIxHIMPpjJgADV4Mg5LiuTzZVRhYyxUg0BgcHhZaQyABtAW+MUig0S43S3nmgC60JhAIgnFAWBgyNR6KFOLxYAJxNJ5Mp9NpiqZAGV7PBMJruTKiLrrbb9VjxUapaaiOarYKc3ac4bJSa03KyG6FSKYAAJTgAD1V6pT2vT1Fj9rzVed5GLNtL2bgFcdBZrLuHWdF5Yd+erRczo-n48XA7N5BddfrSo5+gAVt6oKz2QAeAAqMFbziwYJAx9PAD4MyWYFf3bGYIeT8AoHbDUIGvW8W3vTBH2fAC32oK9ZyxK89zhBFoD9FE0QxLFgwpUMYHQKB7DJClkCpOkG3PTlU15AB1ABVEjdT-U9KIvXsF37J1tzIF9vwbIDO2rejGOoZiAIEkD2I3Tip3NXiPWqL0fUwdCAyw7FcVwgkCKIyNSPpcilQTJNBNohiUCY6CzzZECxMAtVgLYstpMrLjC3IF95MMplmzbBzTNlYSLNEqyJIvOywqk3NXNkjzeKAA), we can see that the types of the first level of depth are inferred fine (both with and without the utility), but the second ones are broken: in both cases, they are inferred to `never` and with the utility, they are causing an error: "(the given type…) does not satisfy the constraint 'object'."
+
+## Improved utility types
+
+Let's be honest: Our utility types were kind of naive. We need to check if the type conversion actually makes sense. Let's try again with conditional types (the `extends` keyword and ternary):
+
+```ts
+type ObjectKeys<T> = T extends object ? keyof T : never;
+
+type ObjectValues<T> = T extends object ? T[keyof T] : never;
+```
+
+Now, we are almost there (take a look at [the Playground](https://www.typescriptlang.org/play?#code/MYewdgzgLgBFCGBLANgd0WAJgfVMkAThNgG4CMMAvDAN4BQMcB8kADvAQKZhQBcMAIijM2HblAEAaBjGABXAlx78B8xeIDCIfASkyARsnjAA1ioDEABmt7GqABaIonCwDN3tmAHNmAT370jIwCZDZuAOyu8K7AnsEATGGC5pyYrvGu4XGCAMxJAinxnAAcrpbZAPQVMAB0dTIAvtKMXJgBMsGh5W7uAKyuvdkCid3JrqnhmFnNQQJ5owXj+vHLldV1NY0zhCxeLrQdgl0CPVFlQyMnY5yc+sDFQ-NXi-qYOcWYa7X1jE0yVd9Ng0YPAILJwNAANx0OhQXysTgwADy+gAVpxgFAANKcXwQAA8ABUAHxUGCEmCcAAeziwYJAaIxsAA-DATLiQK5yTB+GBOCROARobD4YiUejMQA1eDIOScAkkskU6m0zD0xmYmCswkAbXZvk55IAujyYHyBUKYQDXIgiLBkPzOMgYIa+dAMF4RQiYDi8UjXFodGDqOKmb6CXCEYaECh0FhcNpCMRyMSYZHEdLZfL-YGk2TQ1KZXKI6Lo0g0BgcHgk6QyKm6ACIBjwJgYA6Bc7XfKoB6vYiAMr2eCYbMBxNEfMa7G4gkFqCZ4v49Nl2OVhNB2vE+vpmAACWpC9HuYnIanh9nZ6L8qXpa5MYr8erRE3xKAA)), but there is a hidden footgun there. The first level is fine, but in the case of the second, the inference is misleading. IMO, the types for `ShadesOfColors` should not be `"100" | "200" | "300"`, but `"100" | "200" | "300" | undefined`. See why? Because on some of the branches, they are not present at all.
+
+The fix is pretty easy here. Just switch `never` to `undefined` and we are fine (check [the Playground](https://www.typescriptlang.org/play?#code/MYewdgzgLgBFCGBLANgd0WAJgfVMkAThNgG4CMMAvDAN4BQMcB8kADvAQKZhQBcMAIijM2HblAEAaBjGABXAlx78B8xeIDCIfASkyARsnjAA1ioDEABmt7GqABaIonCwDN3tmAHNmAT370jIwCZDZuAOyu8K7AnsEATGGC5pyYrvGu4XGCAMxJAinxnAAcrpbZAPQVMAB0dTIAvtKMXJgBMsGh5W7uAKyuvdkCid3JrqnhmFnNQQJ5owXj+vHLldV1NY0zhCxeLrQdgl0CPVFlQyMnY5yc+sDFQ-NXi-qYOcWYa7X1jE0yVd9Ng0YPAILJwNAANx0OhQXysTgwADy+gAVpxgFAANKcXwQAA8ABUAHxUGCEmCcAAeziwYJAaIxsAA-DATLiQK5yTB+HIsJxXBhUtDYfDESj0ZiAGrwZByTgEklkinU2mYemMzEwVmEgDa7N8nPJAF0eTA+ZgBULMCKAYKiLBkJwSJxkDAjWAFVAMF5RQiYDi8UjXFodGDqBKmYGCXCEUaECh0FhcNpCMRyMSYbHETK5Qrg6G02TI9LZfKY2L40g0BgcHg06QyJm6ACIBjwJgYE6XW6PV6fX7EQBlezwS0QAupojFzXY3EEktQXPl-HZquJ2spsON4nN7MwAAS1OX+ZDU-DyNnJ4XV7LCtXla5CZryfrRB3xKAA)):
+
+```ts
+type ObjectKeys<T> = T extends object ? keyof T : undefined;
+
+type ObjectValues<T> = T extends object ? T[keyof T] : undefined;
+```
+
+So this is our baseline. What's next? The actual recursive types that would give us every accessible level of keys or values.
+
+## Recursive types
+
+I'll start in the opposite direction here. Let's first take a quick peek at the results:
+
+```ts
+type firstLevelKeys = DeepKeys<typeof tailwind_colors_v1, 0>;
+
+type secondLevelValues = DeepValues<typeof tailwind_colors_v1, 1>;
+```
+
+The signature of these types is rather self-explanatory: these utilities will give us the keys or values of the *nth* level of an object.
+
+At first, we will create two helper functions that will serve a simple purpose: decrementing the counter. Unfortunately, the only way in TypeScript to increment or decrement a variable is to store a tuple (or array literal) as a type argument and increase or decrease its length. That's why a simple purpose needs a quite complex solution:
+
+```ts
+// This is a utility for creating an array of length N
+// e.g., Arr<3> // [any, any, any]
+type Arr<N extends number, T extends any[] = []> = T['length'] extends N ? T : Arr<N, [...T, any]>;
+
+// This is a utility for decrementing a number by one
+// e.g., Decrement<5> // 4
+type Decrement<N extends number> = Arr<N> extends [any, ...infer U] ? U['length'] : never;
+```
+
+The `DeepValues` and `DeepKeys` utils will look like this:
+
+```ts
+type DeepKeys<T, Counter extends number = 0> = T extends object
+  ? Counter extends 0
+    ? keyof T
+    : DeepKeys<T[keyof T], Decrement<Counter>>
+  : never;
+
+type DeepValues<T, Counter extends number = 0> = T extends object
+  ? Counter extends 0
+    ? T[keyof T]
+    : DeepValues<T[keyof T], Decrement<Counter>>
+  : never;
+```
+
+What's happening here? A recursion with the base case set using the `Counter` variable (which defaults to `0`). If the counter is `0`, the utility returns keys or values from the depth it has reached; otherwise, it moved one level deeper.
+
+As always, these types can be seen in action on [the Playground](https://www.typescriptlang.org/play?#code/MYewdgzgLgBFCGBLANgd0WAJgfVMkAThNgG4CMMAvDAN4BQMcB8kADvAQKZhQBcMAIijM2HblAEAaBjGABXAlx78B8xeIDCIfASkyARsnjAA1ioDEABmt7GqABaIonCwDN3tmAHNmAT370jIwCZDZuAOyu8K7AnsEATGGC5pyYrvGu4XGCAMxJAinxnAAcrpbZAPQVMAB0dTIAvtKMXJgBMsGh5W7uAKyuvdkCid3JrqnhmFnNQQJ5owXj+vHLldV1NY0zhCxeLrQdgl0CPVFlQyMnY5yc+sDFQ-NXi-qYOcWYa7X1jE0yVd9Ng0YPAILJwNAANx0OgAgAqjjBiDB8BgcigKCcvhgrkIsi48AxYC8IMU8GxIFcMGQ3C8UHsMAAcrDqpwal4apIYABBRQAHhyAD4YACANosXxciVSsC+AC6dCgvlYnB5-MZME4AA9nFgwWA5ABbfScAhcuGanXcTAo2WiuVUGD24XUOGigDkNOJ9PdDu1uptTJgAH4YBb+LyCHzGVzRRs4TL5YLoSyw4iYMiQWiMcgsTi8ZhOMAuIbxBgSaiDcbTTB9BSwJxU2yOVyACJFkviPm9YUAgAsiuVqvbxc4pZ40ctAf1RpNBBdaqjjOF-utYPFsq5Gww4wIMAAqg7Q-uPV66fZfTB+A2SKaU4OVTB25xWABpTi+CB8hMwLRyHg1queowFWc6OpYC4WkBgYgPoABWRZQDIoZ-gBe7QWCljITAJgfpSYYyPwz5vh+X5urhvj4XCcpth2Y5dqhzjzoKhEgZwt4ECmSqPsRABq8DIHInBkVyjGAVawGgTW1AQY6UESTB8GIdhYnoQpmHYeReFUtRrF8QJQlkaKFFUTRT50eOUB8qpgosYw17sXeMIPqqADK9jwIWEAAPKuFoOhgtQxHvp+fLcZw+EICg6BYLg2iEMQ5BcmQyYwuFMAABLavxgnCb5-kJY6+m5V+4WRUgaAYDgeAJaQZDJcmQA).
+
+## Final touch
+
+Are we there yet? Almost. But the utility types still need a little tune-up; it is slightly dangerous in the way it does not warn that these types are *not* accessible on all branches. We need to add `undefined` to the mix if we pass by the end of a bran
+
+How is it done? We can't resolve this when the base case is reached; it would be too late. We need to take notes while traversing. It is a similar approach to graph traversal (what we are doing is actually a [breadth-first search](https://www.youtube.com/watch?v=pcKY4hjDrxk)) and taking bite marks. We just take a look to see if all leaves are objects, and if not, we note that. However deep we got, we'll know that there was a shorter branch up there, and we need to add `undefined` to the final result.
+
+To do so, we'll create two more simple helper types, `Uncertain` and `AreAllLeavesObjects`. We also add a third type argument, `Guaranteed`, which is a simple bite-mark boolean flag.
+
+```ts
+type Uncertain<T> = T | undefined;
+
+type AreAllLeavesObjects<T extends object> =
+  T[keyof T] extends object
+  ? true
+  : false;
+
+type DeepKeys<T, Counter extends number = 0, Guaranteed extends boolean = true> = T extends object
+  ? Counter extends 0
+    ? Guaranteed extends true ? keyof T : Uncertain<keyof T>
+    : DeepKeys<T[keyof T], Decrement<Counter>, AreAllLeavesObjects<T>>
+  : never;
+
+
+type DeepValues<T, Counter extends number = 0, Guaranteed extends boolean = true> = T extends object
+  ? Counter extends 0
+    ? Guaranteed extends true ? T[keyof T] : Uncertain<T[keyof T]>
+    : DeepValues<T[keyof T], Decrement<Counter>, AreAllLeavesObjects<T>>
+  : never;
+```
+
+As always, I created [a Playground](https://www.typescriptlang.org/play?#code/MYewdgzgLgBFCGBLANgd0WAJgfVMkAThNgG4CMMAvDAN4BQMcB8kADvAQKZhQBcMAIijM2HblAEAaBjGABXAlx78B8xeIDCIfASkyARsnjAA1ioDEABmt7GqABaIonCwDN3tmAHNmAT370jIwCZDZuAOyu8K7AnsEATGGC5pyYrvGu4XGCAMxJAinxnAAcrpbZAPQVMAB0dTIAvtKMXJgBMsGh5W7uAKyuvdkCid3JrqnhmFnNQQJ5owXj+vHLldV1NY0zhCxeLrQdgl0CPVFlQyMnY5yc+sDFQ-NXi-qYOcWYa7X1jE0yVd9Ng0YPAILJwNAANx0GFQXysTgwACCigAPAA5GCcAAeziwYLAcgAtvpOARJDAACpY3HcTBgli+ADaAF0qDBWQA+dmUpkAcmQ3C8UHsfLZOLx9JgmIA-FSYPwUQQMRSmRtKRTGSzOdC6HCETAACKcYBcIniDE0yUE4mkgjc6hKjHciV0sFMxkUjYYcYEGAAVTZcv9-MFYGForZ-DAnBIZN1+sR-rAwDJCAwqMpDvlAB8YHIsJxXBhUgn4YiUZwkchkAAZTjwOMQADy+gAViaoBBM1a3TAQO3Ow6ZLyTJxfCBXFTxbT8f3B8AoDI5cI5JwZPwosgIJwywbjZxWABpcfdjUwLQF5x+11zwkksnsywUgDicg4LGcqV7c-0IG0DZgOyq6cNm1K3lKA4douy4XiAV6PhBYKWIccpvh+PA3JgP5SiBMBymOE5TtS-DJqmBDpmAqKEZOVKcoc-AHsep6ZkyNHESyFLGqanDmjwqKXph9oUpW1Z1g2TattBXaZpy9GMNGsbxjCerlkaNysAAavAyBrmeFKCdeOE2g+frUM+MDoSIX7YUhMB-gBLDAQQa5gcZ87SbBhmIbOUooUE+GWe+1lYe5eFyqO460ZSUYBimaZIFRkVEdO8lBIxGnabpnBnmxUUcVxJpmha3nCciXBifWjY5VJnZnnJG4wDGcYELqdAAsWRCwIKcbIP2U4xtAGBeKpBonr4LauFoOhgtQTHjd2ia0emaAYDgeCEMQ5A6rCalZXpzZTdom3skx+05aiS1Tit6BYLgx1EKQZA7e11Q7qAWAwD1nB9bRg1QMNo2IgAyvY8CYDVR0zadGkLZd5bLUgq13Rtj3kBSz17oiAASOLnZN00nXNmU6Xp8MIojKC3etD1bWQGMvQCIqIAQ2Hfb9A05QD4aQk1IDM+GcAgDAO6IvYZLrom0ogAthogKgYCUuLXAw4ecNXXASPU-dM1PRS8QvVL6IgPjACiTjK6rWmkxdGs3WtOubXrMAG5CQA) to fiddle with these types. 
+
+## Why all of this?
+
+That's actually a great question! I totally understand what someone who just started with TypeScript might think about that, and I don't dare say it because I am a decent person. But in fact, it is *not so complicated*; what makes it look so are the limitations of the compiler, resulting in rather simple ideas having to be expressed in a way that does not look simple at all. In plain JavaScript, the code with equal intent would be expressed much more concisely.
+
+Using TypeScript like this might be considered overkill for an app's code, and I totally get that. But it can be really helpful when used by a library. I had a revelation when first migrating to TypeScript in an app that was using [original, "vanilla" Redux](https://redux.js.org/). And it was a pain—red squiggly lines everywhere. But [Redux Toolkit](https://redux-toolkit.js.org/usage/usage-with-typescript) was a completely different story: it was bliss, type inferrence working flawlessly, types flowing effortlessly up and down. It was obvious that the contributors got very good at TypeScript in the meantime and have fully exploited its potential. Other great examples? [React Query](https://tanstack.com/query/v3/), [tRPC](https://trpc.io/), and many others.
+
+☘ Lucky coding!
+
+
+
+
+
+
+
+
+
