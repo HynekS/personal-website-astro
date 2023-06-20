@@ -134,7 +134,7 @@ If we take a look at [the Playground](https://www.typescriptlang.org/play?#code/
 
 ## Improved utility types
 
-Let's be honest: Our utility types were kind of naive. We need to check if the type conversion actually makes sense. Let's try again with conditional types (the `extends` keyword and ternary):
+Let's be honest: Our utility types were kind of naïve. We need to check if the type conversion actually makes sense. Let's try again with conditional types (the `extends` keyword and ternary):
 
 ```ts
 type ObjectKeys<T> = T extends object ? keyof T : never;
@@ -200,16 +200,16 @@ As always, these types can be seen in action on [the Playground](https://www.typ
 
 ## Final touch
 
-Are we there yet? Almost. But the utility types still need a little tune-up; it is slightly dangerous in the way it does not warn that these types are *not* accessible on all branches. We need to add `undefined` to the mix if we pass by the end of a bran
+Are we there yet? Almost. But the utility types still need a little tune-up; it is slightly dangerous in the way it does not warn that these types are *not* accessible on all branches. We need to add `undefined` to the mix if we pass by any leaf branch (a branch that ends at the current depth).
 
 How is it done? We can't resolve this when the base case is reached; it would be too late. We need to take notes while traversing. It is a similar approach to graph traversal (what we are doing is actually a [breadth-first search](https://www.youtube.com/watch?v=pcKY4hjDrxk)) and taking bite marks. We just take a look to see if all leaves are objects, and if not, we note that. However deep we got, we'll know that there was a shorter branch up there, and we need to add `undefined` to the final result.
 
-To do so, we'll create two more simple helper types, `Uncertain` and `AreAllLeavesObjects`. We also add a third type argument, `Guaranteed`, which is a simple bite-mark boolean flag.
+To do so, we'll create two more simple helper types, `Uncertain` and `AreAllValuesObjects`. We also add a third type argument, `Guaranteed`, which is a simple bite-mark boolean flag.
 
 ```ts
 type Uncertain<T> = T | undefined;
 
-type AreAllLeavesObjects<T extends object> =
+type AreAllValuesObjects<T extends object> =
   T[keyof T] extends object
   ? true
   : false;
@@ -217,14 +217,14 @@ type AreAllLeavesObjects<T extends object> =
 type DeepKeys<T, Counter extends number = 0, Guaranteed extends boolean = true> = T extends object
   ? Counter extends 0
     ? Guaranteed extends true ? keyof T : Uncertain<keyof T>
-    : DeepKeys<T[keyof T], Decrement<Counter>, AreAllLeavesObjects<T>>
+    : DeepKeys<T[keyof T], Decrement<Counter>, AreAllValuesObjects<T>>
   : never;
 
 
 type DeepValues<T, Counter extends number = 0, Guaranteed extends boolean = true> = T extends object
   ? Counter extends 0
     ? Guaranteed extends true ? T[keyof T] : Uncertain<T[keyof T]>
-    : DeepValues<T[keyof T], Decrement<Counter>, AreAllLeavesObjects<T>>
+    : DeepValues<T[keyof T], Decrement<Counter>, AreAllValuesObjects<T>>
   : never;
 ```
 
