@@ -5,8 +5,13 @@ const { image } = Astro.props || {};
 
 import macbook_mockup from "@assets/device-mockups/macbookair-mockup-cropped.png";
 
-const optimizedImage = await getImage({ src: image, format: 'webp' })
+const optimizedImage = await getImage({
+  src: image,
+  format: "webp",
+  inferSize: true,
+});
 ---
+
 <style>
   .container {
     overflow-y: scroll;
@@ -20,19 +25,29 @@ const optimizedImage = await getImage({ src: image, format: 'webp' })
   }
 </style>
 <div class="relative mb-12 not-prose">
-  <Image
-    src={macbook_mockup}
+  <img
+    src={macbook_mockup.src}
     alt=""
     width={800}
     height={509}
     class="[filter:drop-shadow(12px_12px_25px_rgba(0,0,0,0.35))]"
+    loading="eager"
+    fetchpriority="high"
   />
   <div
     class="absolute [transform:scale(0.78633)] origin-top top-[5%] w-full overflow-hidden"
   >
     <div class="relative pt-[63.66%]">
       <div class="container absolute inset-0">
-        {image?.src && <img src={optimizedImage.src} alt="" />}
+        {
+          image?.src && (
+            <img
+              src={optimizedImage.src}
+              {...optimizedImage.attributes}
+              alt=""
+            />
+          )
+        }
       </div>
     </div>
   </div>
