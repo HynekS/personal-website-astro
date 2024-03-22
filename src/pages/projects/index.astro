@@ -43,10 +43,7 @@ postsWithImages.sort((a, b) => a.data.order - b.data.order);
               <div class="flex gap-6 lg:gap-7">
                 <img
                   src={thumbnail?.src}
-                  {
-                    // @ts-expect-error – attributes are there. Wrong inferrence?
-                    ...(thumbnail?.attributes ?? {})
-                  }
+                  {...(thumbnail?.attributes ?? {})}
                   class="rounded shadow w-20 h-20 md:w-24 md:h-24"
                   alt="thumbnail"
                 />
