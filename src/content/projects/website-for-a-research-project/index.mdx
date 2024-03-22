@@ -5,7 +5,7 @@ type: project
 dateCreated: July 25, 2022 17:34
 dateLastModified:
 featuredImage:
-thumbnail: /assets/thumbnails/website-for-a-research-project-thumbnail.png
+thumbnail: ./assets/website-for-a-research-project-thumbnail.png
 categories:
   - TypeScript
   - Next.js
@@ -17,7 +17,7 @@ keywords:
 description: Website for a research project (MULINEM), built with Next.js & Sanity.
 order: 3
 ---
-import { Image, Picture } from '@astrojs/image/components';
+import { Image, Picture } from 'astro:assets';
 import Gallery from "@components/Gallery.astro"
 import gallery from "./assets/gallery"
 import DevstackItem from "@components/DevstackItem.astro"
@@ -53,7 +53,7 @@ I've designed a new look for the website. Initially, I converted the site into a
 
  <Gallery gallery={gallery}/>
 
-## Notes
+ ## Notes
 
 One thing I wasn't happy about was the frontend-to-backend type of safety. It is not officially supported yet for GROQ queries (it might work better with GraphQL). There are some promising open source projects working on solutions, but they are still in alpha, and I wasn't able to make them really work. In the end, I just used the codegen and wrote the types for API responses by hand, which is a little _meh_, but for a small project like this, probably acceptable. This should be solved in Sanity v3, but at the time, I wasn't able to get it running.
 

@@ -64,7 +64,7 @@ const blogCollection = defineCollection({
 });
 
 const projectCollection = defineCollection({
-  schema: z.object({
+  schema: ({ image }) => z.object({
     title: z.string(),
     author: z.enum(["Hynek Svacha"]),
     // TODO: consider removing
@@ -75,7 +75,7 @@ const projectCollection = defineCollection({
       .transform((str) => new Date(str))
       .nullable(),
     featuredImage: z.string().nullable(),
-    thumbnail: z.string().nullable(),
+    thumbnail: image().nullable(),
     categories: z.array(z.string()).nullable(),
     keywords: z.array(z.string()).nullable(),
     description: z.string().nullable(),

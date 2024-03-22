@@ -609,3 +609,5 @@ export const ALL_TECH_COLORS = Object.assign(
   LIB_COLORS,
   OVERRIDES
 );
+
+export type TechColor = keyof typeof ALL_TECH_COLORS;

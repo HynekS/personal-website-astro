@@ -1,5 +1,5 @@
 ---
-import { Image } from "@astrojs/image/components";
+import { getImage } from "astro:assets";
 
 interface Props {
   gallery: {
@@ -8,17 +8,34 @@ interface Props {
 }
 
 const { gallery } = Astro.props;
-const sources = Object.values(gallery);
+
+const sources = await Promise.all(
+  Object.values(gallery).map(
+    async (img) =>
+      await getImage({ src: { ...img, format: "webp" }, inferSize: true })
+  )
+);
 ---
 
 {
   sources.length === 0 ? null : sources.length === 1 ? (
-    <Image {...sources[0]} alt="" lightbox />
+    <imge
+      src={sources[0]?.src}
+      {...sources[0]?.attributes}
+      alt=""
+      data-lightbox
+    />
   ) : (
     <section class="grid gap-2 md:grid-cols-2 lg:grid-cols-3">
       {sources.map((source) => (
         <figure class="flex justify-center mb-0 rounded cursor-pointer bg-secondary">
-          <Image {...source} alt="" lightbox class="object-contain"/>
+          <img
+            src={source.src}
+            {...source.attributes}
+            alt=""
+            data-lightbox
+            class="object-contain"
+          />
         </figure>
       ))}
     </section>

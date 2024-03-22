@@ -5,17 +5,16 @@ import Footer from "../components/Footer.astro";
 // TODO: check by zod (lots of lies probably here):
 export interface Props {
   title: string;
-  description: string;
-  categories: string;
-  dateCreated: string;
-  keywords: string;
-  author: string;
-  children: Node | Node[];
+  description?: string;
+  categories?: string[];
+  dateCreated?: string;
+  keywords?: string[];
+  author?: string;
+  children?: Node | Node[];
 }
 
 const defaultDescription =
   "Tutorials and tips for developers. Focused on TypeScript, React, Astro and more.";
-const url = Astro.url;
 const { title, description, author, dateCreated, categories, keywords } =
   Astro.props;
 const currentPath = Astro.url.pathname;
@@ -44,11 +43,13 @@ const currentPath = Astro.url.pathname;
       }}
       extend={{
         meta: [
-          { name: "keywords", content: keywords },
+          { name: "keywords", content: keywords?.join(',') },
           { name: "author", content: author },
           { name: "article:author", content: author },
           { name: "article:published_time", content: dateCreated },
-          { name: "article:tag", content: categories },
+          { name: "article:tag", content: categories?.join(',') },
+          { name: "twitter:card", content: "summary_large_image" },
+          { name: "twitter:site", content: "@SvachaHynek" },
           {
             name: "twitter:image",
             content: "/assets/opengraph/og-image-default.jpg",

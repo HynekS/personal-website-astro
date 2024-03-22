@@ -5,7 +5,7 @@ type: project
 dateCreated: May 30, 2023 14:09
 dateLastModified:
 featuredImage:
-thumbnail: /assets/thumbnails/personal-website-light-thumbnail.png
+thumbnail: ./assets/personal-website-light-thumbnail.png
 categories:
   - Astro.js
   - Tailwind
@@ -15,7 +15,7 @@ keywords:
 description: My personal portfolio/blog site, built with Astro.js.
 order: 7
 ---
-import { Image } from '@astrojs/image/components';
+import { Image } from 'astro:assets';
 import DevstackItem from "@components/DevstackItem.astro"
 import MacBookMockup from "@components/MacBookMockup.astro"
 import mock from "./assets/personal-website-light.png"

@@ -1,45 +1,70 @@
 ---
+import { getImage } from "astro:assets";
 import { getCollection } from "astro:content";
 import Layout from "@layouts/Layout.astro";
 
 const allPosts = await getCollection("projects");
 
-const posts = allPosts.filter((post) => post.data.draft !== true)
+const posts = allPosts.filter((post) => post.data.draft !== true);
 
-posts.sort((a, b) => a.data.order - b.data.order);
+const postsWithImages = await Promise.all(
+  posts.map(async (post) => {
+    return {
+      ...post,
+      data: {
+        ...post.data,
+        ...(post.data.thumbnail && {
+          thumbnail: await getImage({
+            src: post.data.thumbnail,
+            format: "webp",
+            width: 96,
+            height: 96,
+          }),
+        }),
+      },
+    };
+  })
+);
+
+postsWithImages.sort((a, b) => a.data.order - b.data.order);
 ---
 
 <Layout title="Projects | HynekS">
-  <div class="h-full px-2 md:px-4 mx-auto max-w-prose md:max-w-2xl text-secondary">
+  <div
+    class="h-full px-2 md:px-4 mx-auto max-w-prose md:max-w-2xl text-secondary"
+  >
     <h1 class="text-4xl font-normal relative left-[1.25rem]">Projects</h1>
     <ul class="mt-4 list-none">
       {
-        posts.map((post) => {
+        postsWithImages.map((post) => {
+          const thumbnail = post.data.thumbnail;
           return (
             <li class="my-8 relative md:flex-row mt-8 pl-4 pr-6 pt-5 pb-8 rounded-md dark:shadow-sm after:block after:absolute after:w-full after:left-[1rem] after:right-[1.25rem] after:-bottom-4 after:h-px after:[background:linear-gradient(90deg,_rgba(0,0,0,0.6)_0%,_rgba(0,0,0,0.4)_33%,_rgba(166,166,166,0.3)_100%)] dark:after:[background:linear-gradient(90deg,_rgba(200,200,200,0.6)_0%,_rgba(200,200,200,0.4)_33%,_rgba(166,166,166,0.3)_100%)] last:after:invisible">
               <div class="flex gap-6 lg:gap-7">
                 <img
-                    src={post.data.thumbnail}
-                    height={96}
-                    width={96}
-                    class="rounded shadow w-20 h-20 md:w-24 md:h-24"
-                    alt="thumbnail"
-                  />
+                  src={thumbnail?.src}
+                  {
+                    // @ts-expect-error – attributes are there. Wrong inferrence?
+                    ...(thumbnail?.attributes ?? {})
+                  }
+                  class="rounded shadow w-20 h-20 md:w-24 md:h-24"
+                  alt="thumbnail"
+                />
                 <div>
-                <h2 class="text-3xl font-medium transition-colors hover:text-[var(--color-primary)] hover:dark:text-[#b497f9]">
-                  <a href={"/projects/" + post.slug}>{post.data.title}</a>
-                </h2>
-                {post.data?.categories ? (
-                  <ul class="flex gap-1.5 mt-3 flex-wrap">
-                    {post.data.categories.map((category) => (
-                      <li class="font-mono text-xs rounded-md py-0.5 px-1.5 border dark:border-gray-600/50 dark:[background-color:#2a3340]">
-                        {category}
-                      </li>
-                    ))}
-                  </ul>
-                ) : null}
+                  <h2 class="text-3xl font-medium transition-colors hover:text-[var(--color-primary)] hover:dark:text-[#b497f9]">
+                    <a href={"/projects/" + post.slug}>{post.data.title}</a>
+                  </h2>
+                  {post.data?.categories ? (
+                    <ul class="flex gap-1.5 mt-3 flex-wrap">
+                      {post.data.categories.map((category) => (
+                        <li class="font-mono text-xs rounded-md py-0.5 px-1.5 border dark:border-gray-600/50 dark:[background-color:#2a3340]">
+                          {category}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : null}
+                </div>
               </div>
-            </div>
             </li>
           );
         })

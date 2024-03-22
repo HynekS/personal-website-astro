@@ -1,12 +1,13 @@
 import hexToRgba from "hex-to-rgba";
+import { type TechColor } from "@constants/colors";
 
 import { ALL_TECH_COLORS as techColors } from "@constants/colors";
 
-const ListItem = ({ category }: { category: keyof typeof techColors }) => {
+const ListItem = ({ category }: { category: TechColor }) => {
   const categoryBare = category
     .toLowerCase()
     .split(".")
-    .shift() as keyof typeof techColors;
+    .shift() as TechColor;
 
   return (
     <li

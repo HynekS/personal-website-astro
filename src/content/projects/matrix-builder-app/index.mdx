@@ -5,7 +5,7 @@ type: project
 dateCreated: May 30, 2023 14:09
 dateLastModified:
 featuredImage:
-thumbnail: /assets/thumbnails/matrix-builder-thumbnail.png
+thumbnail: ./assets/matrix-builder-thumbnail.png
 categories:
   - tRPC
   - Next.js
@@ -17,7 +17,7 @@ keywords:
 description: An app for building graphical relational matrices.
 order: 0
 ---
-import { Image } from '@astrojs/image/components';
+import { Image } from 'astro:assets';
 import DevstackItem from "@components/DevstackItem.astro"
 import MacBookMockup from "@components/MacBookMockup.astro"
 import mock from "./assets/matrix-builder-diagram.png"

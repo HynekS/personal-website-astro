@@ -1,7 +1,11 @@
 ---
-import { Image } from "@astrojs/image/components";
+import { Image, getImage } from "astro:assets";
 
 const { image } = Astro.props || {};
+
+import macbook_mockup from "@assets/device-mockups/macbookair-mockup-cropped.png";
+
+const optimizedImage = await getImage({ src: image, format: 'webp' })
 ---
 <style>
   .container {
@@ -17,10 +21,10 @@ const { image } = Astro.props || {};
 </style>
 <div class="relative mb-12 not-prose">
   <Image
-    src="/assets/device-mockups/macbookair-mockup-cropped.png"
+    src={macbook_mockup}
     alt=""
     width={800}
-    aspectRatio={1.571428}
+    height={509}
     class="[filter:drop-shadow(12px_12px_25px_rgba(0,0,0,0.35))]"
   />
   <div
@@ -28,7 +32,7 @@ const { image } = Astro.props || {};
   >
     <div class="relative pt-[63.66%]">
       <div class="container absolute inset-0">
-        {image?.src && <img src={image.src} alt="" />}
+        {image?.src && <img src={optimizedImage.src} alt="" />}
       </div>
     </div>
   </div>

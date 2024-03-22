@@ -1,10 +1,11 @@
 ---
 import Layout from "@layouts/Layout.astro";
-import RecursiveList from "@components/RecursiveList.astro";
+import RecursiveList, { type AstroHeading } from "@components/RecursiveList.astro";
 import PrettyDate from "@components/PrettyDate";
 import ScrollToTop from "@components/ScrollToTop";
 import Lightbox from "@components/Lightbox";
 import { execSync } from "child_process";
+import { type TechColor } from "@constants/colors";
 
 import ListItem from "@components/ListItem";
 
@@ -18,8 +19,19 @@ const [_, lastContentEditDate] =
   ) || [];
 
 export interface Props {
+  headings: AstroHeading[];
+  file: string;
   title: string;
   children: Node | Node[];
+  frontmatter: {
+    title: string;
+    description: string;
+    categories: TechColor[];
+    keywords: string[];
+    dateCreated: string;
+    author: string;
+    timeToRead: string;
+  };  
 }
 
 const {
@@ -65,14 +77,14 @@ const currentPath = Astro.url.pathname;
               </ul>
             ) : null
           }
-          posted <PrettyDate date={new Date(dateCreated)} /> ∙ by {author} ∙
+          posted <PrettyDate date={new Date(dateCreated)} client:load /> ∙ by {author} ∙
           {timeToRead}
         </div>
         <slot />
         {
           lastContentEditDate ? (
             <p class="text-xs">
-              last modified <PrettyDate date={new Date(lastContentEditDate)} />
+              last modified <PrettyDate date={new Date(lastContentEditDate)} client:load />
             </p>
           ) : null
         }

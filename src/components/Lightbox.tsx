@@ -7,7 +7,7 @@ const attrs = (element: Element) =>
     return { ...acc, [name]: element.getAttribute(name) };
   }, {});
 
-let lightboxableNodes = [...document.querySelectorAll("[lightbox]")];
+let lightboxableNodes = Array.from(document.querySelectorAll("[data-lightbox]"));
 
 const ChevronLeftIcon = (props: any) => (
   <svg
